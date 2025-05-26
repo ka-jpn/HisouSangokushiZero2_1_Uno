@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" viewBox="0 0 100 100">
+	<path d="M28,0 L72,0 L100,28 L100,72 L72,100 L28,100 L0,72 L0,28 z" fill="#CBB"/>
+	<text x="2.5" y="85" font-size="100" font-family="Hiragino Maru Gothic ProN,Yu Gothic Medium,Hiragino Sans,YuGothic,sans-serif" font-weight="bold" fill="#844" stroke="#844" stroke-width="3" textLength="900">か</text>
+</svg>

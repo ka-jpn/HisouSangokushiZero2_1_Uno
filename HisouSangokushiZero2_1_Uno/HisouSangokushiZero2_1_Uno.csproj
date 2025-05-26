@@ -1,0 +1,54 @@
+﻿<Project Sdk="Uno.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
+
+		<OutputType>Exe</OutputType>
+		<UnoSingleProject>true</UnoSingleProject>
+
+		<!-- Display name -->
+		<ApplicationTitle>HisouSangokushiZero2_1_Uno</ApplicationTitle>
+		<!-- App Identifier -->
+		<ApplicationId>com.companyname.HisouSangokushiZero2_1_Uno</ApplicationId>
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+		<!-- Package Publisher -->
+		<ApplicationPublisher>tomo</ApplicationPublisher>
+		<!-- Package Description -->
+		<Description>HisouSangokushiZero2_1_Uno powered by Uno Platform.</Description>
+
+		<!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+		<UnoFeatures>
+			SkiaRenderer;
+			Svg;
+		</UnoFeatures>
+		<WasmShellWebAppBasePath>./</WasmShellWebAppBasePath>
+		<DefaultLanguage>ja</DefaultLanguage>
+		<PackageCertificateThumbprint>5956E064D89E03046852D192A86E07739DF29AD5</PackageCertificateThumbprint>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+	</PropertyGroup>
+	<ItemGroup>
+		<UnoIcon Include="Assets\Icons\icon.svg" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Uno.WinUI.Svg" />
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="BasicStyle.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties properties_4launchsettings_1json__JsonSchema="" />
+		</VisualStudio>
+	</ProjectExtensions>
+	<ItemGroup>
+		<None Remove="Locales\en-US\*" />
+		<None Remove="Locales\fr-FR\*" />
+		<None Remove="Locales\de-DE\*" />
+	</ItemGroup>
+</Project>
