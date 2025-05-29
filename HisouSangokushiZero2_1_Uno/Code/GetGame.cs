@@ -8,6 +8,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     private static GameState ClearLogMessage(GameState game) => game with { LogMessage = [] };
     private static GameState ClearGameLog(GameState game) => game with { GameLog = [] };
     private static GameState AppendStartMessage(GameState game) => UpdateGame.AppendLogMessage(game,[$"{GameInfo.name.Value} ƒo[ƒWƒ‡ƒ“{GameInfo.version.Value}"]);
-    internal static GameState GetInitGameScenario(Scenario? scenario) => GetScenario(scenario).MyApplyF(maybeScenarioInfo => InitGame(scenario,maybeScenarioInfo)).MyApplyF(InitState).MyApplyF(AppendStartMessage);
+    private static GameState InitMaxAreaNum(GameState game) => game with { CountryMap = game.CountryMap.ToDictionary(v => v.Key,v => v.Value with { MaxAreaNum = Country.GetAreaNum(game,v.Key) }) };
+    internal static GameState GetInitGameScenario(Scenario? scenario) => GetScenario(scenario).MyApplyF(maybeScenarioInfo => InitGame(scenario,maybeScenarioInfo)).MyApplyF(InitState).MyApplyF(AppendStartMessage).MyApplyF(InitMaxAreaNum);
 	}
 }

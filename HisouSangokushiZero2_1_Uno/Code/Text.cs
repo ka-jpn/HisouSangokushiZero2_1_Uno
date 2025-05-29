@@ -1,3 +1,4 @@
+using static HisouSangokushiZero2_1_Uno.Code.Battle;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using CommanderType = HisouSangokushiZero2_1_Uno.Code.DefType.Commander;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;
@@ -23,6 +24,8 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static string ChangeHasCountryText(ECountry attackCountry,ECountry? defenseCountry,EArea targetArea,Lang lang) => Ja.ChangeHasCountryText(attackCountry,defenseCountry,targetArea);
     internal static string? FallCapitalText(ECountry? country,Lang lang) => Ja.FallCapitalText(country);
     internal static string? PerishCountryText(ECountry? country,Lang lang) => Ja.PerishCountryText(country);
+    internal static string AppendUpdateMaxAreaNumLog(int? updatedMaxAreaNum,ECountry? defenseCountry,EArea targetArea,Lang lang) => Ja.AppendUpdateMaxAreaNumLog(updatedMaxAreaNum,defenseCountry,targetArea);
+
     private static class Ja {
       internal static string GetCountryText(ECountry? country) => country?.ToString() ?? "自治";
       internal static string CommanderToText(CommanderType commander) => commander.MainPerson == null && commander.SubPerson == null ? "無名武官" : $"{commander.MainPerson?.Value ?? "無名武官"}と{commander.SubPerson?.Value ?? "無名武官"}";
@@ -39,6 +42,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       internal static string ChangeHasCountryText(ECountry attackCountry,ECountry? defenseCountry,EArea targetArea) => $"{GetCountryText(defenseCountry)}領の{targetArea}が{GetCountryText(attackCountry)}領に";
       internal static string FallCapitalText(ECountry? country) => $"{GetCountryText(country)}の首都が陥落";
       internal static string PerishCountryText(ECountry? country) => $"{GetCountryText(country)}が滅亡";
+      internal static string AppendUpdateMaxAreaNumLog(int? updatedMaxAreaNum,ECountry? defenseCountry,EArea targetArea) => $"{GetCountryText(defenseCountry)}領の{targetArea}を攻略して最大領土数を{updatedMaxAreaNum}に更新";
     }
   }
 }

@@ -246,28 +246,50 @@
                   <TextBlock Text="陸路/水路、および３種類の太さが設定されていますが、現バージョンでは見た目だけの違いです" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel x:Name="WinCondPanel" Visibility="Collapsed">
-
+                  <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ１："/>
+                    <TextBlock x:Name="WinCondScenarioName1" FontFamily="{StaticResource Bold}"/>
+                  </StackPanel>
+                  <StackPanel x:Name="WinCondListPanel1" HorizontalAlignment="Center"/>
+                  <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ２："/>
+                    <TextBlock x:Name="WinCondScenarioName2" FontFamily="{StaticResource Bold}"/>
+                  </StackPanel>
+                  <StackPanel x:Name="WinCondListPanel2" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel x:Name="PersonDataPanel" Visibility="Collapsed">
                   <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ１："/>
-                    <TextBlock x:Name="ScenarioName1" FontFamily="{StaticResource Bold}"/>
+                    <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource Bold}"/>
                   </StackPanel>
                   <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
-                  <VariableSizedWrapGrid x:Name="PersonDataListPanel1" Orientation="Horizontal" HorizontalAlignment="Center"/>
+                  <StackPanel x:Name="PersonDataListPanel1" HorizontalAlignment="Center"/>
                   <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
-                  <VariableSizedWrapGrid x:Name="CountryDataListPanel1" Orientation="Horizontal" HorizontalAlignment="Center"/>
+                  <StackPanel x:Name="CountryDataListPanel1" HorizontalAlignment="Center"/>
                   <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ２："/>
-                    <TextBlock x:Name="ScenarioName2" FontFamily="{StaticResource Bold}"/>
+                    <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource Bold}"/>
                   </StackPanel>
                   <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
-                  <VariableSizedWrapGrid x:Name="PersonDataListPanel2" Orientation="Horizontal" HorizontalAlignment="Center"/>
+                  <StackPanel x:Name="PersonDataListPanel2" HorizontalAlignment="Center"/>
                   <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
-                  <VariableSizedWrapGrid x:Name="CountryDataListPanel2" Orientation="Horizontal" HorizontalAlignment="Center"/>
+                  <StackPanel x:Name="CountryDataListPanel2" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel x:Name="ChangeLogPanel" Visibility="Collapsed">
-                  <TextBlock Text="2025/05/ ver1.0 開発言語変更による作り直しにより差し替え公開"/>
+                  <TextBlock Text="2023/09/28 公開"/>
+                  <TextBlock Text="2024/07/01 ver1.0 機能拡張＆説明修正＆マップ更新"/>
+                  <StackPanel Padding="20,0,0,0">
+                    <TextBlock Text="・人物が1人以下の陣営に人物追加、ただし無理やり気味"/>
+                    <TextBlock Text="・人物データに張超,曹寅陣営の欄がなかったので修正"/>
+                    <TextBlock Text="・マップの見た目更新"/>
+                    <TextBlock Text="・ゲーム中に毎ターンごとに勝利条件と達成具合が表示されるようにアップデート"/>
+                    <TextBlock Text="・役割にアイコンを割り当てた"/>
+                    <TextBlock Text="・助力システムを実装、役割を変えることができるようになった"/>
+                  </StackPanel>
+                  <TextBlock Text="2025/05/31 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
+                  <StackPanel Padding="20,0,0,0">
+                    <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、勝利条件調整、ルールの微修正、挙動の調整"/>                    
+                  </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="SettingPanel" Visibility="Collapsed">
                   <Button x:Name="InitGameButton" Width="500" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black" Padding="30" Margin="20">
