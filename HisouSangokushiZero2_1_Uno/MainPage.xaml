@@ -29,6 +29,7 @@
           <StackPanel x:Name="CountryInfoContentsPanel" VerticalAlignment="Center"/>
         </Grid>
         <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400"/>
+        <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -86,13 +87,13 @@
             <ScrollViewer x:Name="InfoScrollPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="6">
               <StackPanel x:Name="InfoContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top" Width="{x:Bind local:MainPage.infoTextWidth}">
                 <StackPanel x:Name="InstructionPanel" Visibility="Collapsed">
-
+                  <TextBlock FontFamily="{StaticResource Bold}" Text="(未記入)" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel x:Name="ExplainPanel" Visibility="Collapsed">
                   <TextBlock FontFamily="{StaticResource Bold}" Text="勝利・敗北について" HorizontalAlignment="Center"/>
                   <StackPanel HorizontalAlignment="Center">
-                    <TextBlock Text="勝利条件：プレイヤー勢力に設定された勝利条件達成(達成勝利) or ゲーム終了年春まで存続(存続勝利)"/>
-                    <TextBlock Text="敗北条件：プレイヤー勢力領土全失陥"/>
+                    <TextBlock Text="勝利条件：陣営勝利条件を一番乗りで達成(達成勝利) or ゲーム終了年春まで存続(存続勝利)"/>
+                    <TextBlock Text="敗北条件：プレイヤー勢力領土全失陥(滅亡敗北) or 陣営勝利条件をCPUに先に達成される(他陣営達成勝利敗北)"/>
                   </StackPanel>
                   <StackPanel Height="10"/>
                   <TextBlock FontFamily="{StaticResource Bold}" Text="陣営の軍議・行動フェイズ順について" HorizontalAlignment="Center"/>
@@ -282,13 +283,14 @@
                     <TextBlock Text="・人物が1人以下の陣営に人物追加、ただし無理やり気味"/>
                     <TextBlock Text="・人物データに張超,曹寅陣営の欄がなかったので修正"/>
                     <TextBlock Text="・マップの見た目更新"/>
-                    <TextBlock Text="・ゲーム中に毎ターンごとに勝利条件と達成具合が表示されるようにアップデート"/>
+                    <TextBlock Text="・ゲーム中に毎ターンごとに勝利条件と達成具合が表示されるように"/>
                     <TextBlock Text="・役割にアイコンを割り当てた"/>
                     <TextBlock Text="・助力システムを実装、役割を変えることができるようになった"/>
                   </StackPanel>
                   <TextBlock Text="2025/05/31 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
                   <StackPanel Padding="20,0,0,0">
-                    <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、勝利条件調整、ルールの微修正、挙動の調整"/>                    
+                    <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、陣営勝利条件の微調整、挙動の調整"/>
+                    <TextBlock Text="・陣営勝利条件の達成による勝利はCPUが先に達成した場合は敗北に"/>
                   </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="SettingPanel" Visibility="Collapsed">
@@ -340,5 +342,7 @@
       </Canvas>
     </Grid>
     <Canvas x:Name="MovePersonCanvas"/>
+    <StackPanel x:Name="GameEndLogPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Background="WhiteSmoke" Margin="50"/>
   </Grid>
 </Page>
+  

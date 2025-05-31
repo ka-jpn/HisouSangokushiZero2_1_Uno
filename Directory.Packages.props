@@ -13,6 +13,6 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
     <PackageVersion Include="SkiaSharp.Views" Version="3.119.0" />
     <PackageVersion Include="Svg.Skia" Version="3.0.2" />
-    <PackageVersion Include="Uno.WinUI.Svg" Version="6.0.611" />
+    <PackageVersion Include="Uno.WinUI.Svg" Version="6.0.704" />
   </ItemGroup>
 </Project>

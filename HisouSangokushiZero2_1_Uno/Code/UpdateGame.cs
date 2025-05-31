@@ -1,7 +1,5 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
-using static HisouSangokushiZero2_1_Uno.Code.Battle;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using CommanderType = HisouSangokushiZero2_1_Uno.Code.DefType.Commander;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;
 using PostType = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
 namespace HisouSangokushiZero2_1_Uno.Code {
