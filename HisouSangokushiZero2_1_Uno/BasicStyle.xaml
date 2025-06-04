@@ -1,13 +1,14 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <FontFamily x:Key="Emoji">ms-appx:///Assets/Fonts/NotoColorEmoji-Regular.ttf#noto color emoji</FontFamily>
   <FontFamily x:Key="Bold">ms-appx:///Assets/Fonts/SourceHanSansJP-Bold.otf#Source Han Sans JP</FontFamily>
   <FontFamily x:Key="Medium">ms-appx:///Assets/Fonts/SourceHanSansJP-Medium.otf#Source Han Sans JP Medium</FontFamily>
   <Style TargetType="TextBlock">
-		<Setter Property="FontSize" Value="24"/>
+    <Setter Property="FontSize" Value="24"/>
     <Setter Property="FontFamily" Value="{StaticResource Medium}"/>
     <Setter Property="FontWeight" Value="Medium"/>
-		<Setter Property="LineHeight" Value="24"/>
+    <Setter Property="LineHeight" Value="24"/>
     <Setter Property="Height" Value="25"/>
     <Setter Property="Padding" Value="0,3,0,-2"/>
     <Setter Property="LineStackingStrategy" Value="BlockLineHeight"/>
@@ -19,5 +20,9 @@
   <Style TargetType="ScrollViewer">
     <Setter Property="HorizontalScrollMode" Value="Enabled"/>
     <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+  </Style>
+  <Style TargetType="ComboBox">
+    <Setter Property="FontSize" Value="24"/>
+    <Setter Property="FontFamily" Value="{StaticResource Medium}"/>
   </Style>
 </ResourceDictionary>

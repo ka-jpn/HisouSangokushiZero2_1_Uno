@@ -5,7 +5,7 @@ namespace HisouSangokushiZero2_1_Uno {
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
 	public sealed partial class BasicStyle {
-		internal static readonly double fontsize = 24;
-		internal static readonly double textHeight = 25;
-	}
+    internal static readonly double fontsize = 24;
+    internal static readonly double textHeight = 25;
+  }
 }

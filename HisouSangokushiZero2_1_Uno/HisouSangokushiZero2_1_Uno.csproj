@@ -13,7 +13,7 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 		<!-- Package Publisher -->
-		<ApplicationPublisher>tomo</ApplicationPublisher>
+		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
 		<Description>HisouSangokushiZero2_1_Uno powered by Uno Platform.</Description>
 
@@ -34,6 +34,10 @@
 		<UnoIcon Include="Assets\Icons\icon.svg" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Uno.Sdk">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="Uno.WinUI.Svg" />
 	</ItemGroup>
 	<ItemGroup>
@@ -46,9 +50,4 @@
 			<UserProperties properties_4launchsettings_1json__JsonSchema="" />
 		</VisualStudio>
 	</ProjectExtensions>
-	<ItemGroup>
-		<None Remove="Locales\en-US\*" />
-		<None Remove="Locales\fr-FR\*" />
-		<None Remove="Locales\de-DE\*" />
-	</ItemGroup>
 </Project>
