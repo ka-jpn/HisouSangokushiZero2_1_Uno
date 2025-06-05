@@ -342,7 +342,7 @@
       </Canvas>
     </Grid>
     <Canvas x:Name="MovePersonCanvas"/>
-    <StackPanel x:Name="GameEndLogPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Background="WhiteSmoke" Margin="50"/>
+    <StackPanel x:Name="ExPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Background="WhiteSmoke"/>
   </Grid>
 </Page>
   

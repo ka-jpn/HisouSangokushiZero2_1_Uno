@@ -34,7 +34,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       internal static string GetAttackJudgeText(AttackJudge attackJudge) => attackJudge switch { AttackJudge.crush => "大勝", AttackJudge.win => "辛勝", AttackJudge.lose => "惜敗", AttackJudge.rout => "大敗" };
       internal static string BattleDeathPersonText(ERole role,List<PersonType> deathPersons,ECountry? battleCountry) => $"{(role == ERole.attack ? $"{GetCountryText(battleCountry)}領に侵攻" : $"{GetCountryText(battleCountry)}軍の侵攻を守備")}した{string.Join("と",deathPersons.Select(v => v.Value))}が退却できず戦死";
       internal static string RoleToText(ERole role) => role switch { ERole.central => "中枢", ERole.affair => "内政", ERole.defense => "防衛", ERole.attack => "攻撃" };
-      internal static string EndPhaseButtonText(Phase phase) => phase == Phase.SelectScenario ? "シナリオ決定" : phase == Phase.Starting ? "勢力決定" : phase == Phase.Planning ? "軍議終了" : "確認";
+      internal static string EndPhaseButtonText(Phase phase) => phase switch { Phase.Planning => "軍議終了", _ => "確認" };
       internal static string? NaturalDeathPersonText(List<PersonType> deathPersons) => deathPersons.Count != 0 ? $"{string.Join("と",deathPersons.Select(v => v.Value))}が死去" : null;
       internal static string? WarDeathPersonText(List<PersonType> deathPersons) => deathPersons.Count != 0 ? $"{string.Join("と",deathPersons.Select(v => v.Value))}が戦死" : null;
       internal static string DefenseText(ECountry country,bool isTryAttack) => $"{(isTryAttack ? "(資金不足で攻撃中止)" : null)}{country}は防衛に専念";

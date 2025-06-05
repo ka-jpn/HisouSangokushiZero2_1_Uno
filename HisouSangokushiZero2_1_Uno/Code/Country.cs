@@ -32,7 +32,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static int GetSleepTurn(GameState game, ECountry? country) => country?.MyApplyF(game.CountryMap.GetValueOrDefault)?.SleepTurnNum??0;
 		internal static bool IsSleep(GameState game, ECountry? country) => GetSleepTurn(game,country) > 0;
     internal static bool SuccessAttack(GameState game,ECountry country) => CanPayAttackFund(game,country) && !IsSleep(game,country);
-    internal static decimal? GetFund(GameState game,ECountry country) =>game.CountryMap.GetValueOrDefault(country)?.Fund;
+    internal static decimal? GetFund(GameState game,ECountry country) => game.CountryMap.GetValueOrDefault(country)?.Fund;
     internal static ECountry? GetPerishFrom(GameState game,ECountry country) => game.CountryMap.GetValueOrDefault(country)?.PerishFrom;
     internal static bool IsPerish(GameState game,ECountry country) => GetPerishFrom(game,country) != null;
     internal static int HasAreaCount(GameState game,ECountry country,EArea[] areas) => GetAreas(game,country).Intersect(areas).Count();

@@ -23,7 +23,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal record AttackResult(Army Defense, AttackJudge Judge, string InvadeText);
     public enum Lang { ja };
     public enum PostHead { main, sub };
-    public enum Phase { SelectScenario, Starting, Planning, Execution, PerishEnd, TurnLimitOverEnd, WinEnd, OtherWinEnd };
+    public enum Phase { Starting, Planning, Execution, PerishEnd, TurnLimitOverEnd, WinEnd, OtherWinEnd };
     internal enum AttackJudge { crush, win, lose, rout };
     internal enum RoadKind { land, water };
     public enum ERole { central, affair, defense, attack };
