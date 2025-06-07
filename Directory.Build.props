@@ -3,7 +3,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-
     <!--
       Adding NoWarn to remove build warnings
       NU1507: Warning when there are multiple package sources when using CPM with no source mapping
@@ -12,5 +11,6 @@
     -->
     <NoWarn>$(NoWarn);NU1507;NETSDK1201;PRI257</NoWarn>
     <SatelliteResourceLanguages>ja</SatelliteResourceLanguages>
+    <UnoDefaultFont>None</UnoDefaultFont>
   </PropertyGroup>
 </Project>

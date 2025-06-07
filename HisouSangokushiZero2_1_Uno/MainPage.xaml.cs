@@ -14,9 +14,9 @@ using Post = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
 namespace HisouSangokushiZero2_1_Uno;
 public sealed partial class MainPage:Page {
   internal enum ViewMode { fit, fix };
-  internal enum InfoPanelState { Instruction, Explain, WinCond, PersonData, ChangeLog, Setting };
+  internal enum InfoPanelState { Explain, WinCond, PersonData, ChangeLog, Setting };
   private static readonly DispatcherQueue dispatcher = DispatcherQueue.GetForCurrentThread();
-  internal static readonly double fixModeWidth = 1000;
+  internal static readonly double fixModeMaxWidth = 1000;
   internal static readonly Size mapSize = new(2000,1750);
   private static readonly Point mapGridCount = new(9,10);
   internal static readonly GridLength infoFrameWidth = new(50);
@@ -42,7 +42,7 @@ public sealed partial class MainPage:Page {
     SetUIElements(page);
     AttachEvent(page);
     UI.RefreshViewMode(page);
-    UI.SwitchInfoButton(page,InfoPanelState.Instruction);
+    UI.SwitchInfoButton(page,InfoPanelState.Explain);
     static void SetUIElements(MainPage page) {
       page.AttackCrushFillColor.Background = new SolidColorBrush(ThresholdFillColor(AttackJudge.crush));
       page.AttackCrushEdgeColor.Background = new SolidColorBrush(ThresholdEdgeColor(AttackJudge.crush));
@@ -86,7 +86,6 @@ public sealed partial class MainPage:Page {
       page.Page.Loaded += (_,_) => LoadedPage(page);
       page.Page.PointerMoved += (_,e) => UI.MovePersonPanel(page,e);
       page.Page.PointerReleased += (_,e) => UI.PutPersonPanel(page);
-      page.InstructionButton.Click += (_,_) => UI.SwitchInfoButton(page,InfoPanelState.Instruction);
       page.ExplainButton.Click += (_,_) => UI.SwitchInfoButton(page,InfoPanelState.Explain);
       page.WinCondButton.Click += (_,_) => UI.SwitchInfoButton(page,InfoPanelState.WinCond);
       page.PersonDataButton.Click += (_,_) => UI.SwitchInfoButton(page,InfoPanelState.PersonData);
@@ -249,12 +248,12 @@ public sealed partial class MainPage:Page {
               new StackPanel().MySetChildren([
                 new TextBlock{ Text=game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.MyApplyF(scenario=>$"シナリオ:{game.NowScenario.Value}({scenario.StartYear}年開始 {scenario.EndYear}年終了)"),TextAlignment=TextAlignment.Center },
                 new TextBlock{ Text=$"首都:{Area.GetCapitalArea(game,pushCountry)}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"資金:{Country.GetFund(game,pushCountry)?.ToString("0.####")}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"内政力:{Country.GetAffairPower(game,pushCountry).ToString("0.####")}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"内政難度:{Country.GetAffairDifficult(game,pushCountry).ToString("0.####")}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"総内政値:{Country.GetTotalAffair(game,pushCountry).ToString("0.####")}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"支出:{Country.GetOutFund(game,pushCountry).ToString("0.####")}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"収入:{Country.GetInFund(game,pushCountry).ToString("0.####")}",TextAlignment=TextAlignment.Center },
+                new TextBlock{ Text=$"資金:{Country.GetFund(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
+                new TextBlock{ Text=$"内政力:{Country.GetAffairPower(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
+                new TextBlock{ Text=$"内政難度:{Country.GetAffairDifficult(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
+                new TextBlock{ Text=$"総内政値:{Country.GetTotalAffair(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
+                new TextBlock{ Text=$"支出:{Country.GetOutFund(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
+                new TextBlock{ Text=$"収入:{Country.GetInFund(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
                 new TextBlock{ Text=$"勝利条件:" },
                 new TextBlock{ Text=$"{game.CountryMap.GetValueOrDefault(pushCountry)?.WinConditionMessageFunc()}", Width=800, Height=double.NaN, TextWrapping=TextWrapping.Wrap },
                 new TextBlock{ Text=$"初期人物",TextAlignment=TextAlignment.Center  },
@@ -262,7 +261,7 @@ public sealed partial class MainPage:Page {
               ])
             ),
             new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center }.MySetChildren([
-              new Button { Width = 400,Height = 80,Background = UI.buttonBackground,Margin=new(10) }.MySetChild(new TextBlock { Text = "プレイする" }).MyApplyA(v => v.Click += (_, _) => { MainPage.game = SelectPlayCountry(page,game,pushCountry).MyApplyF(game=>StartGame(page,game)).MyApplyA(game=>UpdateCountryInfoPanel(page,game)); page.ExPanel.MySetChildren([]); }),
+              new Button { Width = 400,Height = 80,Background = UI.buttonBackground,Margin=new(10),IsEnabled=pushCountry!=ECountry.漢 }.MySetChild(new TextBlock { Text =pushCountry!=ECountry.漢?"プレイする":"(漢は選べません)" }).MyApplyA(v => v.Click += (_, _) => { MainPage.game = SelectPlayCountry(page,game,pushCountry).MyApplyF(game=>StartGame(page,game)).MyApplyA(game=>UpdateCountryInfoPanel(page,game)); page.ExPanel.MySetChildren([]); }),
               new Button { Width = 400,Height = 80,Background = UI.buttonBackground,Margin=new(10) }.MySetChild(new TextBlock { Text = "閉じる" }).MyApplyA(v => v.Click += (_, _) => page.ExPanel.MySetChildren([]))
             ])
           ])]);
@@ -322,7 +321,7 @@ public sealed partial class MainPage:Page {
         Foreground=new SolidColorBrush(Colors.Black),
         Background=new SolidColorBrush(Colors.White),
         Padding=new(20,0,10,0),
-        ItemContainerStyle = new Style(typeof(ComboBoxItem)).MyApplyA(style=>UI.GetScaleFactor(page).MyApplyA(scale=> style.Setters.Add(new Setter(FontSizeProperty,BasicStyle.fontsize*scale)))),
+        ItemContainerStyle = new Style(typeof(ComboBoxItem)).MyApplyA(style=>style.Setters.Add(new Setter(FontSizeProperty,BasicStyle.fontsize*UI.GetScaleFactor(page)))),
       }.MyApplyA(elem => GameInfo.scenarios.Select(v =>v.Value).ToList().ForEach(elem.Items.Add)).MyApplyA(v=>v.SelectionChanged+=(_,_) => (v.SelectedItem as string)?.MyApplyA(text => InitGame(page,new(text)))),
       new TextBlock { Text=game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.MyApplyF(v=>$"{v.StartYear}年開始{v.EndYear}年終了"),TextAlignment=TextAlignment.Center },
       new StackPanel{ Height=BasicStyle.textHeight*2 },
@@ -378,7 +377,7 @@ public sealed partial class MainPage:Page {
 #endif
     }
     static GameState EndPlanningPhase(MainPage page,GameState game) {
-      return game.MyApplyF(UpdateGame.AutoPutPostCPU).MyApplyF(CalcArmyTarget).MyApplyF(game => game with { Phase = Phase.Execution }).MyApplyA(game => UpdateAreaUI(page,game)).MyApplyF(game => Execution(page,game)).MyApplyA(game => UI.UpdateLogMessageUI(page,game));
+      return game.MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[ECountry.漢])).MyApplyF(CalcArmyTarget).MyApplyF(game => game with { Phase = Phase.Execution }).MyApplyA(game => UpdateAreaUI(page,game)).MyApplyF(game => Execution(page,game)).MyApplyA(game => UI.UpdateLogMessageUI(page,game));
       static GameState CalcArmyTarget(GameState game) {
         Dictionary<ECountry,EArea?> playerArmyTargetMap = game.PlayCountry.MyMaybeToList().Where(country => !Country.IsSleep(game,country)).ToDictionary(v => v,v => game.ArmyTargetMap.GetValueOrDefault(v));
         Dictionary<ECountry,EArea?> NPCArmyTargetMap = game.CountryMap.Keys.Except(game.PlayCountry.MyMaybeToList()).Where(country => !Country.IsSleep(game,country)).ToDictionary(country => country,country => country == ECountry.漢 ? null : RandomSelectNPCAttackTarget(game,country));
@@ -483,11 +482,11 @@ public sealed partial class MainPage:Page {
     internal static readonly Color buttonBackground = Color.FromArgb(175,255,255,255);
     internal static (Panel panel, Post post)? pointerover = null;
     internal static (Panel panel, Person person)? pick = null;
-    private static InfoPanelState showInfoPanelState = InfoPanelState.Instruction;
+    private static InfoPanelState showInfoPanelState = InfoPanelState.Explain;
     private static ViewMode viewMode = ViewMode.fix;
     private static List<ERole> onPointerCountryPostPanelElem = [];
     internal static double CalcFullWidthLength(string str) => str.Length - str.Where(v => v is '0' or '1' or '2' or '3' or '4' or '5' or '6' or '7' or '8' or '9' or '-' or '.').Count() * 0.4;
-    internal static double GetScaleFactor(MainPage page) => Math.Max(Math.Max(fixModeWidth,page.MainLayoutPanel.ActualWidth) / mapSize.Width,Math.Max(fixModeWidth,page.MainLayoutPanel.ActualHeight) / mapSize.Height);
+    internal static double GetScaleFactor(MainPage page) => Math.Max(Math.Max(fixModeMaxWidth,page.MainLayoutPanel.ActualWidth) / mapSize.Width,Math.Max(fixModeMaxWidth,page.MainLayoutPanel.ActualHeight) / mapSize.Height);
     internal static Color GetPostFrameColor(GameState game,EArea? area) => area != null && (game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.ChinaAreas ?? []).Contains(area.Value) ? Color.FromArgb(150,100,100,30) : Color.FromArgb(150,0,0,0);
     internal static void ResizeLogMessageUI(MainPage page,GameState game,double scaleFactor) {
       page.LogContentPanel.Margin = new(0,0,page.LogContentPanel.Width * (scaleFactor - 1),game.LogMessage.Length * BasicStyle.textHeight * (scaleFactor - 1));
@@ -537,7 +536,8 @@ public sealed partial class MainPage:Page {
       }.MySetChildren([
         new TextBlock() { Text = $"勝利条件({Turn.GetCalendarText(game)})" },
         .. winCondMap.Select(winCond => new StackPanel(){ Orientation = Orientation.Horizontal }.MySetChildren([
-          new TextBlock() { Text = $"{(!outputCheckString?"":winCond.Value? "✔ " : "❌ ")}{winCond.Key}" }
+          ..(outputCheckString?new Image() { Source = new SvgImageSource(new($"ms-appx:///Assets/Svg/{(winCond.Value? "checkOK.svg" : "checkNG.svg")}")),Width = BasicStyle.fontsize ,Height = BasicStyle.fontsize }:null).MyMaybeToList(),
+          new TextBlock() { Text = winCond.Key }
         ]))
       ]).MyApplyA(async elem => {
         elem.Opacity = 1;
@@ -555,24 +555,23 @@ public sealed partial class MainPage:Page {
     internal static void RefreshViewMode(MainPage page) {
       page.SwitchViewModeButtonText.Text = viewMode == ViewMode.fix ? "▼" : "▲";
       page.ViewModeText.Text = viewMode == ViewMode.fix ? "固定幅" : "ウィンドウフィット";
-      page.ContentGrid.Width = viewMode == ViewMode.fix ? fixModeWidth : double.NaN;
+      page.ContentGrid.MaxWidth = viewMode == ViewMode.fix ? fixModeMaxWidth : double.MaxValue;
       page.UpdateLayout();
       ScalingElements(page,game,GetScaleFactor(page));
     }
     internal static void SwitchInfoButton(MainPage page,InfoPanelState clickButtonInfoPanelState) {
       showInfoPanelState = clickButtonInfoPanelState;
-      page.InstructionPanel.Visibility = showInfoPanelState == InfoPanelState.Instruction ? Visibility.Visible : Visibility.Collapsed;
       page.ExplainPanel.Visibility = showInfoPanelState == InfoPanelState.Explain ? Visibility.Visible : Visibility.Collapsed;
       page.WinCondPanel.Visibility = showInfoPanelState == InfoPanelState.WinCond ? Visibility.Visible : Visibility.Collapsed;
       page.PersonDataPanel.Visibility = showInfoPanelState == InfoPanelState.PersonData ? Visibility.Visible : Visibility.Collapsed;
       page.ChangeLogPanel.Visibility = showInfoPanelState == InfoPanelState.ChangeLog ? Visibility.Visible : Visibility.Collapsed;
       page.SettingPanel.Visibility = showInfoPanelState == InfoPanelState.Setting ? Visibility.Visible : Visibility.Collapsed;
-      page.InstructionButton.Background = new SolidColorBrush(showInfoPanelState == InfoPanelState.Instruction ? Colors.LightGray : Colors.WhiteSmoke);
       page.ExplainButton.Background = new SolidColorBrush(showInfoPanelState == InfoPanelState.Explain ? Colors.LightGray : Colors.WhiteSmoke);
       page.WinCondButton.Background = new SolidColorBrush(showInfoPanelState == InfoPanelState.WinCond ? Colors.LightGray : Colors.WhiteSmoke);
       page.PersonDataButton.Background = new SolidColorBrush(showInfoPanelState == InfoPanelState.PersonData ? Colors.LightGray : Colors.WhiteSmoke);
       page.ChangeLogButton.Background = new SolidColorBrush(showInfoPanelState == InfoPanelState.ChangeLog ? Colors.LightGray : Colors.WhiteSmoke);
       page.SettingButton.Background = new SolidColorBrush(showInfoPanelState == InfoPanelState.Setting ? Colors.LightGray : Colors.WhiteSmoke);
+      page.UpdateLayout();
       ResizeInfoMessageUI(page,GetScaleFactor(page));
     }
     internal static void ScalingElements(MainPage page,GameState game,double scaleFactor) {

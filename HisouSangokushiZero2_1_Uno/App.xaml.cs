@@ -5,7 +5,10 @@ public partial class App:Application {
 	/// Initializes the singleton application object. This is the first line of authored code
 	/// executed, and as such is the logical equivalent of main() or WinMain().
 	/// </summary>
-	public App() { InitializeComponent(); }
+	public App() {
+    InitializeComponent();
+    FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/SourceHanSansJP-Medium.otf";
+  }
 	protected Window? MainWindow { get; private set; }
 	protected override void OnLaunched(LaunchActivatedEventArgs args) {
     MainWindow =new Window();
@@ -99,5 +102,5 @@ public partial class App:Application {
 		global::Uno.UI.Adapter.Microsoft.Extensions.Logging.LoggingAdapter.Initialize();
 #endif
 #endif
-	}
+  }
 }

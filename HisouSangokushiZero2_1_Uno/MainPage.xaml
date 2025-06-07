@@ -63,32 +63,25 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
               </Grid.ColumnDefinitions>
-              <Button Grid.Column="0" x:Name="InstructionButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
-                <TextBlock Text="操作説明"/>
-              </Button>
-              <Button Grid.Column="1" x:Name="ExplainButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
+              <Button Grid.Column="0" x:Name="ExplainButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
                 <TextBlock Text="ルール詳細"/>
               </Button>
-              <Button Grid.Column="2" x:Name="WinCondButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
+              <Button Grid.Column="1" x:Name="WinCondButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
                 <TextBlock Text="陣営ごとの勝利条件"/>
               </Button>
-              <Button Grid.Column="3" x:Name="PersonDataButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
+              <Button Grid.Column="2" x:Name="PersonDataButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
                 <TextBlock Text="人物・陣営データ"/>
               </Button>
-              <Button Grid.Column="4" x:Name="ChangeLogButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
+              <Button Grid.Column="3" x:Name="ChangeLogButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
                 <TextBlock Text="更新履歴"/>
               </Button>
-              <Button Grid.Column="5" x:Name="SettingButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
+              <Button Grid.Column="4" x:Name="SettingButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
                 <TextBlock Text="設定"/>
               </Button>
             </Grid>
-            <ScrollViewer x:Name="InfoScrollPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="6">
+            <ScrollViewer x:Name="InfoScrollPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5">
               <StackPanel x:Name="InfoContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top" Width="{x:Bind local:MainPage.infoTextWidth}">
-                <StackPanel x:Name="InstructionPanel" Visibility="Collapsed">
-                  <TextBlock FontFamily="{StaticResource Bold}" Text="(未記入)" HorizontalAlignment="Center"/>
-                </StackPanel>
                 <StackPanel x:Name="ExplainPanel" Visibility="Collapsed">
                   <TextBlock FontFamily="{StaticResource Bold}" Text="勝利・敗北について" HorizontalAlignment="Center"/>
                   <StackPanel HorizontalAlignment="Center">
@@ -287,7 +280,7 @@
                     <TextBlock Text="・役割にアイコンを割り当てた"/>
                     <TextBlock Text="・助力システムを実装、役割を変えることができるようになった"/>
                   </StackPanel>
-                  <TextBlock Text="2025/05/31 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
+                  <TextBlock Text="2025/06/07 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
                   <StackPanel Padding="20,0,0,0">
                     <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、陣営勝利条件の微調整、挙動の調整"/>
                     <TextBlock Text="・陣営勝利条件の達成による勝利はCPUが先に達成した場合は敗北に"/>

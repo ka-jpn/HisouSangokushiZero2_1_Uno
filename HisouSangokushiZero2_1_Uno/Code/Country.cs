@@ -5,8 +5,8 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class Country {
     internal static Color GetCountryColor(GameState game,ECountry? country) => country?.MyApplyF(game.CountryMap.GetValueOrDefault)?.ViewColor ?? Color.FromArgb(255,240,240,240);
 		internal static decimal GetTotalAffair(GameState game,ECountry country) => game.AreaMap.Where(v => v.Value.Country==country).Sum(v => v.Value.AffairParam.AffairNow*(v.Key==game.CountryMap.GetValueOrDefault(country)?.CapitalArea ? 1.5m : 1m));
-		internal static decimal GetAffairPower(GameState game,ECountry country) => Commander.GetAffairsCommander(game,country).MyApplyF(v => Commander.CommanderRank(game,v,ERole.affair)).MyApplyF(affairsRank => affairsRank/5m+1);
-		internal static decimal GetAffairDifficult(GameState game,ECountry country) => Math.Round((decimal)Math.Pow(GetAreaNum(game,country),0.5),4);
+		internal static decimal GetAffairPower(GameState game,ECountry? country) => Commander.GetAffairsCommander(game,country).MyApplyF(v => Commander.CommanderRank(game,v,ERole.affair)).MyApplyF(affairsRank => affairsRank/5m+1);
+		internal static decimal GetAffairDifficult(GameState game,ECountry? country) => Math.Round((decimal)Math.Pow(GetAreaNum(game,country),0.5),4);
 		internal static decimal GetInFund(GameState game,ECountry country) => GetAreaNum(game,country)==0 ? 0 : Math.Round(GetTotalAffair(game,country)*GetAffairPower(game,country)/GetAffairDifficult(game,country)+10m/GetAreaNum(game,country),4);
 		internal static decimal GetOutFund(GameState game,ECountry country) {
 			List<PersonParam> deployedPersonParams = [..Enum.GetValues<ERole>().SelectMany(role => Person.GetAlivePersonMap(game,country,role).ExceptBy(Person.GetWaitPostPersonMap(game,country,role).Keys,v => v.Key).Select(v => v.Value))];
@@ -17,8 +17,8 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 			return backCost+roleCost+affairCost+personCost;
 		}
 		internal static EArea? GetTargetArea(GameState game,ECountry? counry) => counry?.MyApplyF(game.ArmyTargetMap.GetValueOrDefault);
-    internal static List<EArea> GetAreas(GameState game,ECountry country) => [.. game.AreaMap.Where(v => v.Value.Country == country).Select(v => v.Key)];
-    internal static int GetAreaNum(GameState game,ECountry country) => GetAreas(game,country).Count;
+    internal static List<EArea> GetAreas(GameState game,ECountry? country) => [.. game.AreaMap.Where(v => v.Value.Country == country).Select(v => v.Key)];
+    internal static int GetAreaNum(GameState game,ECountry? country) => GetAreas(game,country).Count;
     internal static ECountry? GetAreaCountry(GameState game,EArea area) => game.AreaMap.GetValueOrDefault(area)?.Country;
 		internal static int? SuccessFindPersonRank(GameState game,ECountry country) {
 			decimal mainRank = Person.GetPostPerson(game,country,new(ERole.central,new(PostHead.main)))?.Value.MyApplyF(v => Person.CalcRank(v,ERole.central))??0;

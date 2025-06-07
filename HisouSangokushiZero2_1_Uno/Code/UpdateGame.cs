@@ -1,4 +1,5 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using static HisouSangokushiZero2_1_Uno.Code.Battle;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;
 using PostType = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
@@ -16,7 +17,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static GameState RemoveNaturalDeathPersonPost(GameState game) => game.CountryMap.Keys.SelectMany(country => Enum.GetValues<ERole>().SelectMany(role => Person.GetNaturalDeathPostPersonMap(game,country,role).Keys)).ToList().MyApplyF(deathPersons => RemoveDeathPersonPost(game,deathPersons,Text.NaturalDeathPersonText([.. deathPersons],Lang.ja)));
     internal static GameState RemoveWarDeathPersonPost(GameState game,List<PersonType> deathPersons) => RemoveDeathPersonPost(game,deathPersons,Text.WarDeathPersonText([.. deathPersons],Lang.ja));
     private static GameState RemoveDeathPersonPost(GameState game,List<PersonType> deathPersons,string? appendLog) => RemovePersonPost(game,deathPersons).MyApplyF(game => AppendLogMessage(game,[appendLog]));
-    internal static GameState AutoPutPostCPU(GameState game) => game.CountryMap.Keys.Except(game.PlayCountry.MyMaybeToList()).Except([ECountry.漢]).SelectMany(country => Enum.GetValues<ERole>().SelectMany(role => Post.GetAutoPutPost(game,country,role))).ToDictionary().MyApplyF(v => SetPersonPost(game,v));
+    internal static GameState AutoPutPostCPU(GameState game,ECountry[] exceptCountrys) => game.CountryMap.Keys.Except(game.PlayCountry.MyMaybeToList().Concat(exceptCountrys)).SelectMany(country => Enum.GetValues<ERole>().SelectMany(role => Post.GetAutoPutPost(game,country,role))).ToDictionary().MyApplyF(v => SetPersonPost(game,v));
 		internal static GameState PutPersonFromUI(GameState game,PersonType? putPerson,PostType? putPost) => putPerson!=null&&putPost!=null ? SetPersonPost(game,new() { { putPerson,putPost } }) : game;
 		internal static GameState AttachGameStartData(GameState game,ECountry? countryName) => countryName is ECountry country ? game with { PlayCountry=country,PlayTurn=0 } : game;
     internal static GameState AppendGameStartLog(GameState game) {
@@ -94,12 +95,18 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       static GameState AddAffair(GameState game) => game with {
         AreaMap = game.AreaMap.ToDictionary(area => area.Key,area => area.Value with {
           AffairParam = area.Value.AffairParam with {
-            AffairNow = Math.Clamp(Math.Round(area.Value.AffairParam.AffairNow + (area.Value.Country?.MyApplyF(country => Country.GetAffairPower(game,country) / Country.GetAffairDifficult(game,country)) ?? 0) * (game.PersonMap.MyNullable().FirstOrDefault(v => v?.Value.Post?.PostRole == ERole.affair && v?.Value.Post?.PostKind == new PostKind(area.Key))?.Value.MyApplyF(v => Person.CalcRank(v,ERole.affair)) ?? 0) * (1 - area.Value.AffairParam.AffairNow / area.Value.AffairParam.AffairsMax),4),0,area.Value.AffairParam.AffairsMax),
-            AffairsMax = Math.Round(area.Value.AffairParam.AffairsMax * 1.001m + 0.01m,4)
+            AffairNow = Math.Clamp(area.Value.AffairParam.AffairNow + AddNowAfair(game,area),0,area.Value.AffairParam.AffairsMax),
+            AffairsMax = area.Value.AffairParam.AffairsMax + Math.Round(area.Value.AffairParam.AffairsMax * 0.001m + 0.01m + AddNowAfair(game,area) * 0.05m,4)
           }
         })
       };
       static GameState RemoveDeathPersonPost(GameState game) => Turn.GetInYear(game) == BaseData.yearItems.Length / 2 ? RemoveNaturalDeathPersonPost(game) : game;
+      static decimal AddNowAfair(GameState game,KeyValuePair<EArea,AreaInfo> area) {
+        decimal countryAffairPower = Country.GetAffairPower(game,area.Value.Country) / Country.GetAffairDifficult(game,area.Value.Country);
+        decimal personAffairPower = game.PersonMap.MyNullable().FirstOrDefault(v => v?.Value.Post?.PostRole == ERole.affair && v?.Value.Post?.PostKind == new PostKind(area.Key))?.Value.MyApplyF(v => Person.CalcRank(v,ERole.affair))??0;
+        decimal areaAffairPower = 1 - area.Value.AffairParam.AffairNow / area.Value.AffairParam.AffairsMax;
+        return Math.Round(countryAffairPower * personAffairPower * areaAffairPower,4);
+      }
     }
     internal static GameState GameEndJudge(GameState game) {
       return SetWinCountrys(game).MyApplyF(game => IsPerish(game) ? PerishEnd(game) : IsWinEnd(game) ? WinEnd(game) : IsOtherWinEnd(game) ? OtherWinEnd(game) : IsTurnLimitOver(game) ? TurnLimitOverEnd(game) : game);
