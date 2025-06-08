@@ -14,6 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 		README.md = README.md
 	EndProjectSection
+	ProjectSection(FolderGlobals) = preProject
+		D_5_4desktop_4HisouSangokushiZero2_31_3Uno_4global_1json__JsonSchema = 
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

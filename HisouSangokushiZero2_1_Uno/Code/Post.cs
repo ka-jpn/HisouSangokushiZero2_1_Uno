@@ -2,6 +2,8 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using PostType = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;
 using System.Data;
+using System.Linq;
+using System.Collections.Generic;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class Post {																																																																			
 		private static List<PostType> GetCapitalRolePosts(ECountry country,ERole role) => country==ECountry.漢 ? [] : [new PostType(role,new(PostHead.main)),new PostType(role,new(PostHead.sub))];

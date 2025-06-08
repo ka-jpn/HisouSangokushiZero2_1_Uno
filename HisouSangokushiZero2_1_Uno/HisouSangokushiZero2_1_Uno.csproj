@@ -3,8 +3,7 @@
 		<TargetFrameworks>net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
 
 		<OutputType>Exe</OutputType>
-		<UnoSingleProject>true</UnoSingleProject>
-
+		<UnoSingleProject>true</UnoSingleProject>		
 		<!-- Display name -->
 		<ApplicationTitle>HisouSangokushiZero2_1_Uno</ApplicationTitle>
 		<!-- App Identifier -->
@@ -16,7 +15,6 @@
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
 		<Description>HisouSangokushiZero2_1_Uno powered by Uno Platform.</Description>
-
 		<!--
       UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
       https://aka.platform.uno/singleproject-features
@@ -30,8 +28,20 @@
 		<PackageCertificateThumbprint>5956E064D89E03046852D192A86E07739DF29AD5</PackageCertificateThumbprint>
 		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 	</PropertyGroup>
+	<PropertyGroup>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
+		<UnoDragDropExternalSupport>false</UnoDragDropExternalSupport>
+		<WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
+		<PublishTrimmed>true</PublishTrimmed>
+		<RunAOTCompilationAfterBuild>true</RunAOTCompilationAfterBuild>
+	</PropertyGroup>
 	<ItemGroup>
-		<UnoIcon Include="Assets\Icons\icon.svg" />
+	  <None Remove="Assets\Icons\icon.svg" />
+	</ItemGroup>
+	<ItemGroup>
+		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=512m,nursery-size=64m,evacuation-threshold=66,major=marksweep" />
+		<BlazorLinkerDescriptor Include="LinkerConfig.xml" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Uno.Sdk">
@@ -45,9 +55,10 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>
+	<ItemGroup>
+	  <UnoIcon Include="Assets\Icons\icon.svg" />
+	</ItemGroup>
 	<ProjectExtensions>
-		<VisualStudio>
-			<UserProperties properties_4launchsettings_1json__JsonSchema="" />
-		</VisualStudio>
+		<VisualStudio><UserProperties platforms_4webassembly_4manifest_1webmanifest__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio>
 	</ProjectExtensions>
 </Project>

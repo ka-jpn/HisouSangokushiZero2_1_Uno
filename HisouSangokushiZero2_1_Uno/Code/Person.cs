@@ -2,6 +2,9 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using PostType = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 namespace HisouSangokushiZero2_1_Uno.Code {
   internal static class Person {
     private static bool IsInitPerson(GameState game,PersonParam personParam) => GetAppearYear(personParam) < Turn.GetYear(game);

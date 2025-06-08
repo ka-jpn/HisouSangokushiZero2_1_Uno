@@ -1,4 +1,6 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using System.Collections.Generic;
+using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class GetGame {

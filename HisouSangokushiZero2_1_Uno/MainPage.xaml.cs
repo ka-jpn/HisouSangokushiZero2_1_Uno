@@ -1,9 +1,16 @@
 using HisouSangokushiZero2_1_Uno.Code;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Shapes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Windows.UI;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;

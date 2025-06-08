@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Windows.UI;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	public static class DefType {

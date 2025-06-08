@@ -1,4 +1,5 @@
-using static HisouSangokushiZero2_1_Uno.Code.Battle;
+using System.Collections.Generic;
+using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using CommanderType = HisouSangokushiZero2_1_Uno.Code.DefType.Commander;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;

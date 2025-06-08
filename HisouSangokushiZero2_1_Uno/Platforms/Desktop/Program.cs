@@ -1,10 +1,9 @@
 using HisouSangokushiZero2_1_Uno;
+using System;
 using Uno.UI.Hosting;
 internal class Program {
-  [STAThread]
-  public static void Main(string[] args) {
+  [STAThread]public static void Main(string[] _) {
     App.InitializeLogging();
-
     var host = UnoPlatformHostBuilder.Create()
         .App(() => new App())
         .UseX11()
@@ -12,7 +11,6 @@ internal class Program {
         .UseMacOS()
         .UseWin32()
         .Build();
-
     host.Run();
   }
 }

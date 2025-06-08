@@ -1,4 +1,6 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using System.Collections.Generic;
+using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using Point = HisouSangokushiZero2_1_Uno.Code.DefType.Point;
 namespace HisouSangokushiZero2_1_Uno.Code;

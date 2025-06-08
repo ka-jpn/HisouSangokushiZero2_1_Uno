@@ -1,5 +1,7 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
-
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using System.Collections.Generic;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class UIUtil {
 

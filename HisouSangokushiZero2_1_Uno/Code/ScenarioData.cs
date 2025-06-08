@@ -1,5 +1,8 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.UI;
 using static HisouSangokushiZero2_1_Uno.Code.Battle;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;

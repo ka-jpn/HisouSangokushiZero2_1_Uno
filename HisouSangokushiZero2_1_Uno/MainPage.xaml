@@ -280,7 +280,7 @@
                     <TextBlock Text="・役割にアイコンを割り当てた"/>
                     <TextBlock Text="・助力システムを実装、役割を変えることができるようになった"/>
                   </StackPanel>
-                  <TextBlock Text="2025/06/07 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
+                  <TextBlock Text="2025/06/08 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
                   <StackPanel Padding="20,0,0,0">
                     <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、陣営勝利条件の微調整、挙動の調整"/>
                     <TextBlock Text="・陣営勝利条件の達成による勝利はCPUが先に達成した場合は敗北に"/>
