@@ -285,6 +285,7 @@
                     <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、陣営勝利条件の微調整、挙動の調整"/>
                     <TextBlock Text="・陣営勝利条件の達成による勝利はCPUが先に達成した場合は敗北に"/>
                   </StackPanel>
+                  <TextBlock Text="2025/06/09 ver1.2 スマホでプレイする際にレイアウトが崩れていたのに対処"/>
                 </StackPanel>
                 <StackPanel x:Name="SettingPanel" Visibility="Collapsed">
                   <Button x:Name="InitGameButton" Width="500" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black" Padding="30" Margin="20">
@@ -335,7 +336,7 @@
       </Canvas>
     </Grid>
     <Canvas x:Name="MovePersonCanvas"/>
-    <StackPanel x:Name="ExPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Background="WhiteSmoke"/>
+    <StackPanel x:Name="ExPanel" HorizontalAlignment="Center" VerticalAlignment="Center"/>
   </Grid>
 </Page>
   

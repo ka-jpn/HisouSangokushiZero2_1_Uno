@@ -9,8 +9,8 @@
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.HisouSangokushiZero2_1_Uno</ApplicationId>
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
+		<ApplicationVersion>1.1</ApplicationVersion>
 		<!-- Package Publisher -->
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
@@ -51,12 +51,12 @@
 		<PackageReference Include="Uno.WinUI.Svg" />
 	</ItemGroup>
 	<ItemGroup>
+	  <UnoIcon Include="Assets\Icons\icon.svg" />
+	</ItemGroup>
+	<ItemGroup>
 		<Page Update="BasicStyle.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <UnoIcon Include="Assets\Icons\icon.svg" />
 	</ItemGroup>
 	<ProjectExtensions>
 		<VisualStudio><UserProperties platforms_4webassembly_4manifest_1webmanifest__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio>

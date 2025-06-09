@@ -50,6 +50,7 @@ public sealed partial class MainPage:Page {
     AttachEvent(page);
     UI.RefreshViewMode(page);
     UI.SwitchInfoButton(page,InfoPanelState.Explain);
+    UI.UpdateCountryPostPanelZIndex(page,ERole.central);
     static void SetUIElements(MainPage page) {
       page.AttackCrushFillColor.Background = new SolidColorBrush(ThresholdFillColor(AttackJudge.crush));
       page.AttackCrushEdgeColor.Background = new SolidColorBrush(ThresholdEdgeColor(AttackJudge.crush));
@@ -105,10 +106,10 @@ public sealed partial class MainPage:Page {
       page.CountryAffairPostPanel.PointerEntered += (_,_) => UI.PointerEnterCountryPostPanel(page,ERole.affair);
       page.CountryDefensePostPanel.PointerEntered += (_,_) => UI.PointerEnterCountryPostPanel(page,ERole.defense);
       page.CountryAttackPostPanel.PointerEntered += (_,_) => UI.PointerEnterCountryPostPanel(page,ERole.attack);
-      page.CountryCentralPostPanel.PointerExited += (_,_) => UI.PointerExitCountryPostPanel(page,ERole.central);
-      page.CountryAffairPostPanel.PointerExited += (_,_) => UI.PointerExitCountryPostPanel(page,ERole.affair);
-      page.CountryDefensePostPanel.PointerExited += (_,_) => UI.PointerExitCountryPostPanel(page,ERole.defense);
-      page.CountryAttackPostPanel.PointerExited += (_,_) => UI.PointerExitCountryPostPanel(page,ERole.attack);
+      page.CountryCentralPostPanel.PointerPressed += (_,e) => { if(e.Pointer.PointerDeviceType != Microsoft.UI.Input.PointerDeviceType.Mouse) UI.PointerEnterCountryPostPanel(page,ERole.central); };
+      page.CountryAffairPostPanel.PointerPressed += (_,e) => { if(e.Pointer.PointerDeviceType != Microsoft.UI.Input.PointerDeviceType.Mouse) UI.PointerEnterCountryPostPanel(page,ERole.affair); };
+      page.CountryDefensePostPanel.PointerPressed += (_,e) => { if(e.Pointer.PointerDeviceType != Microsoft.UI.Input.PointerDeviceType.Mouse) UI.PointerEnterCountryPostPanel(page,ERole.defense); };
+      page.CountryAttackPostPanel.PointerPressed += (_,e) => { if(e.Pointer.PointerDeviceType != Microsoft.UI.Input.PointerDeviceType.Mouse) UI.PointerEnterCountryPostPanel(page,ERole.attack); };
       static void ClickOpenLogButton(MainPage page) => (page.LogScrollPanel.Visibility = page.LogScrollPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible).MyApplyA(v => page.InfoPanel.Visibility = Visibility.Collapsed);
       static void ClickOpenInfoButton(MainPage page) => (page.InfoPanel.Visibility = page.InfoPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible).MyApplyA(v => page.LogScrollPanel.Visibility = Visibility.Collapsed);
       static void LoadedPage(MainPage page) {
@@ -222,15 +223,15 @@ public sealed partial class MainPage:Page {
       return Area.GetAreaPoint(game,road.From,mapSize,areaSize,mapGridCount,infoFrameWidth.Value) is Point from && Area.GetAreaPoint(game,road.To,mapSize,areaSize,mapGridCount,infoFrameWidth.Value) is Point to ? CreateRoadLine(road,from,to) : null;
       static Line CreateRoadLine(ScenarioData.Road road,Point from,Point to) => new() { X1 = from.X,Y1 = from.Y,X2 = to.X,Y2 = to.Y,Stroke = new SolidColorBrush(road.Kind == RoadKind.land ? landRoadColor : waterRoadColor),StrokeThickness = 10 * Math.Pow(road.Easiness,1.7) / 2 + 20 };
     }
-    static Grid CreateAreaPanel(MainPage page,GameState game,KeyValuePair<EArea,AreaInfo> info) {
-      double capitalBorderWidth = 3;
-      Grid areaPanel = new() { Width = areaSize.Width,Height = areaSize.Height,CornerRadius = areaCornerRadius };
-      Border areaBorder = new() { Width = areaSize.Width,Height = areaSize.Height,BorderThickness = new(game.CountryMap.Values.Select(v => v.CapitalArea).Contains(info.Key) ? capitalBorderWidth : 0),CornerRadius = areaCornerRadius,BorderBrush = new SolidColorBrush(Colors.Red),Background = new SolidColorBrush(Country.GetCountryColor(game,info.Value.Country)) };
-      Grid areaBackPanel = new() { Width = areaSize.Width,Height = areaSize.Height,Background = new SolidColorBrush(Area.IsPlayerSelectable(game,info.Key) ? Colors.Transparent : Color.FromArgb(100,100,100,100)) };
+    static Button CreateAreaPanel(MainPage page,GameState game,KeyValuePair<EArea,AreaInfo> info) {
+      double capitalBorderWidth = 3.5;
+      Button areaPanel = new() { Width = areaSize.Width,Height = areaSize.Height,CornerRadius = areaCornerRadius };
+      Border areaBorder = new() { Width = areaSize.Width,Height = areaSize.Height,BorderThickness = new(game.CountryMap.Values.Select(v => v.CapitalArea).Contains(info.Key)?capitalBorderWidth:0),CornerRadius = areaCornerRadius,BorderBrush = new SolidColorBrush(Colors.Red),Background = new SolidColorBrush(Country.GetCountryColor(game,info.Value.Country)) };
+      Grid areaWrapPanel = new() { Width = areaSize.Width,Height = areaSize.Height,Background = new SolidColorBrush(Area.IsPlayerSelectable(game,info.Key) ? Colors.Transparent : Color.FromArgb(100,100,100,100)) };
       StackPanel areaInnerPanel = new() { Width = areaSize.Width,VerticalAlignment = VerticalAlignment.Center };
       Area.GetAreaPoint(game,info.Key,mapSize,areaSize,mapGridCount,infoFrameWidth.Value)?.MyApplyA(v => Canvas.SetLeft(areaPanel,v.X - areaSize.Width / 2)).MyApplyA(v => Canvas.SetTop(areaPanel,v.Y - areaSize.Height / 2));
-      areaPanel.PointerPressed += (_,_) => MainPage.game = PushAreaPanel(page,MainPage.game,info);
-      return areaPanel.MySetChildren([areaBorder,areaBackPanel,areaInnerPanel.MySetChildren(GetAreaElems(page,game,info))]);
+      areaPanel.Click += (_,_) => MainPage.game = PushAreaPanel(page,MainPage.game,info);
+      return areaPanel.MySetChild(new Grid().MySetChildren([areaBorder,areaInnerPanel.MySetChildren(GetAreaElems(page,game,info)),areaWrapPanel]));
       static List<UIElement> GetAreaElems(MainPage page,GameState game,KeyValuePair<EArea,AreaInfo> areaInfo) => [
         new StackPanel { HorizontalAlignment=HorizontalAlignment.Center,Orientation=Orientation.Horizontal}.MySetChildren([
           new TextBlock { Text=areaInfo.Key.ToString() },
@@ -249,31 +250,25 @@ public sealed partial class MainPage:Page {
       static GameState PushAreaPanel(MainPage page,GameState game,KeyValuePair<EArea,AreaInfo> areaInfo) {
         return game.Phase == Phase.Starting ? areaInfo.Value.Country?.MyApplyF(country => ShowSelectPlayCountryPanel(page,game,country)) ?? game : Area.IsPlayerSelectable(game,areaInfo.Key) ? SelectTarget(page,game,areaInfo.Value.Country != game.PlayCountry ? areaInfo.Key : null) : game;
         static GameState ShowSelectPlayCountryPanel(MainPage page,GameState game,ECountry pushCountry) {
-          page.ExPanel.MySetChildren([new StackPanel().MySetChildren([
-            new TextBlock { Text = $"{pushCountry}陣営", HorizontalAlignment = HorizontalAlignment.Center,Margin=new(10) },
-            new ScrollViewer { Height = BasicStyle.textHeight*15,Margin=new(10,0),Background=new SolidColorBrush(Colors.White) }.MySetChild(
-              new StackPanel().MySetChildren([
-                new TextBlock{ Text=game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.MyApplyF(scenario=>$"シナリオ:{game.NowScenario.Value}({scenario.StartYear}年開始 {scenario.EndYear}年終了)"),TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"首都:{Area.GetCapitalArea(game,pushCountry)}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"資金:{Country.GetFund(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"内政力:{Country.GetAffairPower(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"内政難度:{Country.GetAffairDifficult(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"総内政値:{Country.GetTotalAffair(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"支出:{Country.GetOutFund(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"収入:{Country.GetInFund(game,pushCountry):0.####}",TextAlignment=TextAlignment.Center },
-                new TextBlock{ Text=$"勝利条件:" },
-                new TextBlock{ Text=$"{game.CountryMap.GetValueOrDefault(pushCountry)?.WinConditionMessageFunc()}", Width=800, Height=double.NaN, TextWrapping=TextWrapping.Wrap },
-                new TextBlock{ Text=$"初期人物",TextAlignment=TextAlignment.Center  },
-                .. Enum.GetValues<ERole>().SelectMany(role=>Code.Person.GetInitPersonMap(game,pushCountry,role).OrderBy(v=>v.Value.BirthYear).Select(v => new TextBlock { Text = $"{v.Key.Value}  {Code.Text.RoleToText(v.Value.Role,Lang.ja)} ランク{v.Value.Rank} 齢{Turn.GetYear(game)-v.Value.BirthYear}",TextAlignment=TextAlignment.Center  })),
-              ])
-            ),
-            new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center }.MySetChildren([
-              new Button { Width = 400,Height = 80,Background = UI.buttonBackground,Margin=new(10),IsEnabled=pushCountry!=ECountry.漢 }.MySetChild(new TextBlock { Text =pushCountry!=ECountry.漢?"プレイする":"(漢は選べません)" }).MyApplyA(v => v.Click += (_, _) => { MainPage.game = SelectPlayCountry(page,game,pushCountry).MyApplyF(game=>StartGame(page,game)).MyApplyA(game=>UpdateCountryInfoPanel(page,game)); page.ExPanel.MySetChildren([]); }),
-              new Button { Width = 400,Height = 80,Background = UI.buttonBackground,Margin=new(10) }.MySetChild(new TextBlock { Text = "閉じる" }).MyApplyA(v => v.Click += (_, _) => page.ExPanel.MySetChildren([]))
-            ])
-          ])]);
-          page.UpdateLayout();
-          UI.ResizeExPanelUI(page,UI.GetScaleFactor(page));
+          string title = $"{pushCountry}陣営";
+          TextBlock[] content = [
+            new TextBlock{ Text=game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.MyApplyF(scenario=>$"シナリオ:{game.NowScenario.Value}({scenario.StartYear}年開始 {scenario.EndYear}年終了)"),HorizontalAlignment=HorizontalAlignment.Center },
+            new TextBlock{ Text=$"首都:{Area.GetCapitalArea(game,pushCountry)}",HorizontalAlignment=HorizontalAlignment.Center },
+            new TextBlock{ Text=$"資金:{Country.GetFund(game,pushCountry):0.####}",HorizontalAlignment = HorizontalAlignment.Center },
+            new TextBlock{ Text=$"内政力:{Country.GetAffairPower(game,pushCountry):0.####}",HorizontalAlignment = HorizontalAlignment.Center },
+            new TextBlock{ Text=$"内政難度:{Country.GetAffairDifficult(game,pushCountry):0.####}",HorizontalAlignment = HorizontalAlignment.Center },
+            new TextBlock{ Text=$"総内政値:{Country.GetTotalAffair(game,pushCountry):0.####}",HorizontalAlignment = HorizontalAlignment.Center },
+            new TextBlock{ Text=$"支出:{Country.GetOutFund(game,pushCountry):0.####}",HorizontalAlignment = HorizontalAlignment.Center },
+            new TextBlock{ Text=$"収入:{Country.GetInFund(game,pushCountry):0.####}",HorizontalAlignment = HorizontalAlignment.Center },
+            new TextBlock{ Text=$"勝利条件:" },
+            new TextBlock{ Text=$"{game.CountryMap.GetValueOrDefault(pushCountry)?.WinConditionMessageFunc()}",HorizontalAlignment = HorizontalAlignment.Center, Height=double.NaN, TextWrapping=TextWrapping.Wrap },
+            new TextBlock{ Text=$"初期人物",HorizontalAlignment = HorizontalAlignment.Center  },
+            .. Enum.GetValues<ERole>().SelectMany(role=>Code.Person.GetInitPersonMap(game,pushCountry,role).OrderBy(v=>v.Value.BirthYear).Select(v => new TextBlock { Text = $"{v.Key.Value}  {Code.Text.RoleToText(v.Value.Role,Lang.ja)} ランク{v.Value.Rank} 齢{Turn.GetYear(game)-v.Value.BirthYear}",HorizontalAlignment=HorizontalAlignment.Center  })),
+          ];
+          string okButtonText = pushCountry != ECountry.漢 ? "プレイする" : "(漢は選べません)";
+          RoutedEventHandler clickOkButtonEvent = (_,_) => { MainPage.game = SelectPlayCountry(page,game,pushCountry).MyApplyF(game => StartGame(page,game)).MyApplyA(game => UpdateCountryInfoPanel(page,game)); page.ExPanel.MySetChildren([]); };
+          bool enableOkButton = pushCountry != ECountry.漢;
+          UI.SetExPanel(page,title,content,okButtonText,clickOkButtonEvent,enableOkButton);
           return game;
           static GameState SelectPlayCountry(MainPage page,GameState game,ECountry playCountry) => UpdateGame.AttachGameStartData(game,playCountry).MyApplyA(game => UpdateCountryPostPersons(page,game));
           static GameState StartGame(MainPage page,GameState game) => (game with { Phase = Phase.Planning }).MyApplyA(v => UpdateAreaUI(page,v)).MyApplyF(UpdateGame.AppendGameStartLog).MyApplyA(game => UI.UpdateLogMessageUI(page,game)).MyApplyA(game => UI.UpdateTurnLogUI(page,game)).MyApplyA(game => UI.UpdateTurnWinCondUI(page,game,false));
@@ -360,20 +355,11 @@ public sealed partial class MainPage:Page {
       new Button() { HorizontalAlignment = HorizontalAlignment.Stretch,Background = new SolidColorBrush(Color.FromArgb(100,100,100,100)),Height = BasicStyle.textHeight * 5.5 }.MySetChild(new TextBlock { Text = "ゲームログを表示" }).MyApplyA(button=>button.Click += (_,_) => ShowGameEndLogButtonClick(page,game))
     ];
     static void ShowGameEndLogButtonClick(MainPage page,GameState game) {
-      page.ExPanel.MySetChildren([new StackPanel().MySetChildren([
-        new TextBlock { Text = "ゲームログ",TextAlignment = TextAlignment.Center,Margin=new(10) },
-        new ScrollViewer { Height = BasicStyle.textHeight*15,Margin=new(10,0),Background=new SolidColorBrush(Colors.White) }.MySetChild(
-          new StackPanel().MySetChildren([
-           ..game.GameLog.Select(log=> new TextBlock { Text = log, TextWrapping=TextWrapping.Wrap, Width=800, Height = double.NaN })
-          ])
-        ),
-        new StackPanel { Orientation = Orientation.Horizontal,HorizontalAlignment = HorizontalAlignment.Center,Margin=new(10)  }.MySetChildren([
-          new Button { Width = 400,Height = 80,Background = UI.buttonBackground,Margin=new(10) }.MySetChild(new TextBlock { Text = "ゲームコメントを投稿する" }).MyApplyA(v => v.Click += (_,_) => LogButtonClick(game)),
-          new Button { Width = 400,Height = 80,Background = UI.buttonBackground,Margin=new(10) }.MySetChild(new TextBlock { Text = "閉じる" }).MyApplyA(v => v.Click += (_,_) => page.ExPanel.MySetChildren([]))
-        ])
-      ])]);
-      page.UpdateLayout();
-      UI.ResizeExPanelUI(page,UI.GetScaleFactor(page));
+      string title = $"ゲームログ";
+      TextBlock[] content = [.. game.GameLog.Select(log => new TextBlock { Text = log,TextWrapping = TextWrapping.Wrap,Height = double.NaN })];
+      string okButtonText = "ゲームコメントを投稿する";
+      RoutedEventHandler clickOkButtonEvent = (_,_) => LogButtonClick(game);
+      UI.SetExPanel(page,title,content,okButtonText,clickOkButtonEvent,true);
     }
     static void LogButtonClick(GameState game) {
       string url = $"https://karintougames.com/siteContents/gameComment.php?caption={GameInfo.name.Value} ver.{GameInfo.version.Value}&comment={HttpUtility.UrlEncode(string.Join('\n',game.GameLog))}";
@@ -491,7 +477,6 @@ public sealed partial class MainPage:Page {
     internal static (Panel panel, Person person)? pick = null;
     private static InfoPanelState showInfoPanelState = InfoPanelState.Explain;
     private static ViewMode viewMode = ViewMode.fix;
-    private static List<ERole> onPointerCountryPostPanelElem = [];
     internal static double CalcFullWidthLength(string str) => str.Length - str.Where(v => v is '0' or '1' or '2' or '3' or '4' or '5' or '6' or '7' or '8' or '9' or '-' or '.').Count() * 0.4;
     internal static double GetScaleFactor(MainPage page) => Math.Max(Math.Max(fixModeMaxWidth,page.MainLayoutPanel.ActualWidth) / mapSize.Width,Math.Max(fixModeMaxWidth,page.MainLayoutPanel.ActualHeight) / mapSize.Height);
     internal static Color GetPostFrameColor(GameState game,EArea? area) => area != null && (game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.ChinaAreas ?? []).Contains(area.Value) ? Color.FromArgb(150,100,100,30) : Color.FromArgb(150,0,0,0);
@@ -510,9 +495,6 @@ public sealed partial class MainPage:Page {
     }
     internal static void ResizeTurnWinCondPanelUI(MainPage page,double scaleFactor) {
       page.TurnWinCondPanel.RenderTransform = new ScaleTransform() { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = page.TurnWinCondPanel.ActualWidth / 2 };
-    }
-    internal static void ResizeExPanelUI(MainPage page,double scaleFactor) {
-      page.ExPanel.RenderTransform = new ScaleTransform() { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = page.ExPanel.ActualWidth / 2,CenterY = page.ExPanel.ActualHeight / 2 };
     }
     internal static void UpdateLogMessageUI(MainPage page,GameState game) {
       page.LogContentPanel.MySetChildren([.. game.LogMessage.Select(logText => new TextBlock() { Text = logText })]);
@@ -556,7 +538,7 @@ public sealed partial class MainPage:Page {
         page.TurnWinCondPanel.Children.Remove(elem);
       });
       page.TurnWinCondPanel.Children.Add(panel);
-      page.UpdateLayout();
+      page.TurnWinCondPanel.UpdateLayout();
       ResizeTurnWinCondPanelUI(page,GetScaleFactor(page));
     }
     internal static void RefreshViewMode(MainPage page) {
@@ -601,8 +583,7 @@ public sealed partial class MainPage:Page {
       page.TurnLogPanel.Margin = new(infoFrameWidth.Value * scaleFactor,0,0,0);
       page.TurnLogPanel.RenderTransform = new ScaleTransform() { ScaleX = scaleFactor,ScaleY = scaleFactor };
       page.TurnWinCondPanel.Margin = new(0,infoFrameWidth.Value * scaleFactor,0,0);
-      ResizeTurnWinCondPanelUI(page,GetScaleFactor(page));
-      ResizeExPanelUI(page,GetScaleFactor(page));
+      ResizeTurnWinCondPanelUI(page,scaleFactor);
       ResizeCountryPostUI(page,scaleFactor);
       ResizeLogMessageUI(page,game,scaleFactor);
       ResizeInfoMessageUI(page,scaleFactor);
@@ -636,25 +617,57 @@ public sealed partial class MainPage:Page {
       }
     }
     internal static void PointerEnterCountryPostPanel(MainPage page,ERole target) {
-      Dictionary<ERole,StackPanel> hideHittestElemMap = GetPanelRoleMap(page).MyApplyA(v => v.Remove(target));
-      onPointerCountryPostPanelElem = [.. onPointerCountryPostPanelElem.Concat([target])];
-      UpdateCountryPostPanelZIndex(page);
-      hideHittestElemMap.Values.ToList().ForEach(v => v.IsHitTestVisible = false);
+      UpdateCountryPostPanelZIndex(page,target);
     }
-    internal static void PointerExitCountryPostPanel(MainPage page,ERole target) {
-      Dictionary<ERole,StackPanel> showHittestElemMap = GetPanelRoleMap(page).MyApplyA(v => v.Remove(target));
-      onPointerCountryPostPanelElem = [.. onPointerCountryPostPanelElem.Except([target])];
-      UpdateCountryPostPanelZIndex(page);
-      showHittestElemMap.Values.ToList().ForEach(v => v.IsHitTestVisible = true);
-    }
-    private static void UpdateCountryPostPanelZIndex(MainPage page) {
+    internal static void UpdateCountryPostPanelZIndex(MainPage page,ERole activeRoles) {
       Dictionary<ERole,StackPanel> panelRoleMap = GetPanelRoleMap(page);
-      ERole? maybeTarget = onPointerCountryPostPanelElem.OrderByDescending(v => Canvas.GetZIndex(panelRoleMap.GetValueOrDefault(v))).MyNullable().FirstOrDefault();
-      maybeTarget?.MyApplyA(target => panelRoleMap.ToList().ForEach(v => Canvas.SetZIndex(v.Value,GetNewPiecePanelZIndex(target,v.Key))));
+      page.CountryPostsPanel.MySetChildren([.. panelRoleMap.OrderBy(v => GetNewPiecePanelZIndex(activeRoles,v.Key)).Select(v => v.Value)]);
       static int GetNewPiecePanelZIndex(ERole focus,ERole elem) {
         return elem switch { ERole.central => focus == ERole.central ? 3 : 0, ERole.affair => focus is ERole.central or ERole.affair ? 2 : 1, ERole.defense => focus is ERole.central or ERole.affair ? 1 : 2, ERole.attack => focus == ERole.attack ? 3 : 0 };
       }
     }
     private static Dictionary<ERole,StackPanel> GetPanelRoleMap(MainPage page) => new() { { ERole.central,page.CountryCentralPostPanel },{ ERole.affair,page.CountryAffairPostPanel },{ ERole.defense,page.CountryDefensePostPanel },{ ERole.attack,page.CountryAttackPostPanel } };
+    internal static void SetExPanel(MainPage page,string title,TextBlock[] contents,string okButtonText,RoutedEventHandler clickOkButtonEvent,bool enableOkButton) {
+      double scaleFactor = GetScaleFactor(page);
+      RoutedEventHandler clickCloseButtonEvent = (_,_) => page.ExPanel.MySetChildren([]);
+      Button okButton = new Button { Height = 80,Background = buttonBackground,Margin = new(10),IsEnabled = enableOkButton }.MySetChild(new TextBlock { Text = okButtonText });
+      Button closeButton = new Button { Height = 80,Background = buttonBackground,Margin = new(10) }.MySetChild(new TextBlock { Text = "閉じる" });
+      TextBlock titleTextBlock = new() { Text = title,HorizontalAlignment = HorizontalAlignment.Center };
+      StackPanel contentsPanel = new StackPanel { }.MySetChildren([.. contents]);
+      ScrollViewer contentsView = new ScrollViewer { Height = BasicStyle.textHeight * 15,Margin=new(0,5), Background = new SolidColorBrush(Colors.White) }.MySetChild(contentsPanel);
+      StackPanel buttonPanel = new StackPanel { Orientation = Orientation.Horizontal,HorizontalAlignment = HorizontalAlignment.Center }.MySetChildren([okButton,new StackPanel { Margin = new(5) },closeButton]);
+      page.ExPanel.MySetChildren([new StackPanel { Padding = new(5),Background=new SolidColorBrush(Color.FromArgb(255,230,230,230)) }.MySetChildren([titleTextBlock,contentsView,buttonPanel])]);
+      okButton.Click += clickOkButtonEvent;
+      okButton.Click += ClickButtonEventCeanUp;
+      closeButton.Click += clickCloseButtonEvent;
+      closeButton.Click += ClickButtonEventCeanUp;
+      page.ContentGrid.SizeChanged += ExPanelSizeChangedEvent;
+      ResizeExPanelElem(page,titleTextBlock,contentsView,contentsPanel,buttonPanel,okButton,closeButton);
+      void ClickButtonEventCeanUp(object _,RoutedEventArgs e) {
+        okButton.Click -= clickOkButtonEvent;
+        okButton.Click -= ClickButtonEventCeanUp;
+        closeButton.Click -= clickCloseButtonEvent;
+        closeButton.Click -= ClickButtonEventCeanUp;
+        page.SizeChanged -= ExPanelSizeChangedEvent;
+      }
+      void ExPanelSizeChangedEvent(object _,SizeChangedEventArgs e) => ResizeExPanelElem(page,titleTextBlock,contentsView,contentsPanel,buttonPanel,okButton,closeButton);
+      static void ResizeExPanelElem(MainPage page,TextBlock titleTextBlock,ScrollViewer contentsView,StackPanel contentsPanel,StackPanel buttonPanel,Button okButton,Button closeButton) {
+        double scaleFactor = GetScaleFactor(page);
+        double titleTextScaleFactor = 1.25;
+        titleTextBlock.Margin = new(0,5 * scaleFactor,0,BasicStyle.textHeight * (scaleFactor - 1) + 5 * scaleFactor);
+        titleTextBlock.RenderTransform = new ScaleTransform { ScaleX = scaleFactor * titleTextScaleFactor,ScaleY = scaleFactor * titleTextScaleFactor,CenterX = titleTextBlock.ActualWidth * titleTextScaleFactor / 2 };
+        contentsView.Width = Math.Min(page.ContentGrid.ActualWidth - 20 * scaleFactor,(600 * 2 + 10 / scaleFactor) * scaleFactor);
+        contentsView.Height = 300;
+        contentsPanel.Width = contentsView.Width / scaleFactor-15;
+        contentsPanel.Margin = new(contentsPanel.Width * (scaleFactor - 1) / 2,0,contentsPanel.Width * (scaleFactor - 1) / 2,contentsPanel.ActualHeight * (scaleFactor - 1));
+        contentsPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = contentsPanel.Width / 2 };
+        okButton.Width = Math.Min((page.ContentGrid.ActualWidth / 2 - 5 - 5d / 2) / scaleFactor,600);
+        okButton.Margin = new(okButton.Width * (scaleFactor - 1) / 2,0,okButton.Width * (scaleFactor - 1) / 2,okButton.Height * (scaleFactor - 1));
+        okButton.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = okButton.Width / 2 };
+        closeButton.Width = Math.Min((page.ContentGrid.ActualWidth / 2 - 5 - 5d / 2) / scaleFactor,600);
+        closeButton.Margin = new(closeButton.Width * (scaleFactor - 1) / 2,0,closeButton.Width * (scaleFactor - 1) / 2,closeButton.Height * (scaleFactor - 1));
+        closeButton.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = closeButton.Width / 2 };
+      }
+    }
   }
 }

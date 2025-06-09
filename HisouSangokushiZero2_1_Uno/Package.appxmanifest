@@ -5,14 +5,14 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-  <Identity  Name="HisouSangokushiZero2-1" Version="1.0.0.0" Publisher="CN=かりんとう"/>
+  <Identity  Name="HisouSangokushiZero2-1" Version="1.1.0.0" Publisher="CN=かりんとう"/>
   <Properties >
   
   <DisplayName>悲愴三国志Zero2-1</DisplayName>
   
   <PublisherDisplayName>かりんとう</PublisherDisplayName>
   
-  <Logo>PackageLogo.png</Logo>
+  <Logo>Assets\Icons\icon.png</Logo>
   </Properties >
 
   <Dependencies>
@@ -28,21 +28,17 @@
     <Application Id="App"
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
-      <uap:VisualElements  DisplayName="悲愴三国志Zero2-1" Description="悲愴三国志Zero2-1 UnoPlatform" Square150x150Logo="MediumTile.png" Square44x44Logo="AppIcon.png">
-        <uap:DefaultTile Square71x71Logo="SmallTile.png" Wide310x150Logo="WideTile.png" Square310x310Logo="LargeTile.png">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo"/>
-            <uap:ShowOn Tile="wide310x150Logo"/>
-            <uap:ShowOn Tile="square310x310Logo"/>
-          </uap:ShowNameOnTiles>
-        </uap:DefaultTile>
+      <uap:VisualElements  DisplayName="悲愴三国志Zero2-1" Description="悲愴三国志Zero2-1 UnoPlatform"  Square150x150Logo="Assets\Icons\icon.png" Square44x44Logo="Assets\Icons\icon.png">
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/>
           <uap:Rotation Preference="portrait"/>
           <uap:Rotation Preference="landscapeFlipped"/>
           <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
-        <uap:SplashScreen Image="SplashScreen.png"/>
-        <uap:LockScreen BadgeLogo="BadgeLogo.png" Notification="badge"/>
+        <uap:DefaultTile>
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
       </uap:VisualElements >
     </Application>
   </Applications>
