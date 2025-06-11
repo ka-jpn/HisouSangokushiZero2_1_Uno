@@ -286,6 +286,7 @@
                     <TextBlock Text="・陣営勝利条件の達成による勝利はCPUが先に達成した場合は敗北に"/>
                   </StackPanel>
                   <TextBlock Text="2025/06/09 ver1.2 スマホでプレイする際にレイアウトが崩れていたのに対処"/>
+                  <TextBlock Text="2025/06/11 ver1.3 アップデートの際、人物駒が動かせなくなっていたのを修正"/>
                 </StackPanel>
                 <StackPanel x:Name="SettingPanel" Visibility="Collapsed">
                   <Button x:Name="InitGameButton" Width="500" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black" Padding="30" Margin="20">
@@ -304,36 +305,7 @@
           </Grid>
         </Grid>
       </Grid>
-      <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind local:MainPage.countryPersonPutPanelHeight}">
-        <StackPanel x:Name="CountryCentralPostPanel" Background="#EEC" Padding="1.5,0">
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Foreground="#222" Text="中枢"/>
-            <Image Source="/Assets/Svg/central.svg" Width="{x:Bind local:BasicStyle.textHeight}" Height="{x:Bind local:BasicStyle.textHeight}"/>
-          </StackPanel>
-          <StackPanel x:Name="CentralPanel"/>
-        </StackPanel>
-        <StackPanel x:Name="CountryAffairPostPanel" Background="#EEE" Padding="1.5,0">
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Foreground="#222" Text="内政"/>
-            <Image Source="/Assets/Svg/affair.svg" Width="{x:Bind local:BasicStyle.textHeight}" Height="{x:Bind local:BasicStyle.textHeight}"/>
-          </StackPanel>
-          <StackPanel x:Name="AffairPanel"/>
-        </StackPanel>
-        <StackPanel x:Name="CountryDefensePostPanel" Background="#CCE" Padding="1.5,0">
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Foreground="#222" Text="防衛"/>
-            <Image Source="/Assets/Svg/defense.svg" Width="{x:Bind local:BasicStyle.textHeight}" Height="{x:Bind local:BasicStyle.textHeight}"/>
-          </StackPanel>
-          <StackPanel x:Name="DefensePanel"/>
-        </StackPanel>
-        <StackPanel x:Name="CountryAttackPostPanel" Background="#ECC" Padding="1.5,0">
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Foreground="#222" Text="攻撃"/>
-            <Image Source="/Assets/Svg/attack.svg" Width="{x:Bind local:BasicStyle.textHeight}" Height="{x:Bind local:BasicStyle.textHeight}"/>
-          </StackPanel>
-          <StackPanel x:Name="AttackPanel"/>
-        </StackPanel>
-      </Canvas>
+      <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind local:MainPage.countryPersonPutPanelHeight}" Background="Transparent"/>
     </Grid>
     <Canvas x:Name="MovePersonCanvas"/>
     <StackPanel x:Name="ExPanel" HorizontalAlignment="Center" VerticalAlignment="Center"/>
