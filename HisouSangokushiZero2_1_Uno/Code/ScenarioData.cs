@@ -234,384 +234,684 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 				}.AsReadOnly(),
 				new Dictionary<ECountry,CountryInfo>(){
           {ECountry.漢,new CountryInfo(5000,1,Color.FromArgb(255,238,238,136),
-            ()=>"(選べません)",
+            ()=>["選べません(勝利条件なし)"],
             (game)=>false,
             (game)=>[],
             0,0)},
           {ECountry.公孫度,new CountryInfo(100,1,Color.FromArgb(255,136,204,136),
-            ()=>"西暦230年時点で8都市以上、西暦226年以降で9都市以上~西暦210年以降で13都市以上領有(襄平領有で2都市条件が軽減される)",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.公孫度)>=13-(Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.公孫度,[EArea.襄平])?2:0),
+            ()=>[
+              "西暦210年以降",
+              "13都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "※襄平を領有していたら2都市軽減"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.公孫度)>=13-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.公孫度,[EArea.襄平])?2:0),
             (game)=>new() {
-              { "西暦210年以降で13都市以上(軽減前条件)領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.公孫度)>=13-(Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.公孫度,[EArea.襄平])?2:0) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"― 襄平を領有(2都市軽減)",Country.HasAreas(game,ECountry.公孫度,[EArea.襄平]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{13-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.公孫度,[EArea.襄平])?2:0)}都市以上領有",Country.GetAreaNum(game,ECountry.公孫度)>=13-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.公孫度,[EArea.襄平])?2:0) },
+              { "― ※緩和前条件13都市",null},
+              { "― ※西暦255年以降4年毎1都市緩和",null},
+              { "― 襄平を領有(2都市軽減適用)",Country.HasAreas(game,ECountry.公孫度,[EArea.襄平]) },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.公孫度)}都市",null }
             },
             0,0)},
           {ECountry.公孫瓚,new CountryInfo(2000,1,Color.FromArgb(255,221,170,102),
-            ()=>"西暦230年時点で9都市以上、西暦226年以降で10都市以上~西暦210年以降で14都市以上領有(鮮卑が滅亡したなら1都市、烏丸が滅亡したなら2都市、烏丸を滅亡させたならさらに1都市条件が軽減される、重複あり)",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.公孫瓚)>=14-(Turn.GetYear(game)-210)/4-(Country.IsPerish(game,ECountry.鮮卑)?1:0)-(Country.IsPerish(game,ECountry.烏丸)?2:0)-(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?1:0),
+            ()=>[
+              "西暦210年以降",
+              "14都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "※鮮卑が滅亡したら1都市軽減",
+              "※烏丸が滅亡したら2都市軽減",
+              "※烏丸を滅亡させたら1都市軽減"
+              ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.公孫瓚)>=14-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.IsPerish(game,ECountry.鮮卑)?1:0)-(Country.IsPerish(game,ECountry.烏丸)?2:0)-(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?1:0),
             (game)=>new(){
-              { "西暦210年以降で14都市以上(軽減前条件)領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.公孫瓚)>=14-(Turn.GetYear(game)-210)/4-(Country.IsPerish(game,ECountry.鮮卑)?1:0)-(Country.IsPerish(game,ECountry.烏丸)?2:0)-(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?1:0) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"― 鮮卑が滅亡(1都市軽減)",Country.IsPerish(game,ECountry.鮮卑) },
-              { $"― 烏丸が滅亡(2都市軽減)",Country.IsPerish(game,ECountry.烏丸) },
-              { $"― 烏丸を滅亡させた(1都市軽減)",Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚 }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{14-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.IsPerish(game,ECountry.鮮卑)?1:0)-(Country.IsPerish(game,ECountry.烏丸)?2:0)-(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?1:0)}都市以上領有",Country.GetAreaNum(game,ECountry.公孫瓚)>=14-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.IsPerish(game,ECountry.鮮卑)?1:0)-(Country.IsPerish(game,ECountry.烏丸)?2:0)-(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?1:0) },
+              { "― ※緩和前条件14都市",null},
+              { "― ※西暦255年以降4年毎1都市緩和",null},
+              { "― 鮮卑が滅亡(1都市軽減適用)",Country.IsPerish(game,ECountry.鮮卑) },
+              { "― 烏丸が滅亡(2都市軽減適用)",Country.IsPerish(game,ECountry.烏丸) },
+              { "― 烏丸を滅亡させた(1都市軽減適用)",Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚 },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.公孫瓚)}都市",null }
             },
             0,0)},
           {ECountry.劉虞,new CountryInfo(500,1,Color.FromArgb(255,221,136,136),
-            ()=>"西暦230年時点で4都市以上、西暦225年以降で5都市以上~西暦210年以降で8都市以上領有(鮮卑が滅亡したなら1都市、烏丸が滅亡したなら2都市、烏丸を滅亡させたのが公孫瓚ならさらに2都市条件が厳しくなる、重複あり)",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.劉虞)>=8-(Turn.GetYear(game)-210)/5+(Country.IsPerish(game,ECountry.鮮卑)?1:0)+(Country.IsPerish(game,ECountry.烏丸)?2:0)+(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?2:0),
+            ()=>[
+              "西暦210年以降",
+              "8都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "※鮮卑が滅亡したら1都市厳格化",
+              "※烏丸が滅亡したら2都市厳格化",
+              "※烏丸を滅亡させたのが公孫瓚なら2都市厳格化"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.劉虞)>=8-Math.Max(0,Turn.GetYear(game)-210)/5+(Country.IsPerish(game,ECountry.鮮卑)?1:0)+(Country.IsPerish(game,ECountry.烏丸)?2:0)+(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?2:0),
             (game)=>new(){
-              {  "西暦210年以降で8都市以上(厳格化前条件)領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.劉虞)>=8-(Turn.GetYear(game)-210)/5+(Country.IsPerish(game,ECountry.鮮卑)?1:0)+(Country.IsPerish(game,ECountry.烏丸)?2:0)+(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?2:0) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"― 鮮卑が滅亡(1都市厳格化)",Country.IsPerish(game,ECountry.鮮卑) },
-              { $"― 烏丸が滅亡(2都市厳格化)",Country.IsPerish(game,ECountry.烏丸) },
-              { $"― 烏丸を滅亡させたのが公孫瓚(2都市厳格化)",Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚 },
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-210)/5+(Country.IsPerish(game,ECountry.鮮卑)?1:0)+(Country.IsPerish(game,ECountry.烏丸)?2:0)+(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?2:0)}都市以上領有",Country.GetAreaNum(game,ECountry.劉虞)>=8-Math.Max(0,Turn.GetYear(game)-210)/5+(Country.IsPerish(game,ECountry.鮮卑)?1:0)+(Country.IsPerish(game,ECountry.烏丸)?2:0)+(Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚?2:0) },
+              { "― ※緩和/厳格化前条件8都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { "― 鮮卑が滅亡(1都市厳格化適用)",Country.IsPerish(game,ECountry.鮮卑) },
+              { "― 烏丸が滅亡(2都市厳格化適用)",Country.IsPerish(game,ECountry.烏丸) },
+              { "― 烏丸を滅亡させたのが公孫瓚(2都市厳格化適用)",Country.GetPerishFrom(game,ECountry.烏丸)==ECountry.公孫瓚 },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.劉虞)}都市",null }
             },
             0,0)},
           {ECountry.黒山賊,new CountryInfo(500,1,Color.FromArgb(255,119,119,119),
-            ()=>"西暦230年時点で8都市以上、西暦226年以降で9都市以上~西暦210年以降で13都市以上領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.黒山賊)>=13-(Turn.GetYear(game)-210)/4,
+            ()=>[
+              "西暦210年以降",
+              "13都市以上領有",
+              "※西暦210年以降4年毎1都市緩和"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.黒山賊)>=13-Math.Max(0,Turn.GetYear(game)-210)/4,
             (game)=>new(){
-              { "西暦210年以降で13都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.黒山賊)>=13-(Turn.GetYear(game)-210)/4 },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{13-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.GetAreaNum(game,ECountry.黒山賊)>=13-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件13都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.黒山賊)}都市",null }
             },
             0,0)},
           {ECountry.袁紹,new CountryInfo(1500,1,Color.FromArgb(255,204,204,119),
-            ()=>"西暦230年時点で中華領域10都市以上、西暦226年以降で中華領域11都市以上~西暦210年以降で中華領域15都市以上領有＆曹操以上の領土を領有＆袁術以上の領土を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.袁紹,Area.GetChinaAreas(0))>=15-(Turn.GetYear(game)-210)/4&&Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.曹操)&&Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.袁術),
+            ()=>[
+              "西暦210年以降",
+              "中華領域15都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "曹操以上の領土を領有",
+              "袁術以上の領土を領有"
+              ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.袁紹,Area.GetChinaAreas(0))>=15-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.曹操)&&Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.袁術),
             (game)=>new() {
-              { "西暦210年以降で中華領域15都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.袁紹,Area.GetChinaAreas(0))>=15-(Turn.GetYear(game)-210)/4&&Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.曹操)&&Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.袁術) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"曹操以上の領土を領有",Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.曹操) },
-              { $"袁術以上の領土を領有",Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.袁術) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{15-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.袁紹,Area.GetChinaAreas(0))>=15-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件15都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.袁紹,Area.GetChinaAreas(0))}都市",null },
+              { "曹操以上の領土を領有",Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.曹操) },
+              { "袁術以上の領土を領有",Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.袁術) }
             },
             0,0)},
           {ECountry.韓馥,new CountryInfo(600,1,Color.FromArgb(255,187,153,221),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆鄴を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.韓馥,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.韓馥,[EArea.鄴]),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "鄴を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.韓馥,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.韓馥,[EArea.鄴]),
             (game)=>new() {
-              {  "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.韓馥,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.韓馥,[EArea.鄴]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"鄴を領有",Country.HasAreas(game,ECountry.韓馥,[EArea.鄴]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.韓馥,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.韓馥,Area.GetChinaAreas(0))}都市",null },
+              { "鄴を領有",Country.HasAreas(game,ECountry.韓馥,[EArea.鄴]) }
             },
             0,0)},
           {ECountry.張楊,new CountryInfo(300,1,Color.FromArgb(255,153,221,187),
-            ()=>"西暦230年時点で中華領域3都市以上、西暦225年以降で中華領域4都市以上~西暦210年以降で中華領域7都市以上領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張楊,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/5,
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降5年毎1都市緩和"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張楊,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/5,
             (game)=>new(){
-              { "西暦210年以降で中華領域7都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張楊,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/5 },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.HasAreaCount(game,ECountry.張楊,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.張楊,Area.GetChinaAreas(0))}都市",null }
             },
             0,1)},
           {ECountry.焦和,new CountryInfo(200,1,Color.FromArgb(255,221,170,221),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆劇を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.焦和,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.焦和,[EArea.劇]),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "劇を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.焦和,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.焦和,[EArea.劇]),
             (game)=>new() {
-              { "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.焦和,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.焦和,[EArea.劇]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"劇を領有",Country.HasAreas(game,ECountry.焦和,[EArea.劇]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.焦和,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.焦和,Area.GetChinaAreas(0))}都市",null },
+              { "劇を領有",Country.HasAreas(game,ECountry.焦和,[EArea.劇]) }
             },
             0,0)},
           {ECountry.劉岱,new CountryInfo(300,1,Color.FromArgb(255,221,221,170),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆濮陽を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.劉岱,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.劉岱,[EArea.濮陽]),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "濮陽を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.劉岱,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.劉岱,[EArea.濮陽]),
             (game)=>new(){
-              {  "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.劉岱,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.劉岱,[EArea.濮陽]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"濮陽を領有",Country.HasAreas(game,ECountry.劉岱,[EArea.濮陽]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.劉岱,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.劉岱,Area.GetChinaAreas(0))}都市",null },
+              { "濮陽を領有",Country.HasAreas(game,ECountry.劉岱,[EArea.濮陽]) }
             },
             0,0)},
           {ECountry.曹操,new CountryInfo(600,1,Color.FromArgb(255,187,187,255),
-            ()=>"西暦230年時点で中華領域10都市以上、西暦226年以降で中華領域11都市以上~西暦210年以降で中華領域15都市以上領有＆袁紹が滅亡",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.曹操,Area.GetChinaAreas(0))>=15-(Turn.GetYear(game)-210)/4&&Country.IsPerish(game,ECountry.袁紹),
+            ()=>[
+              "西暦210年以降",
+              "中華領域15都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "袁紹が滅亡"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.曹操,Area.GetChinaAreas(0))>=15-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.IsPerish(game,ECountry.袁紹),
             (game)=>new(){
-              {  "西暦210年以降で中華領域15都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.曹操,Area.GetChinaAreas(0))>=15-(Turn.GetYear(game)-210)/4&&Country.IsPerish(game,ECountry.袁紹) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"袁紹が滅亡",Country.IsPerish(game,ECountry.袁紹) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{15-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.曹操,Area.GetChinaAreas(0))>=15-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件15都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.曹操,Area.GetChinaAreas(0))}都市",null },
+              { "袁紹が滅亡",Country.IsPerish(game,ECountry.袁紹) }
             },
             0,0)},
           {ECountry.董卓,new CountryInfo(3000,1,Color.FromArgb(255,153,153,136),
-            ()=>"中華領域5都市以上領有＆長安を領有＆資金10000以上所持",
+            ()=>[
+              "中華領域5都市以上領有",
+              "長安を領有",
+              "資金10000以上所持"
+            ],
             (game)=>Country.HasAreaCount(game,ECountry.董卓,Area.GetChinaAreas(0))>=5&&Country.HasAreas(game,ECountry.董卓,[EArea.長安])&&Country.GetFund(game,ECountry.董卓)>=10000,
             (game)=>new(){
               { "中華領域5都市以上領有",Country.HasAreaCount(game,ECountry.董卓,Area.GetChinaAreas(0))>=5 },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.董卓,Area.GetChinaAreas(0))}都市",null },
               { "長安を領有",Country.HasAreas(game,ECountry.董卓,[EArea.長安]) },
               { "資金10000以上所持",Country.GetFund(game,ECountry.董卓)>=10000 }
             },
             0,0)},
           {ECountry.韓遂,new CountryInfo(100,1,Color.FromArgb(255,204,153,136),
-            ()=>"西暦230年時点で8都市以上、西暦225年以降で9都市以上~西暦210年以降で12都市以上領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.黒山賊)>=12-(Turn.GetYear(game)-210)/5,
+            ()=>[
+              "西暦210年以降",
+              "12都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.韓遂)>=12-Math.Max(0,Turn.GetYear(game)-210)/5,
             (game)=>new(){
-              { "西暦210年以降で12都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.韓遂)>=12-(Turn.GetYear(game)-210)/5 },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{12-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.韓遂)>=12-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件12都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.韓遂)}都市",null }
             },
             0,0)},
           {ECountry.陶謙,new CountryInfo(100,1,Color.FromArgb(255,136,221,119),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆彭城を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.陶謙,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.陶謙,[EArea.彭城]),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "彭城を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.陶謙,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.陶謙,[EArea.彭城]),
             (game)=>new(){
-              { "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.陶謙,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.陶謙,[EArea.彭城]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"彭城を領有",Country.HasAreas(game,ECountry.陶謙,[EArea.彭城]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.陶謙,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.陶謙,Area.GetChinaAreas(0))}都市",null },
+              { "彭城を領有",Country.HasAreas(game,ECountry.陶謙,[EArea.彭城]) }
             },
             0,0)},
           {ECountry.張超,new CountryInfo(150,1,Color.FromArgb(255,204,170,119),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆淮陰を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張超,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.張超,[EArea.淮陰]),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "淮陰を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張超,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.張超,[EArea.淮陰]),
             (game)=>new(){
-              {  "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張超,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.張超,[EArea.淮陰]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"淮陰を領有",Country.HasAreas(game,ECountry.張超,[EArea.淮陰]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.張超,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.張超,Area.GetChinaAreas(0))}都市",null },
+              { "淮陰を領有",Country.HasAreas(game,ECountry.張超,[EArea.淮陰]) }
             },
             0,1)},
           {ECountry.袁術,new CountryInfo(1000,1,Color.FromArgb(255,238,153,221),
-            ()=>"西暦230年時点で中華領域8都市以上、西暦225年以降で中華領域9都市以上~西暦210年以降で中華領域12都市以上領有＆袁紹以上の領土を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.袁術,Area.GetChinaAreas(0))>=12-(Turn.GetYear(game)-210)/5&&Country.GetAreaNum(game,ECountry.袁術)>=Country.GetAreaNum(game,ECountry.袁紹),
+            ()=>[
+              "西暦210年以降",
+              "中華領域12都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "袁紹以上の領土を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.袁術,Area.GetChinaAreas(0))>=12-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.GetAreaNum(game,ECountry.袁術)>=Country.GetAreaNum(game,ECountry.袁紹),
             (game)=>new(){
-              {  "西暦210年以降で中華領域12都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.袁術,Area.GetChinaAreas(0))>=12-(Turn.GetYear(game)-210)/5&&Country.GetAreaNum(game,ECountry.袁術)>=Country.GetAreaNum(game,ECountry.袁紹) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"袁紹以上の領土を領有",Country.GetAreaNum(game,ECountry.袁術)>=Country.GetAreaNum(game,ECountry.袁紹) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{12-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.HasAreaCount(game,ECountry.袁術,Area.GetChinaAreas(0))>=12-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件12都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.袁術,Area.GetChinaAreas(0))}都市",null },
+              { "袁紹以上の領土を領有",Country.GetAreaNum(game,ECountry.袁術)>=Country.GetAreaNum(game,ECountry.袁紹) }
             },
             0,0)},
           {ECountry.張咨,new CountryInfo(500,1,Color.FromArgb(255,238,238,238),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆宛を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張咨,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.張咨,[EArea.宛]),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "宛を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張咨,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.張咨,[EArea.宛]),
             (game)=>new(){
-              {  "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.張咨,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.張咨,[EArea.宛]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"宛を領有",Country.HasAreas(game,ECountry.張咨,[EArea.宛]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.張咨,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.張咨,Area.GetChinaAreas(0))}都市",null },
+              { "宛を領有",Country.HasAreas(game,ECountry.張咨,[EArea.宛]) }
             },
             0,2)},
           {ECountry.王叡,new CountryInfo(500,1,Color.FromArgb(255,204,221,187),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆襄陽を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.王叡,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.王叡,[EArea.襄陽]),
-            (game)=>new() {
-              { "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.王叡,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.王叡,[EArea.襄陽]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"襄陽を領有",Country.HasAreas(game,ECountry.王叡,[EArea.襄陽]) }
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "襄陽を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.王叡,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.王叡,[EArea.襄陽]),
+            (game)=>new(){
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.王叡,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.王叡,Area.GetChinaAreas(0))}都市",null },
+              { "襄陽を領有",Country.HasAreas(game,ECountry.王叡,[EArea.襄陽]) }
             },
             0,2)},
-					{ECountry.劉表,new CountryInfo(100,1,Color.FromArgb(255,187,204,221),
-            ()=>"西暦230年時点で中華領域4都市以上、西暦226年以降で中華領域5都市以上~西暦210年以降で中華領域9都市以上領有＆襄陽・鄂を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.劉表,Area.GetChinaAreas(0))>=9-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.劉表,[EArea.襄陽,EArea.鄂]),
+          {ECountry.劉表,new CountryInfo(100,1,Color.FromArgb(255,187,204,221),
+            ()=>[
+              "西暦210年以降",
+              "中華領域9都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "襄陽を領有",
+              "鄂を領有"
+              ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.劉表,Area.GetChinaAreas(0))>=9-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.劉表,[EArea.襄陽,EArea.鄂]),
             (game)=>new() {
-              { "西暦210年以降で中華領域9都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.劉表,Area.GetChinaAreas(0))>=9-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.劉表,[EArea.襄陽,EArea.鄂]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"襄陽を領有",Country.HasAreas(game,ECountry.劉表,[EArea.襄陽]) },
-              { $"鄂を領有",Country.HasAreas(game,ECountry.劉表,[EArea.鄂]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{9-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.劉表,Area.GetChinaAreas(0))>=9-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件9都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.劉表,Area.GetChinaAreas(0))}都市",null },
+              { "襄陽を領有",Country.HasAreas(game,ECountry.劉表,[EArea.襄陽]) },
+              { "鄂を領有",Country.HasAreas(game,ECountry.劉表,[EArea.鄂]) }
             },
             0,0)},
-					{ECountry.孫堅,new CountryInfo(200,1,Color.FromArgb(255,255,187,187),
-            ()=>"西暦230年時点で10都市以上、西暦226年以降で11都市以上~西暦210年以降で15都市以上領有(洛陽領有で5都市条件が軽減される)",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.孫堅,Area.GetChinaAreas(0))>=15-(Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.孫堅,[EArea.洛陽])?5:0),
+          {ECountry.孫堅,new CountryInfo(200,1,Color.FromArgb(255,255,187,187),
+            ()=>[
+              "西暦210年以降",
+              "15都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "※洛陽を領有していたら5都市軽減"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.孫堅,Area.GetChinaAreas(0))>=15-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.孫堅,[EArea.洛陽])?5:0),
             (game)=>new() {
-              { "西暦210年以降で15都市(軽減前条件)以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.孫堅,Area.GetChinaAreas(0))>=15-(Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.孫堅,[EArea.洛陽])?5:0) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"― 洛陽を領有(5都市軽減)",Country.HasAreas(game,ECountry.孫堅,[EArea.洛陽]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{15-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.孫堅,[EArea.洛陽])?5:0)}都市以上領有",Country.HasAreaCount(game,ECountry.孫堅,Area.GetChinaAreas(0))>=15-Math.Max(0,Turn.GetYear(game)-210)/4-(Country.HasAreas(game,ECountry.孫堅,[EArea.洛陽])?5:0) },
+              { "― ※緩和前条件15都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { "― 洛陽を領有(5都市軽減適用)",Country.HasAreas(game,ECountry.孫堅,[EArea.洛陽]) },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.孫堅,Area.GetChinaAreas(0))}都市",null }
             },
             0,0)},
-					{ECountry.曹寅,new CountryInfo(100,1,Color.FromArgb(255,153,204,221),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆臨沅を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.曹寅,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.曹寅,[EArea.臨沅]),
+          {ECountry.曹寅,new CountryInfo(100,1,Color.FromArgb(255,153,204,221),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "臨沅を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.曹寅,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.曹寅,[EArea.臨沅]),
             (game)=>new(){
-              { "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.曹寅,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.曹寅,[EArea.臨沅]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"臨沅を領有",Country.HasAreas(game,ECountry.曹寅,[EArea.臨沅]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.曹寅,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.曹寅,Area.GetChinaAreas(0))}都市",null },
+              { "臨沅を領有",Country.HasAreas(game,ECountry.曹寅,[EArea.臨沅]) }
             },
             0,1)},
-					{ECountry.蘇固,new CountryInfo(100,1,Color.FromArgb(255,204,204,238),
-            ()=>"西暦230年時点で中華領域2都市以上、西暦226年以降で中華領域3都市以上~西暦210年以降で中華領域7都市以上領有＆南鄭を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.蘇固,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.蘇固,[EArea.南鄭]),
+          {ECountry.蘇固,new CountryInfo(100,1,Color.FromArgb(255,204,204,238),
+            ()=>[
+              "西暦210年以降",
+              "中華領域7都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "南鄭を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.蘇固,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.蘇固,[EArea.南鄭]),
             (game)=>new(){
-              {  "西暦210年以降で中華領域7都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.蘇固,Area.GetChinaAreas(0))>=7-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.蘇固,[EArea.南鄭]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{7-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.HasAreaCount(game,ECountry.蘇固,Area.GetChinaAreas(0))>=7-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.蘇固,Area.GetChinaAreas(0))}都市",null },
               { $"南鄭を領有",Country.HasAreas(game,ECountry.蘇固,[EArea.南鄭]) }
             },
             0,0)},
-					{ECountry.劉焉,new CountryInfo(200,1,Color.FromArgb(255,187,238,187),
-            ()=>"西暦230年時点で5都市以上、西暦225年以降で6都市以上~西暦210年以降で9都市以上領有＆成都・綿竹を領有＆馬相が滅亡",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.劉焉)>=9-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.劉焉,[EArea.成都,EArea.綿竹])&&Country.IsPerish(game,ECountry.馬相),
+          {ECountry.劉焉,new CountryInfo(200,1,Color.FromArgb(255,187,238,187),
+            ()=>[
+              "西暦210年以降",
+              "9都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "成都を領有",
+              "綿竹を領有",
+              "馬相が滅亡"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.劉焉)>=9-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.劉焉,[EArea.成都,EArea.綿竹])&&Country.IsPerish(game,ECountry.馬相),
             (game)=>new() {
-              { "西暦210年以降で9都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.劉焉)>=9-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.劉焉,[EArea.成都,EArea.綿竹])&&Country.IsPerish(game,ECountry.馬相) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"成都を領有",Country.HasAreas(game,ECountry.劉焉,[EArea.成都]) },
-              { $"綿竹を領有",Country.HasAreas(game,ECountry.劉焉,[EArea.綿竹]) },
-              { $"馬相が滅亡",Country.IsPerish(game,ECountry.馬相) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{9-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.劉焉)>=9-Math.Max(0,Turn.GetYear(game)-210)/5},
+              { "― ※緩和前条件9都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.GetAreaNum(game,ECountry.劉焉)}都市",null },
+              { "成都を領有",Country.HasAreas(game,ECountry.劉焉,[EArea.成都]) },
+              { "綿竹を領有",Country.HasAreas(game,ECountry.劉焉,[EArea.綿竹]) },
+              { "馬相が滅亡",Country.IsPerish(game,ECountry.馬相) }
             },
             0,0)},
-					{ECountry.馬相,new CountryInfo(300,1,Color.FromArgb(255,221,187,187),
-            ()=>"西暦230年時点で6都市以上、西暦226年以降で7都市以上~西暦210年以降で11都市以上領有＆成都を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.馬相)>=11-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.馬相,[EArea.成都]),
+          {ECountry.馬相,new CountryInfo(300,1,Color.FromArgb(255,221,187,187),
+            ()=>[
+              "西暦210年以降",
+              "11都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "成都を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.馬相)>=11-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.馬相,[EArea.成都]),
             (game)=>new() {
-              { "西暦210年以降で11都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.馬相)>=11-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.馬相,[EArea.成都]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"成都を領有",Country.HasAreas(game,ECountry.馬相,[EArea.成都]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{11-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.GetAreaNum(game,ECountry.馬相)>=11-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件11都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.GetAreaNum(game,ECountry.馬相)}都市",null },
+              { "成都を領有",Country.HasAreas(game,ECountry.馬相,[EArea.成都]) }
             },
             0,1)},
-					{ECountry.士燮,new CountryInfo(300,1,Color.FromArgb(255,187,255,255),
-            ()=>"西暦230年時点で3都市以上、西暦226年以降で4都市以上~西暦210年以降で8都市以上領有＆龍編を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.士燮)>=8-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.士燮,[EArea.龍編]),
+          {ECountry.士燮,new CountryInfo(300,1,Color.FromArgb(255,187,255,255),
+            ()=>[
+              "西暦210年以降",
+              "8都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "龍編を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.士燮)>=8-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.士燮,[EArea.龍編]),
             (game)=>new() {
-              { "西暦210年以降で8都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.士燮)>=8-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.士燮,[EArea.龍編]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"龍編を領有",Country.HasAreas(game,ECountry.士燮,[EArea.龍編]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.GetAreaNum(game,ECountry.士燮)>=8-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件8都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.GetAreaNum(game,ECountry.士燮)}都市",null },
+              { "龍編を領有",Country.HasAreas(game,ECountry.士燮,[EArea.龍編]) }
             },
             0,0)},
 					{ECountry.南蛮,new CountryInfo(100,1,Color.FromArgb(255,204,221,119),
-            ()=>"西暦230年時点で4都市以上、西暦225年以降で5都市以上~西暦210年以降で8都市以上領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.南蛮)>=8-(Turn.GetYear(game)-210)/5,
+            ()=>[
+              "西暦210年以降",
+              "8都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.南蛮)>=8-Math.Max(0,Turn.GetYear(game)-210)/5,
             (game)=>new() {
-              { "西暦210年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.南蛮)>=8-(Turn.GetYear(game)-210)/5 },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.南蛮)>=8-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件8都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.南蛮)}都市",null }
             },
             0,0)},
 					{ECountry.北匈奴,new CountryInfo(100,1,Color.FromArgb(255,221,204,119),
-            ()=>"西暦230年時点で中華領域1都市以上、西暦225年以降で中華領域2都市以上~西暦210年以降で中華領域5都市以上領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.北匈奴,Area.GetChinaAreas(0))>=5-(Turn.GetYear(game)-210)/5,
+            ()=>[
+              "西暦210年以降",
+              "中華領域5都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.北匈奴,Area.GetChinaAreas(0))>=5-Math.Max(0,Turn.GetYear(game)-210)/5,
             (game)=>new() {
-              { "西暦210年以降で中華領域5都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.HasAreaCount(game,ECountry.北匈奴,Area.GetChinaAreas(0))>=5-(Turn.GetYear(game)-210)/5 },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"中華領域{5-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.HasAreaCount(game,ECountry.北匈奴,Area.GetChinaAreas(0))>=5-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件5都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.北匈奴,Area.GetChinaAreas(0))}都市",null }
             },
             0,0)},
 					{ECountry.羌,new CountryInfo(200,1,Color.FromArgb(255,187,187,119),
-            ()=>"氐が滅亡＆自陣営総内政値150以上",
+            ()=>[
+              "氐が滅亡",
+              "内政値150以上"
+            ],
             (game)=>Country.IsPerish(game,ECountry.氐)&&Country.GetTotalAffair(game,ECountry.羌)>=150,
             (game)=>new() {
               { "氐が滅亡",Country.IsPerish(game,ECountry.氐) },
-              { "自陣営総内政値150以上",Country.GetTotalAffair(game,ECountry.羌)>=150 }
+              { "内政値150以上",Country.GetTotalAffair(game,ECountry.羌)>=150 },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.羌)}",null }
+
             },
             0,0)},
 					{ECountry.氐,new CountryInfo(200,1,Color.FromArgb(255,238,204,102),
-            ()=>"羌が滅亡＆自陣営総内政値150以上",
+            ()=>[
+              "羌が滅亡",
+              "内政値150以上"
+            ],
             (game)=>Country.IsPerish(game,ECountry.羌)&&Country.GetTotalAffair(game,ECountry.氐)>=150,
             (game)=>new(){
               { "羌が滅亡",Country.IsPerish(game,ECountry.羌) },
-              { "自陣営総内政値150以上",Country.GetTotalAffair(game,ECountry.氐)>=150 }
+              { "内政値150以上",Country.GetTotalAffair(game,ECountry.氐)>=150 },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.氐)}",null }
             },
             0,0)},
 					{ECountry.南匈奴,new CountryInfo(200,1,Color.FromArgb(255,204,221,153),
-            ()=>"西暦230年時点で4都市以上、西暦225年以降で5都市以上~西暦210年以降で8都市以上領有＆北地・朔方・臨河を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.南匈奴)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.南匈奴,[EArea.北地,EArea.朔方,EArea.臨河]),
+            ()=>[
+              "西暦210年以降",
+              "8都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "北地を領有",
+              "朔方を領有",
+              "臨河を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.南匈奴)>=8-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.南匈奴,[EArea.北地,EArea.朔方,EArea.臨河]),
             (game)=>new(){
-              { "西暦210年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.南匈奴)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.南匈奴,[EArea.北地,EArea.朔方,EArea.臨河]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"北地を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.北地]) },
-              { $"朔方を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.朔方]) },
-              { $"臨河を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.臨河]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.南匈奴)>=8-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件8都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.南匈奴)}都市",null },
+              { "北地を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.北地]) },
+              { "朔方を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.朔方]) },
+              { "臨河を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.臨河]) }
             },
             0,0)},
 					{ECountry.鮮卑,new CountryInfo(200,1,Color.FromArgb(255,170,221,153),
-            ()=>"西暦230年時点で7都市以上、西暦226年以降で8都市以上~西暦210年以降で12都市以上領有＆弾汗・鮮卑を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.鮮卑)>=12-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.鮮卑,[EArea.弾汗,EArea.鮮卑]),
+            ()=>[
+              "西暦210年以降",
+              "12都市以上領有",
+              "※西暦210年以降4年毎1都市緩和",
+              "弾汗を領有",
+              "鮮卑を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.鮮卑)>=12-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.鮮卑,[EArea.弾汗,EArea.鮮卑]),
             (game)=>new(){
-              { "西暦210年以降で12都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.鮮卑)>=12-(Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.鮮卑,[EArea.弾汗,EArea.鮮卑]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和)",true },
-              { $"弾汗を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.弾汗]) },
-              { $"鮮卑を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.鮮卑]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{12-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.GetAreaNum(game,ECountry.鮮卑)>=12-Math.Max(0,Turn.GetYear(game)-210)/4 },
+              { "― ※緩和前条件12都市",null},
+              { "― ※西暦210年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.鮮卑)}都市",null },
+              { "弾汗を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.弾汗]) },
+              { "鮮卑を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.鮮卑]) }
             },
             0,0)},
 					{ECountry.烏丸,new CountryInfo(100,1,Color.FromArgb(255,204,238,102),
-            ()=>"西暦230年時点で4都市以上、西暦225年以降で5都市以上~西暦210年以降で8都市以上領有＆烏桓を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.烏丸)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]),
+            ()=>[
+              "西暦210年以降",
+              "8都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "烏桓を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.烏丸)>=8-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]),
             (game)=>new(){
-              { "西暦210年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.烏丸)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"烏桓を領有",Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.烏丸)>=8-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件8都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.烏丸)}都市",null },
+              { "烏桓を領有",Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]) }
             },
             0,0)},
 					{ECountry.高句麗,new CountryInfo(200,1,Color.FromArgb(255,221,153,187),
-            ()=>"西暦230年時点で4都市以上、西暦225年以降で5都市以上~西暦210年以降で8都市以上領有＆襄平・番汗・朝鮮を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.高句麗)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.高句麗,[EArea.襄平,EArea.番汗,EArea.朝鮮]),
+            ()=>[
+              "西暦210年以降",
+              "8都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "襄平を領有",
+              "番汗を領有",
+              "朝鮮を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.高句麗)>=8-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.高句麗,[EArea.襄平,EArea.番汗,EArea.朝鮮]),
             (game)=>new(){
-              { "西暦210年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.高句麗)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.高句麗,[EArea.襄平,EArea.番汗,EArea.朝鮮]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"襄平を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.襄平]) },
-              { $"番汗を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.番汗]) },
-              { $"朝鮮を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.朝鮮]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.高句麗)>=8-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件8都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.高句麗)}都市",null },
+              { "襄平を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.襄平]) },
+              { "番汗を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.番汗]) },
+              { "朝鮮を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.朝鮮]) }
             },
             0,0)},
 					{ECountry.沃沮,new CountryInfo(50,1,Color.FromArgb(255,153,187,221),
-            ()=>"西暦230年時点で3都市以上、西暦225年以降で4都市以上~西暦210年以降で7都市以上領有＆沃沮を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.沃沮)>=7-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]),
+            ()=>[
+              "西暦210年以降",
+              "7都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "沃沮を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.沃沮)>=7-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]),
             (game)=>new(){
-              { "西暦210年以降で7都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.沃沮)>=7-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"沃沮を領有",Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{7-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.沃沮)>=7-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.沃沮)}都市",null },
+              { "沃沮を領有",Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]) }
             },
             0,0)},
 					{ECountry.馬韓,new CountryInfo(100,1,Color.FromArgb(255,170,238,136),
-            ()=>"西暦230年時点で3都市以上、西暦225年以降で4都市以上~西暦210年以降で7都市以上領有＆番汗・朝鮮・目支を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.馬韓)>=7-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.馬韓,[EArea.番汗,EArea.朝鮮,EArea.目支]),
+            ()=>[
+              "西暦210年以降",
+              "7都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "番汗を領有",
+              "朝鮮を領有",
+              "目支を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.馬韓)>=7-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.馬韓,[EArea.番汗,EArea.朝鮮,EArea.目支]),
             (game)=>new(){
-              { "西暦210年以降で7都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.馬韓)>=7-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.馬韓,[EArea.番汗,EArea.朝鮮,EArea.目支]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
-              { $"番汗を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.番汗]) },
-              { $"朝鮮を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.朝鮮]) },
-              { $"目支を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.目支]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{7-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.馬韓)>=7-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件7都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.馬韓)}都市",null },
+              { "番汗を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.番汗]) },
+              { "朝鮮を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.朝鮮]) },
+              { "目支を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.目支]) }
             },
             0,0)},
 					{ECountry.琉球,new CountryInfo(50,1,Color.FromArgb(255,204,170,153),
-            ()=>"西暦230年時点で自陣営総内政値7以上、西暦225年以降で自陣営総内政値8以上~西暦210年以降で自陣営総内政値11以上＆首里を領有＆資金1000以上",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.琉球)>=11-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.琉球,[EArea.首里])&&Country.GetFund(game,ECountry.琉球)>=1000,
+            ()=>[
+              "西暦210年以降",
+              "内政値11以上",
+              "※西暦210年以降5年毎内政値1緩和",
+              "首里を領有",
+              "資金1000以上"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.琉球)>=11-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.琉球,[EArea.首里])&&Country.GetFund(game,ECountry.琉球)>=1000,
             (game)=>new(){
-              { "西暦210年以降で自陣営総内政値11以上(5年毎1内政値緩和)",Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.琉球)>=11-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.琉球,[EArea.首里])&&Country.GetFund(game,ECountry.琉球)>=1000 },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}内政値緩和)",true },
-              { $"首里を領有",Country.HasAreas(game,ECountry.琉球,[EArea.首里]) },
-              { $"資金1000以上",Country.GetFund(game,ECountry.琉球)>=1000 }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"内政値{11-Math.Max(0,Turn.GetYear(game)-210)/5}以上",Country.GetTotalAffair(game,ECountry.琉球)>=11-(Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件11以上",null},
+              { "― ※西暦210年以降5年毎1内政値緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}内政値緩和適用)",null },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.琉球)}",null },
+              { "首里を領有",Country.HasAreas(game,ECountry.琉球,[EArea.首里]) },
+              { "資金1000以上",Country.GetFund(game,ECountry.琉球)>=1000 }
             },
             0,1)},
 					{ECountry.南越,new CountryInfo(100,1,Color.FromArgb(255,204,170,221),
-            ()=>"西暦230年時点で自陣営総内政値60以上、西暦229年以降で自陣営総内政値61以上~西暦210年以降で自陣営総内政値80以上＆南越・日南を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.南越)>=80-(Turn.GetYear(game)-210)&&Country.HasAreas(game,ECountry.南越,[EArea.南越,EArea.日南]),
+            ()=>[
+              "西暦210年以降",
+              "内政値80以上",
+              "※西暦210年以降1年毎内政値1緩和",
+              "南越を領有",
+              "日南を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.南越)>=80-Math.Max(0,Turn.GetYear(game)-210)&&Country.HasAreas(game,ECountry.南越,[EArea.南越,EArea.日南]),
             (game)=>new(){
-              { "西暦210年以降で自陣営総内政値80以上(1年毎20内政値緩和)",Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.南越)>=80-(Turn.GetYear(game)-210)&&Country.HasAreas(game,ECountry.南越,[EArea.南越,EArea.日南]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)}内政値緩和)",true },
-              { $"南越を領有",Country.HasAreas(game,ECountry.南越,[EArea.南越]) },
-              { $"日南を領有",Country.HasAreas(game,ECountry.南越,[EArea.日南]) }
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"内政値{80-(Turn.GetYear(game)-210)}以上",Country.GetTotalAffair(game,ECountry.南越)>=80-(Turn.GetYear(game)-210) },
+              { "― ※緩和前条件80以上",null},
+              { "― ※西暦210年以降1年毎1内政値緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)}内政値緩和適用)",null },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.南越)}",null },
+              { "南越を領有",Country.HasAreas(game,ECountry.南越,[EArea.南越]) },
+              { "日南を領有",Country.HasAreas(game,ECountry.南越,[EArea.日南]) }
             },
             0,0)},
           {ECountry.濊,new CountryInfo(100,1,Color.FromArgb(255,187,170,153),
-            ()=>"西暦230年時点で4都市以上、西暦225年以降で5都市以上~西暦210年以降で8都市以上領有and番汗・朝鮮・目支を領有",
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.濊)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.濊,[EArea.番汗,EArea.朝鮮,EArea.目支]),
+            ()=>[
+              "西暦210年以降",
+              "8都市以上領有",
+              "※西暦210年以降5年毎1都市緩和",
+              "番汗を領有",
+              "朝鮮を領有",
+              "目支を領有"
+            ],
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.濊)>=8-Math.Max(0,Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.濊,[EArea.番汗,EArea.朝鮮,EArea.目支]),
             (game)=>new(){
-              { "西暦210年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.濊)>=8-(Turn.GetYear(game)-210)/5&&Country.HasAreas(game,ECountry.濊,[EArea.番汗,EArea.朝鮮,EArea.目支]) },
-              { $"― 210年以降",Turn.GetYear(game)>=210 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和)",true },
+              { "西暦210年以降",Turn.GetYear(game)>=210 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-210)/5}都市以上領有",Country.GetAreaNum(game,ECountry.濊)>=8-Math.Max(0,Turn.GetYear(game)-210)/5 },
+              { "― ※緩和前条件8都市",null},
+              { "― ※西暦210年以降5年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.濊)}都市",null },
               { $"番汗を領有",Country.HasAreas(game,ECountry.濊,[EArea.番汗]) },
               { $"朝鮮を領有",Country.HasAreas(game,ECountry.濊,[EArea.朝鮮]) },
               { $"目支を領有",Country.HasAreas(game,ECountry.濊,[EArea.目支]) }
@@ -1090,175 +1390,310 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 				}.AsReadOnly(),
 				new Dictionary<ECountry,CountryInfo>(){
           {ECountry.魏,new CountryInfo(1000,1,Color.FromArgb(255,187,187,255),
-            ()=>"呉と蜀漢が滅亡＆中華領域の65%以上領有(蜀漢を滅亡させた場合は10%、呉を滅亡させた場合は5%条件が軽減される、重複あり)",
+            ()=>[
+              "呉が滅亡",
+              "蜀漢が滅亡",
+              "中華領域の65%以上領有",
+              "※蜀漢を滅亡させたら10%軽減",
+              "※呉を滅亡させたら5%軽減"
+            ],
             (game)=>Country.IsPerish(game,ECountry.呉)&&Country.IsPerish(game,ECountry.蜀漢)&&Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.65-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏?0.1:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏?0.05:0))<=Country.HasAreaCount(game,ECountry.魏,v)),
             (game)=>new(){
               { "呉が滅亡",Country.IsPerish(game,ECountry.呉) },
               { "蜀漢が滅亡",Country.IsPerish(game,ECountry.蜀漢) },
-              { "中華領域の65%以上(軽減前条件)領有",Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.65-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏?0.1:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏?0.05:0))<=Country.HasAreaCount(game,ECountry.魏,v)) },
-              { "― 蜀漢を滅亡させた(10%軽減)", Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏 },
-              { "― 呉を滅亡させた(5%軽減)", Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏 },
+              { $"中華領域の{65-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏?10:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏?5:0)}%以上領有",Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.65-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏?0.1:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏?0.05:0))<=Country.HasAreaCount(game,ECountry.魏,v)) },
+              { $"― ※軽減前条件65%",null },
+              { "― 蜀漢を滅亡させた(10%軽減適用)", Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏 },
+              { "― 呉を滅亡させた(5%軽減適用)", Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏 },
+              { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.魏,v)/v.Length*100):0}%領有",null }
             },
             0,0)},
           {ECountry.呉,new CountryInfo(1000,1,Color.FromArgb(255,255,187,187),
-            ()=>"魏以上かつ蜀以上の領土を領有＆中華領域の50%以上領有(魏を滅亡させた場合は10%、蜀漢を滅亡させた場合は8%条件が軽減される、重複あり)",
+            ()=>[
+              "魏以上の領土を領有",
+              "蜀漢以上の領土を領有",
+              "中華領域の50%以上領有",
+              "※魏を滅亡させたら10%軽減",
+              "※蜀漢を滅亡させたら8%軽減"
+            ],
             (game)=>Country.GetAreaNum(game,ECountry.呉)>=Country.GetAreaNum(game,ECountry.魏)&&Country.GetAreaNum(game,ECountry.呉)>=Country.GetAreaNum(game,ECountry.蜀漢)&&Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.5-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.呉?0.1:0)-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.呉?0.08:0))<=Country.HasAreaCount(game,ECountry.呉,v)),
             (game)=>new(){
               { "魏以上の領土を領有",Country.GetAreaNum(game,ECountry.呉)>=Country.GetAreaNum(game,ECountry.魏) },
-              { "蜀以上の領土を領有",Country.GetAreaNum(game,ECountry.呉)>=Country.GetAreaNum(game,ECountry.蜀漢) },
-              { "中華領域の50%以上(軽減前条件)領有",Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.5-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.呉?0.1:0)-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.呉?0.08:0))<=Country.HasAreaCount(game,ECountry.呉,v)) },
-              { "― 魏を滅亡させた(10%軽減)", Country.GetPerishFrom(game,ECountry.魏)==ECountry.呉 },
-              { "― 蜀漢を滅亡させた(8%軽減)", Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.呉 }
+              { "蜀漢以上の領土を領有",Country.GetAreaNum(game,ECountry.呉)>=Country.GetAreaNum(game,ECountry.蜀漢) },
+              { $"中華領域の{50-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.呉?10:0)-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.呉?8:0)}%以上領有",Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.5-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.呉?0.1:0)-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.呉?0.08:0))<=Country.HasAreaCount(game,ECountry.呉,v)) },
+              { $"― ※軽減前条件50%",null },
+              { "― 魏を滅亡させた(10%軽減適用)", Country.GetPerishFrom(game,ECountry.魏)==ECountry.呉 },
+              { "― 蜀漢を滅亡させた(8%軽減適用)", Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.呉 },
+              { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.呉,v)/v.Length*100):0}%領有",null }
             },
             0,0)},
           {ECountry.蜀漢,new CountryInfo(1000,1,Color.FromArgb(255,187,255,187),
-            ()=>"魏が滅亡＆中華領域の65%以上領有(魏を滅亡させた場合は25%、呉を滅亡させた場合は5%条件が軽減される、重複あり)",
+            ()=>[
+              "魏が滅亡",
+              "中華領域の65%以上領有",
+              "※魏を滅亡させたら25%軽減",
+              "※呉を滅亡させたら5%軽減"
+            ],
             (game)=>Country.IsPerish(game,ECountry.魏)&&Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.65-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.蜀漢?0.25:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.蜀漢?0.05:0))<=Country.HasAreaCount(game,ECountry.蜀漢,v)),
             (game)=>new(){
               { "魏が滅亡",Country.IsPerish(game,ECountry.魏) },
-              { "中華領域の65%以上(軽減前条件)領有",Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.65-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.蜀漢?0.25:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.蜀漢?0.05:0))<=Country.HasAreaCount(game,ECountry.蜀漢,v)) },
-              { "― 魏を滅亡させた(25%軽減)", Country.GetPerishFrom(game,ECountry.魏)==ECountry.蜀漢 },
-              { "― 呉を滅亡させた(5%軽減)", Country.GetPerishFrom(game,ECountry.呉)==ECountry.蜀漢 },
+              { $"中華領域の{65-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.蜀漢?25:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.蜀漢?5:0)}%以上領有",Area.GetChinaAreas(1).MyApplyF(v=>v.Length*(0.65-(Country.GetPerishFrom(game,ECountry.魏)==ECountry.蜀漢?0.25:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.蜀漢?0.05:0))<=Country.HasAreaCount(game,ECountry.蜀漢,v)) },
+              { "― ※軽減前条件65%",null },
+              { "― 魏を滅亡させた(25%軽減適用)", Country.GetPerishFrom(game,ECountry.魏)==ECountry.蜀漢 },
+              { "― 呉を滅亡させた(5%軽減適用)", Country.GetPerishFrom(game,ECountry.呉)==ECountry.蜀漢 },
+              { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.蜀漢,v)/v.Length*100):0}%領有",null }
             },
             0,0)},
           {ECountry.燕,new CountryInfo(500,1,Color.FromArgb(255,255,187,255),
-            ()=>"西暦275年時点で6都市以上、西暦273年以降で7都市以上~西暦255年以降で16都市以上領有",
+            ()=>[
+              "西暦255年以降",
+              "16都市以上領有",
+              "※西暦255年以降2年毎1都市緩和"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.燕)>=16-(Turn.GetYear(game)-255)/2,
             (game)=>new(){
-              { "西暦255年以降で16都市以上領有(2年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.燕)>=16-(Turn.GetYear(game)-255)/2 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/2}都市緩和)",true }
+              { "西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{16-Math.Max(0,Turn.GetYear(game)-255)/2}都市以上領有",Country.GetAreaNum(game,ECountry.燕)>=16-Math.Max(0,Turn.GetYear(game)-255)/2 },
+              { "― ※緩和前条件16都市",null},
+              { "― ※西暦255年以降2年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/2}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.燕)}都市",null }
             },
             0,0)},
           {ECountry.士燮,new CountryInfo(800,1,Color.FromArgb(255,187,255,255),
-            ()=>"西暦275年時点で4都市以上、西暦271年以降で5都市以上~西暦255年以降で9都市以上領有",
+            ()=>[
+              "西暦255年以降",
+              "9都市以上領有",
+              "※西暦255年以降4年毎1都市緩和",
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.士燮)>=9-(Turn.GetYear(game)-255)/4,
             (game)=>new(){
-              { "西暦255年以降で9都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.士燮)>=9-(Turn.GetYear(game)-255)/4 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和)",true }
+              { "西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{9-Math.Max(0,Turn.GetYear(game)-255)/4}都市以上領有",Country.GetAreaNum(game,ECountry.士燮)>=9-Math.Max(0,Turn.GetYear(game)-255)/4 },
+              { "― ※緩和前条件9都市",null},
+              { "― ※西暦255年以降4年毎1都市緩和",null},
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.士燮)}都市",null }
             },
             0,0)},
           {ECountry.南蛮,new CountryInfo(500,1,Color.FromArgb(255,204,221,119),
-            ()=>"蜀漢が滅亡＆西暦275年時点で5都市以上、西暦271年以降で6都市以上~西暦255年以降で10都市以上領有(蜀漢を滅亡させた場合は2都市条件が軽減される)",
+            ()=>[
+              "蜀漢が滅亡",
+              "西暦255年以降",
+              "10都市以上領有",
+              "※西暦255年以降4年毎1都市緩和",
+              "※蜀漢を滅亡させたら2都市軽減"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.IsPerish(game,ECountry.蜀漢)&&Country.GetAreaNum(game,ECountry.南蛮)>=10-(Turn.GetYear(game)-255)/4-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.南蛮?2:0),
             (game)=>new(){
               { "蜀漢が滅亡",Country.IsPerish(game,ECountry.蜀漢) },
-              { "西暦255年以降で10都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.南蛮)>=10-(Turn.GetYear(game)-255)/4-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.南蛮?2:0) },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和)",true }
+              { "西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{10-Math.Max(0,Turn.GetYear(game)-255)/4-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.南蛮?2:0)}都市以上領有",Country.GetAreaNum(game,ECountry.南蛮)>=10-Math.Max(0,Turn.GetYear(game)-255)/4-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.南蛮?2:0) },
+              { "― ※緩和前条件10都市",null},
+              { "― ※西暦255年以降4年毎1都市緩和",null},
+              { "― 蜀漢を滅亡させた(2都市軽減適用)",Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.南蛮 },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.南蛮)}都市",null }
             },
             0,0)},
 					{ECountry.北匈奴,new CountryInfo(100,1,Color.FromArgb(255,221,204,119),
-            ()=>"西暦275年時点で中華領域1都市以上、西暦270年以降で中華領域2都市以上~西暦255年以降で中華領域5都市以上領有",
-            (game)=>Turn.GetYear(game)>=255&&Area.GetChinaAreas(1).MyApplyF(v=>Country.GetAreas(game,ECountry.北匈奴).Intersect(v).Count())>=5-(Turn.GetYear(game)-255)/5,
+            ()=>[
+              "西暦255年以降",
+              "中華領域5都市以上領有",
+              "※西暦255年以降5年毎1都市緩和"
+            ],
+            (game)=>Turn.GetYear(game)>=255&&Area.GetChinaAreas(1).MyApplyF(v=>Country.GetAreas(game,ECountry.北匈奴).Intersect(v).Count())>=5-Math.Max(0,Turn.GetYear(game)-255)/5,
             (game)=>new(){
-              { "西暦255年以降で中華領域5都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=255&&Area.GetChinaAreas(1).MyApplyF(v=>Country.GetAreas(game,ECountry.北匈奴).Intersect(v).Count())>=5-(Turn.GetYear(game)-255)/5 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和)",true }
+              { "西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"中華領域{5-Math.Max(0,Turn.GetYear(game)-255)/5}都市以上領有",Area.GetChinaAreas(1).MyApplyF(v=>Country.GetAreas(game,ECountry.北匈奴).Intersect(v).Count())>=5-Math.Max(0,Turn.GetYear(game)-255)/5 },
+              { "― ※緩和前条件5都市",null },
+              { "― ※西暦255年以降5年毎1都市緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和適用)",null },
+              { $"― ※現在 {Area.GetChinaAreas(1).MyApplyF(v=>Country.GetAreas(game,ECountry.北匈奴).Intersect(v).Count())}都市",null }
             },
             0,0)},
 					{ECountry.羌,new CountryInfo(300,1,Color.FromArgb(255,187,187,119),
-            ()=>"氐が滅亡＆自陣営総内政値150以上",
+            ()=>[
+              "氐が滅亡",
+              "内政値150以上"
+            ],
             (game)=>Country.IsPerish(game,ECountry.氐)&&Country.GetTotalAffair(game,ECountry.羌)>=150,
             (game)=>new(){
               { "氐が滅亡",Country.IsPerish(game,ECountry.氐) },
-              { "自陣営総内政値150以上",Country.GetTotalAffair(game,ECountry.羌)>=150 }
+              { "内政値150以上",Country.GetTotalAffair(game,ECountry.羌)>=150 },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.羌)}",null }
             },
             0,0)},
 					{ECountry.氐,new CountryInfo(300,1,Color.FromArgb(255,238,204,102),
-            ()=>"羌が滅亡＆自陣営総内政値150以上",
+            ()=>[
+              "羌が滅亡",
+              "内政値150以上"
+            ],
             (game)=>Country.IsPerish(game,ECountry.羌)&&Country.GetTotalAffair(game,ECountry.氐)>=150,
             (game)=>new() {
               { "羌が滅亡",Country.IsPerish(game,ECountry.羌) },
-              { "自陣営総内政値150以上",Country.GetTotalAffair(game,ECountry.氐)>=150 }
+              { "内政値150以上",Country.GetTotalAffair(game,ECountry.氐)>=150 },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.氐)}",null }
             },
             0,0)},
 					{ECountry.南匈奴,new CountryInfo(300,1,Color.FromArgb(255,204,221,153),
-            ()=>"西暦275年時点で4都市以上、西暦270年以降で5都市以上~西暦255年以降で8都市以上領有＆北地・朔方・臨河を領有",
+            ()=>[
+              "西暦255年以降",
+              "8都市以上領有",
+              "※西暦255年以降5年毎1都市緩和",
+              "北地を領有",
+              "朔方を領有",
+              "臨河を領有"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.南匈奴)>=8-(Turn.GetYear(game)-255)/5&&Country.HasAreas(game,ECountry.南匈奴,[EArea.北地,EArea.朔方,EArea.臨河]),
             (game)=>new() {
-              {  "西暦255年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.南匈奴)>=8-(Turn.GetYear(game)-255)/5 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-255)/5}都市以上領有",Country.GetAreaNum(game,ECountry.南匈奴)>=8-Math.Max(0,Turn.GetYear(game)-255)/5 },
+              { "― ※緩和前条件8都市",null },
+              { "― ※西暦255年以降5年毎1都市緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.南匈奴)}都市",null },
               { "北地を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.北地]) },
               { "朔方を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.朔方]) },
               { "臨河を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.臨河]) }
             },
             0,0)},
 					{ECountry.鮮卑,new CountryInfo(500,1,Color.FromArgb(255,170,221,153),
-            ()=>"西暦275年時点で7都市以上、西暦271年以降で8都市以上~西暦255年以降で12都市以上領有＆弾汗・鮮卑を領有",
+            ()=>[
+              "西暦255年以降",
+              "12都市以上領有",
+              "※西暦255年以降4年毎1都市緩和",
+              "弾汗を領有",
+              "鮮卑を領有"
+              ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.鮮卑)>=12-(Turn.GetYear(game)-255)/4&&Country.HasAreas(game,ECountry.鮮卑,[EArea.弾汗,EArea.鮮卑]),
             (game)=>new() {
-              { "西暦255年以降で12都市以上領有(4年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.鮮卑)>=12-(Turn.GetYear(game)-255)/4 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{12-Math.Max(0,Turn.GetYear(game)-255)/4}都市以上領有",Country.GetAreaNum(game,ECountry.鮮卑)>=12-Math.Max(0,Turn.GetYear(game)-255)/4 },
+              { "― ※緩和前条件12都市",null },
+              { "― ※西暦255年以降4年毎1都市緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.鮮卑)}都市",null },
               { "弾汗を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.弾汗]) },
               { "鮮卑を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.鮮卑]) }
             },
             0,0)},
 					{ECountry.烏丸,new CountryInfo(100,1,Color.FromArgb(255,204,238,102),
-            ()=>"西暦275年時点で4都市以上、西暦270年以降で5都市以上~西暦255年以降で8都市以上領有＆烏桓を領有",
+            ()=>[
+              "西暦255年以降",
+              "8都市以上領有",
+              "※西暦255年以降5年毎1都市緩和",
+              "烏桓を領有"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.烏丸)>=8-(Turn.GetYear(game)-255)/5&&Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]),
             (game)=>new(){
-              { "西暦255年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.烏丸)>=8-(Turn.GetYear(game)-255)/5 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-255)/5}都市以上領有",Country.GetAreaNum(game,ECountry.烏丸)>=8-Math.Max(0,Turn.GetYear(game)-255)/5 },
+              { "― ※緩和前条件8都市",null },
+              { "― ※西暦255年以降5年毎1都市緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.烏丸)}都市",null },
               { "烏桓を領有",Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]) }
             },
             0,0)},
 					{ECountry.高句麗,new CountryInfo(200,1,Color.FromArgb(255,221,153,187),
-            ()=>"西暦275年時点で4都市以上、西暦270年以降で5都市以上~西暦255年以降で8都市以上領有＆襄平・番汗・朝鮮を領有",
+            ()=>[
+              "西暦255年以降",
+              "8都市以上領有",
+              "※西暦255年以降5年毎1都市緩和",
+              "襄平を領有",
+              "番汗を領有",
+              "朝鮮を領有"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.高句麗)>=8-(Turn.GetYear(game)-255)/5&&Country.HasAreas(game,ECountry.高句麗,[EArea.襄平,EArea.番汗,EArea.朝鮮]),
             (game)=>new(){
-              {  "西暦255年以降で8都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.高句麗)>=8-(Turn.GetYear(game)-255)/5 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{8-Math.Max(0,Turn.GetYear(game)-255)/5}都市以上領有",Country.GetAreaNum(game,ECountry.高句麗)>=8-Math.Max(0,Turn.GetYear(game)-255)/5 },
+              { "― ※緩和前条件8都市",null },
+              { "― ※西暦255年以降5年毎1都市緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.高句麗)}都市",null },
               { "襄平を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.襄平]) },
               { "番汗を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.番汗]) },
               { "朝鮮を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.朝鮮]) }
             },
             0,0)},
 					{ECountry.沃沮,new CountryInfo(100,1,Color.FromArgb(255,153,187,221),
-            ()=>"西暦275年時点で3都市以上、西暦270年以降で4都市以上~西暦255年以降で7都市以上領有＆沃沮を領有",
+            ()=>[
+              "西暦255年以降",
+              "7都市以上領有",
+              "※西暦255年以降5年毎1都市緩和",
+              "沃沮を領有"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.沃沮)>=7-(Turn.GetYear(game)-255)/5&&Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]),
             (game)=>new() {
-              { "西暦255年以降で7都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.沃沮)>=7-(Turn.GetYear(game)-255)/5 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{7-Math.Max(0,Turn.GetYear(game)-255)/5}都市以上領有",Country.GetAreaNum(game,ECountry.沃沮)>=7-Math.Max(0,Turn.GetYear(game)-255)/5 },
+              { "― ※緩和前条件7都市",null },
+              { "― ※西暦255年以降5年毎1都市緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.沃沮)}都市",null },
               { "沃沮を領有",Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]) }
             },
             0,0)},
 					{ECountry.馬韓,new CountryInfo(300,1,Color.FromArgb(255,170,238,136),
-            ()=>"西暦275年時点で3都市以上、西暦270年以降で4都市以上~西暦255年以降で7都市以上領有＆番汗・朝鮮・目支を領有",
+            ()=>[
+              "西暦255年以降",
+              "7都市以上領有",
+              "※西暦255年以降5年毎1都市緩和",
+              "番汗を領有",
+              "朝鮮を領有",
+              "目支を領有"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.馬韓)>=7-(Turn.GetYear(game)-255)/5&&Country.HasAreas(game,ECountry.馬韓,[EArea.番汗,EArea.朝鮮,EArea.目支]),
             (game)=>new(){
-              { "西暦255年以降で7都市以上領有(5年毎1都市緩和)",Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.馬韓)>=7-(Turn.GetYear(game)-255)/5 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"{7-Math.Max(0,Turn.GetYear(game)-255)/5}都市以上領有",Country.GetAreaNum(game,ECountry.馬韓)>=7-Math.Max(0,Turn.GetYear(game)-255)/5 },
+              { "― ※緩和前条件7都市",null },
+              { "― ※西暦255年以降5年毎1都市緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}都市緩和適用)",null },
+              { $"― ※現在 {Country.GetAreaNum(game,ECountry.馬韓)}都市",null },
               { "番汗を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.番汗]) },
               { "朝鮮を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.朝鮮]) },
               { "目支を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.目支]) }
             },
             0,0)},
 					{ECountry.琉球,new CountryInfo(100,1,Color.FromArgb(255,204,170,153),
-            ()=>"西暦275年時点で自陣営総内政値7以上、西暦270年以降で自陣営総内政値8以上~西暦255年以降で自陣営総内政値11以上＆首里を領有＆資金1000以上",
+            ()=>[
+              "西暦255年以降",
+              "内政値11以上",
+              "※西暦255年以降5年毎内政値1緩和",
+              "首里を領有",
+              "資金1000以上"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetTotalAffair(game,ECountry.琉球)>=11-(Turn.GetYear(game)-255)/5&&Country.HasAreas(game,ECountry.琉球,[EArea.首里])&&Country.GetFund(game,ECountry.琉球)>=1000,
             (game)=>new() {
-              { "西暦255年以降で自陣営総内政値11以上(5年毎1内政値緩和)",Turn.GetYear(game)>=255&&Country.GetTotalAffair(game,ECountry.琉球)>=11-(Turn.GetYear(game)-255)/5 },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}内政値緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"内政値{11-Math.Max(0,Turn.GetYear(game)-255)/5}以上",Country.GetTotalAffair(game,ECountry.琉球)>=11-Math.Max(0,Turn.GetYear(game)-255)/5 },
+              { "― ※緩和前条件11以上",null },
+              { "― ※西暦255年以降5年毎内政値1緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/5}内政値緩和適用)",null },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.琉球)}",null },
               { "首里を領有",Country.HasAreas(game,ECountry.琉球,[EArea.首里]) },
               { "資金1000以上",Country.GetFund(game,ECountry.琉球)>=1000 }
             },
             0,1)},
 					{ECountry.南越,new CountryInfo(200,1,Color.FromArgb(255,204,170,221),
-            ()=>"西暦275年時点で自陣営総内政値60以上、西暦274年以降で自陣営総内政値61以上~西暦255年以降で自陣営総内政値80以上＆南越・日南を領有",
+            ()=>[
+              "西暦255年以降",
+              "内政値80以上",
+              "※西暦255年以降1年毎内政値1緩和",
+              "南越を領有",
+              "日南を領有"
+            ],
             (game)=>Turn.GetYear(game)>=255&&Country.GetTotalAffair(game,ECountry.南越)>=80-(Turn.GetYear(game)-255)&&Country.HasAreas(game,ECountry.南越,[EArea.南越,EArea.日南]),
             (game)=>new(){
-              { "西暦255年以降で自陣営総内政値80以上(1年毎1内政値緩和)",Turn.GetYear(game)>=255&&Country.GetTotalAffair(game,ECountry.南越)>=80-(Turn.GetYear(game)-255) },
-              { $"― 255年以降",Turn.GetYear(game)>=255 },
-              { $"― 現在{Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)}内政値緩和)",true },
+              { $"西暦255年以降",Turn.GetYear(game)>=255 },
+              { $"内政値{80-Math.Max(0,Turn.GetYear(game)-255)}以上",Country.GetTotalAffair(game,ECountry.南越)>=80-Math.Max(0,Turn.GetYear(game)-255) },
+              { "― ※緩和前条件80以上",null },
+              { "― ※西暦255年以降1年毎内政値1緩和",null },
+              { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)}内政値緩和適用)",null },
+              { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.南越)}",null },
               { "南越を領有",Country.HasAreas(game,ECountry.南越,[EArea.南越]) },
               { "日南を領有",Country.HasAreas(game,ECountry.南越,[EArea.日南]) }
             },

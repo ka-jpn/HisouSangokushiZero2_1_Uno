@@ -12,7 +12,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     public record PersonParam(ERole Role,int Rank,int BirthYear,int DeathYear,ECountry Country,int? GameAppearYear = null,int? GameDeathTurn=null,Post? Post=null);
     public record AffairsParam(decimal AffairsMax,decimal AffairNow);
     public record AreaInfo(Point Position,AffairsParam AffairParam,ECountry? Country);
-    public record CountryInfo(decimal Fund,int NavyLevel,Color ViewColor,Func<string> WinConditionMessageFunc,Func<GameState,bool> WinConditionJudgeFunc,Func<GameState,Dictionary<string,bool>> WinConditionProgressExplainFunc,int SleepTurnNum,int AnonymousPersonNum,int? MaxAreaNum=null,EArea? CapitalArea = null,ECountry? PerishFrom = null);
+    public record CountryInfo(decimal Fund,int NavyLevel,Color ViewColor,Func<string[]> WinConditionMessageFunc,Func<GameState,bool> WinConditionJudgeFunc,Func<GameState,Dictionary<string,bool?>> WinConditionProgressExplainFunc,int SleepTurnNum,int AnonymousPersonNum,int? MaxAreaNum=null,EArea? CapitalArea = null,ECountry? PerishFrom = null);
 		internal record Commander(Person? MainPerson,Person? SubPerson);
 		public record GameState(Scenario? NowScenario,Dictionary<EArea,AreaInfo> AreaMap,Dictionary<ECountry,CountryInfo> CountryMap,Dictionary<Person,PersonParam> PersonMap,ECountry? PlayCountry,int? PlayTurn,int PlayerMaxCellNum,Phase Phase,Dictionary<ECountry,EArea?> ArmyTargetMap,bool IsTurnProcessing,string[] LogMessage,string[] TrunLog,string[] GameLog,ECountry[] WinCountrys);
     public record PostKind(PostHead? MaybeHead,int? MaybePostNo,EArea? MaybeArea) {
