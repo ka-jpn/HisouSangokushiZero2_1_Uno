@@ -9,8 +9,8 @@
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.HisouSangokushiZero2_1_Uno</ApplicationId>
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.4</ApplicationDisplayVersion>
-		<ApplicationVersion>1.4</ApplicationVersion>
+		<ApplicationDisplayVersion>1.5</ApplicationDisplayVersion>
+		<ApplicationVersion>1.5</ApplicationVersion>
 		<!-- Package Publisher -->
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
@@ -43,8 +43,50 @@
 		<UnoIcon Include="Assets\Icons\icon.svg" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Compile Update="ChangeLog.xaml.cs">
+	    <DependentUpon>ChangeLog.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="PersonData.xaml.cs">
+	    <DependentUpon>PersonData.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Setting.xaml.cs">
+	    <DependentUpon>Setting.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="WinCond.xaml.cs">
+	    <DependentUpon>WinCond.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
 	  <Content Update="Assets\Icons\icon.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Explain.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="WinCond.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="PersonData.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="ChangeLog.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Setting.xaml">
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 </Project>
