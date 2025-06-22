@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" ?>
 <UserControl 
-  x:Class="HisouSangokushiZero2_1_Uno.ChangeLog"
+  x:Class="HisouSangokushiZero2_1_Uno.Pages.ChangeLog"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   HorizontalAlignment="Center">
@@ -24,6 +24,6 @@
     <TextBlock Text="2025/06/11 ver1.3 アップデートの際、人物駒が動かせなくなっていたのを修正"/>
     <TextBlock Text="2025/06/14 ver1.4 レイアウト微修正"/>
     <TextBlock Text="2025/06/15 ver1.5 投稿ページに繋がらない不具合に対処＆レイアウト微修正"/>
-    
+    <TextBlock Text="2025/06/19 ver1.6 "/>
   </StackPanel>
 </UserControl>

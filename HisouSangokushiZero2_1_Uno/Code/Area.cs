@@ -29,5 +29,5 @@ internal static class Area {
     return [.. GetCountryAreaInfoMap(game,country).OrderByDescending(v => ComputeAreaRemAffairs(game,v)).Select(v => v.Key)];
     static decimal ComputeAreaRemAffairs(GameState game,KeyValuePair<EArea,AreaInfo> area) => area.Value.AffairParam.MyApplyF(v => v.AffairsMax - v.AffairNow);
   }
-  internal static EArea[] GetChinaAreas(int scenarioNo)=>GameInfo.scenarios.ElementAtOrDefault(scenarioNo)?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.ChinaAreas??[];
+  internal static EArea[] GetChinaAreas(int scenarioNo)=>BaseData.scenarios.ElementAtOrDefault(scenarioNo)?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.ChinaAreas??[];
 }

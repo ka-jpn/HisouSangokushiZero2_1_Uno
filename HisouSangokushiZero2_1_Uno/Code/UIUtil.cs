@@ -1,7 +1,7 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using HisouSangokushiZero2_1_Uno.Pages;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -19,29 +19,35 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static readonly Size mapSize = new(2000,1750);
     internal static readonly Point mapGridCount = new(9,10);
     internal static readonly GridLength infoFrameWidth = new(50);
-    internal static readonly double dataListFrameWidth = 1;
-    internal static readonly Color dataListFrameColor = Color.FromArgb(255,150,150,150);
+    internal static readonly Thickness dataListFrameThickness = new(1);
     internal static readonly double fixModeMaxWidth = 1000;
     internal static readonly Size areaSize = new(204,155);
     internal static readonly CornerRadius areaCornerRadius = new(30);
+    internal static readonly double postFrameWidth = 1;
     internal static readonly Size personPutSize = new(99,70);
-    internal static readonly double countryPersonPutPanelHeight = (personPutSize.Height + postFrameWidth * 4) * 4 + postFrameWidth * 4 * 2 + BasicStyle.textHeight;
+    internal static readonly double countryPersonPutPanelHeight = personPutSize.Height * 4 + postFrameWidth * 2 * 2 + BasicStyle.textHeight;
     internal static readonly double personRankFontScale = 1.5;
     internal static readonly double personNameFontScale = 1.75;
-    internal static readonly Color landRoadColor = Color.FromArgb(150,120,120,50);
-    internal static readonly Color waterRoadColor = Color.FromArgb(150,50,50,150);
-    internal static readonly double postFrameWidth = 1;
-     internal static double CalcFullWidthLength(string str) => str.Length - str.Count("0123456789-.()".Contains) * 0.4;
-    internal static double CalcElemWidth(double textlength) => BasicStyle.fontsize * textlength + dataListFrameWidth * 2;
+    internal static readonly SolidColorBrush transparentBrush = new(Colors.Transparent);
+    internal static readonly SolidColorBrush landRoadBrush = new(Color.FromArgb(150,120,120,50));
+    internal static readonly SolidColorBrush waterRoadBrush = new(Color.FromArgb(150,50,50,150));
+    internal static readonly SolidColorBrush dataBackBrush = new(Color.FromArgb(255,240,240,240));
+    internal static readonly SolidColorBrush dataListFrameBrush = new(Color.FromArgb(255,150,150,150));
+    internal static readonly int capitalPieceRowNum = 3;
+    internal static readonly int capitalPieceColumnNum = 5;
+    internal static readonly int capitalPieceCellNum = capitalPieceRowNum * capitalPieceColumnNum;
+    internal static readonly string[] yearItems = ["春","夏","秋","冬"];
+    internal static double CalcFullWidthTextLength(string str) => str.Length - str.Count("0123456789-.()".Contains) * 0.4 - str.Count(" ".Contains) * 0.8;
+    internal static double CalcDataListElemWidth(double textlength) => BasicStyle.fontsize * textlength + dataListFrameThickness.Left + dataListFrameThickness.Right;
     internal static StackPanel[] CreatePersonDataList(int scenarioNo,int chunkBlockBlockSize,int chunkBlockNum) {
       ScenarioData.ScenarioInfo? maybeScenarioInfo = ScenarioData.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
       Dictionary<DefType.Person,PersonParam>[] chunkedPersonInfoMaps = maybeScenarioInfo?.PersonMap.MyApplyF(elems => elems.OrderBy(v => v.Value.Country).ThenBy(v => v.Value.Role).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
       StackPanel[] personDataBlock = maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedPersonInfoMaps.Select(chunkedPersonInfoMap => CreatePersonDataPanel(scenarioInfo,chunkedPersonInfoMap)).ToArray()) ?? [];
       return [.. personDataBlock.Chunk(chunkBlockBlockSize).Select(v => new StackPanel() { Orientation = Orientation.Horizontal }.MySetChildren([.. v]))];
       static StackPanel CreatePersonDataPanel(ScenarioData.ScenarioInfo scenarioInfo,Dictionary<DefType.Person,PersonParam> includePersonInfoMap) {
-        return new StackPanel { Background = new SolidColorBrush(dataListFrameColor) }.MySetChildren([
+        return new StackPanel { Background = dataListFrameBrush }.MySetChildren([
           CreatePersonDataLine(
-          Color.FromArgb(255,240,240,240),
+          dataBackBrush,
           new TextBlock { Text="陣営",HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text="人物名",HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text="ロール",Margin=new(0,0,-BasicStyle.fontsize*3*0.5,0),RenderTransform=new ScaleTransform() { ScaleX=0.5 } },
@@ -50,9 +56,9 @@ namespace HisouSangokushiZero2_1_Uno.Code {
           new TextBlock { Text="登場",HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text="没年",HorizontalAlignment=HorizontalAlignment.Center }
         ), .. includePersonInfoMap.Select(personInfo => CreatePersonDataLine(
-          scenarioInfo.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewColor??Colors.Transparent,
+          scenarioInfo.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewBrush??transparentBrush,
           new TextBlock { Text=personInfo.Value.Country.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
-          new TextBlock { Text=personInfo.Key.Value,Margin=new(0,0,-BasicStyle.fontsize*(UIUtil.CalcFullWidthLength(personInfo.Key.Value)-3),0),RenderTransform=new ScaleTransform() { ScaleX=Math.Min(1,3/UIUtil.CalcFullWidthLength(personInfo.Key.Value)) } },
+          new TextBlock { Text=personInfo.Key.Value,Margin=new(0,0,-BasicStyle.fontsize*(CalcFullWidthTextLength(personInfo.Key.Value)-3),0),RenderTransform=new ScaleTransform() { ScaleX=Math.Min(1,3/CalcFullWidthTextLength(personInfo.Key.Value)) } },
           new Image{ Source=new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")),Width=BasicStyle.fontsize,Height=BasicStyle.fontsize,HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Center },
           new TextBlock { Text=personInfo.Value.Rank.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text=personInfo.Value.BirthYear.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
@@ -60,16 +66,16 @@ namespace HisouSangokushiZero2_1_Uno.Code {
           new TextBlock { Text=personInfo.Value.DeathYear.ToString(),HorizontalAlignment=HorizontalAlignment.Center }
         ))
         ]);
-        static StackPanel CreatePersonDataLine(Color backColor,UIElement countryNameElem,UIElement personNameElem,UIElement personRoleElem,UIElement personRankElem,UIElement personBirthYearElem,UIElement personAppearYearElem,UIElement personDeathYearElem) {
-          return new StackPanel { Orientation = Orientation.Horizontal,Background = new SolidColorBrush(backColor),}.MySetChildren([
-            new Border{ Width=CalcElemWidth(3),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(countryNameElem),
-          new Border{ Width=CalcElemWidth(3),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(personNameElem),
-          new Border{ Width=CalcElemWidth(1.5),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(personRoleElem),
-          new Border{ Width=CalcElemWidth(1.5),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(personRankElem),
-          new Border{ Width=CalcElemWidth(2),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(personBirthYearElem),
-          new Border{ Width=CalcElemWidth(2),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(personAppearYearElem),
-          new Border{ Width=CalcElemWidth(2),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(personDeathYearElem),
-        ]);
+        static StackPanel CreatePersonDataLine(SolidColorBrush backColor,UIElement countryNameElem,UIElement personNameElem,UIElement personRoleElem,UIElement personRankElem,UIElement personBirthYearElem,UIElement personAppearYearElem,UIElement personDeathYearElem) {
+          return new StackPanel { Orientation = Orientation.Horizontal,Background = backColor,}.MySetChildren([
+            new Border{ Width=CalcDataListElemWidth(3),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(countryNameElem),
+            new Border{ Width=CalcDataListElemWidth(3),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(personNameElem),
+            new Border{ Width=CalcDataListElemWidth(1.5),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(personRoleElem),
+            new Border{ Width=CalcDataListElemWidth(1.5),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(personRankElem),
+            new Border{ Width=CalcDataListElemWidth(2),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(personBirthYearElem),
+            new Border{ Width=CalcDataListElemWidth(2),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(personAppearYearElem),
+            new Border{ Width=CalcDataListElemWidth(2),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(personDeathYearElem),
+          ]);
         }
       }
     }
@@ -78,24 +84,24 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       Dictionary<ECountry,CountryInfo>[] chunkedCountryInfoMaps = maybeScenarioInfo?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
       return maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedCountryInfoMaps.Select(chunkedCountryInfoMap => CreateCountryDataPanel(scenarioInfo,chunkedCountryInfoMap)).ToArray()) ?? [];
       static StackPanel CreateCountryDataPanel(ScenarioData.ScenarioInfo scenarioInfo,Dictionary<ECountry,CountryInfo> includeCountryInfoMap) {
-        return new StackPanel { Background = new SolidColorBrush(dataListFrameColor) }.MySetChildren([
+        return new StackPanel { Background = dataListFrameBrush }.MySetChildren([
           CreateCountryDataLine(
-          Color.FromArgb(255,240,240,240),
+          dataBackBrush,
           new TextBlock { Text="陣営名",HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text="資金",HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text="所属エリア",HorizontalAlignment=HorizontalAlignment.Center }
         ), .. includeCountryInfoMap.Select(countryInfo => CreateCountryDataLine(
-          scenarioInfo.CountryMap.GetValueOrDefault(countryInfo.Key)?.ViewColor??Colors.Transparent,
+          scenarioInfo.CountryMap.GetValueOrDefault(countryInfo.Key)?.ViewBrush??transparentBrush,
           new TextBlock { Text=countryInfo.Key.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text=countryInfo.Value.Fund.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text=string.Join(",",scenarioInfo.AreaMap.Where(v=>v.Value.Country==countryInfo.Key).Select(v=>v.Key.ToString())),HorizontalAlignment=HorizontalAlignment.Left }
         ))
         ]);
-        static StackPanel CreateCountryDataLine(Color backColor,UIElement countryNameElem,UIElement countryFundElem,UIElement countryAreasElem) {
-          return new StackPanel { Orientation = Orientation.Horizontal,Background = new SolidColorBrush(backColor),}.MySetChildren([
-            new Border{ Width=CalcElemWidth(3),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(countryNameElem),
-            new Border{ Width=CalcElemWidth(3),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(countryFundElem),
-            new Border{ Width=CalcElemWidth(40),BorderThickness=new(dataListFrameWidth),BorderBrush=new SolidColorBrush(dataListFrameColor) }.MySetChild(countryAreasElem),
+        static StackPanel CreateCountryDataLine(SolidColorBrush backBrush,UIElement countryNameElem,UIElement countryFundElem,UIElement countryAreasElem) {
+          return new StackPanel { Orientation = Orientation.Horizontal,Background = backBrush,}.MySetChildren([
+            new Border{ Width=CalcDataListElemWidth(3),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(countryNameElem),
+            new Border{ Width=CalcDataListElemWidth(3),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(countryFundElem),
+            new Border{ Width=CalcDataListElemWidth(40),BorderThickness=dataListFrameThickness,BorderBrush=dataListFrameBrush }.MySetChild(countryAreasElem),
           ]);
         }
       }

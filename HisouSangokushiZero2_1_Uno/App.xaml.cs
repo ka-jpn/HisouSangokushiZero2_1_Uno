@@ -1,3 +1,4 @@
+using HisouSangokushiZero2_1_Uno.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;

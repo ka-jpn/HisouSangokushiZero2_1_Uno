@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" ?>
 <UserControl 
-  x:Class="HisouSangokushiZero2_1_Uno.PersonData"
+  x:Class="HisouSangokushiZero2_1_Uno.Pages.PersonData"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   HorizontalAlignment="Center">
   <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-      <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ１："/>
-      <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource Bold}"/>
+      <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ１："/>
+      <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
     </StackPanel>
     <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
     <StackPanel x:Name="PersonDataListPanel1" HorizontalAlignment="Center"/>
     <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
     <StackPanel x:Name="CountryDataListPanel1" HorizontalAlignment="Center"/>
     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-      <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ２："/>
-      <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource Bold}"/>
+      <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ２："/>
+      <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
     </StackPanel>
     <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
     <StackPanel x:Name="PersonDataListPanel2" HorizontalAlignment="Center"/>

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" ?>
 <Page
-  x:Class="HisouSangokushiZero2_1_Uno.MainPage"
+  x:Class="HisouSangokushiZero2_1_Uno.Pages.MainPage"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:local="using:HisouSangokushiZero2_1_Uno"
+  xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
 	mc:Ignorable="d"
 	x:Name="Page" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="False" Background="#EEFE">
@@ -26,10 +26,8 @@
       <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400"/>
       <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
     <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
-    <Grid x:Name="CountryInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="230" Height="320" Background="#BFFF">
-      <StackPanel x:Name="CountryInfoContentsPanel" VerticalAlignment="Center"/>
-    </Grid>
-    <Grid x:Name="ExPanel" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    <local:StateInfo x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    <local:Ask Grid.RowSpan="2"/>
     <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>

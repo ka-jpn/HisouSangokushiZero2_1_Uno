@@ -9,12 +9,12 @@
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.HisouSangokushiZero2_1_Uno</ApplicationId>
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.5</ApplicationDisplayVersion>
-		<ApplicationVersion>1.5</ApplicationVersion>
+		<ApplicationDisplayVersion>1.6</ApplicationDisplayVersion>
+		<ApplicationVersion>1.6</ApplicationVersion>
 		<!-- Package Publisher -->
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
-		<Description>HisouSangokushiZero2_1_Uno powered by Uno Platform.</Description>
+		<Description>HisouSangokushiZero2_1 powered by Uno Platform.</Description>
 		<UnoFeatures>
 			SkiaRenderer;
 			Svg;
@@ -33,59 +33,35 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<BlazorLinkerDescriptor Include="LinkerConfig.xml" />
+		<EmbeddedResource Include="Platforms\WebAssembly\WasmScripts\myScript.js">
+		  <IsDefaultItem>true</IsDefaultItem>
+		</EmbeddedResource>
+		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=512m,nursery-size=64m,evacuation-threshold=66,major=marksweep" />
 	</ItemGroup>
 	<ItemGroup>
-		<Page Update="BasicStyle.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</Page>
+		<UnoIcon Include="Assets\Icons\icon.svg" ForegroundFile="Assets\Icons\icon_foreground.svg" />
 	</ItemGroup>
+	<PropertyGroup>
+		<UnoSplashScreenFile>Assets\Splash\splash_screen.svg</UnoSplashScreenFile>
+		<UnoSplashScreenColor>#DDE</UnoSplashScreenColor>
+	</PropertyGroup>
+	<ProjectExtensions><VisualStudio><UserProperties platforms_4webassembly_4manifest_1webmanifest__JsonSchema="" /></VisualStudio></ProjectExtensions>
 	<ItemGroup>
-		<UnoIcon Include="Assets\Icons\icon.svg" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="ChangeLog.xaml.cs">
-	    <DependentUpon>ChangeLog.xaml</DependentUpon>
+	  <Compile Update="Pages\StateInfo.xaml.cs">
+	    <DependentUpon>StateInfo.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="PersonData.xaml.cs">
-	    <DependentUpon>PersonData.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Setting.xaml.cs">
-	    <DependentUpon>Setting.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="WinCond.xaml.cs">
-	    <DependentUpon>WinCond.xaml</DependentUpon>
+	  <Compile Update="Pages\Ask.xaml.cs">
+	    <DependentUpon>Ask.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Update="Assets\Icons\icon.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Explain.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="WinCond.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="PersonData.xaml">
+	  <Page Update="Pages\Ask.xaml">
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="ChangeLog.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Setting.xaml">
-	    <SubType>Designer</SubType>
+	  <Page Update="Pages\StateInfo.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>

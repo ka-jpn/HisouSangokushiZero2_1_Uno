@@ -1,4 +1,5 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using HisouSangokushiZero2_1_Uno.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,7 +104,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
           }
         })
       };
-      static GameState RemoveDeathPersonPost(GameState game) => Turn.GetInYear(game) == BaseData.yearItems.Length / 2 ? RemoveNaturalDeathPersonPost(game) : game;
+      static GameState RemoveDeathPersonPost(GameState game) => Turn.GetInYear(game) == UIUtil.yearItems.Length / 2 ? RemoveNaturalDeathPersonPost(game) : game;
       static decimal AddNowAfair(GameState game,KeyValuePair<EArea,AreaInfo> area) {
         decimal countryAffairPower = Country.GetAffairPower(game,area.Value.Country) / Country.GetAffairDifficult(game,area.Value.Country);
         decimal personAffairPower = game.PersonMap.MyNullable().FirstOrDefault(v => v?.Value.Post?.PostRole == ERole.affair && v?.Value.Post?.PostKind == new PostKind(area.Key))?.Value.MyApplyF(v => Person.CalcRank(v,ERole.affair))??0;

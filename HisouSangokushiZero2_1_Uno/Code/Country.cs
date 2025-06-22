@@ -1,4 +1,5 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,8 @@ using Windows.UI;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class Country {
-    internal static Color GetCountryColor(GameState game,ECountry? country) => country?.MyApplyF(game.CountryMap.GetValueOrDefault)?.ViewColor ?? Color.FromArgb(255,240,240,240);
+    private static readonly SolidColorBrush nonCountryBrush = new(Color.FromArgb(255,240,240,240));
+    internal static SolidColorBrush GetCountryBrush(GameState game,ECountry? country) => country?.MyApplyF(game.CountryMap.GetValueOrDefault)?.ViewBrush ?? nonCountryBrush;
 		internal static decimal GetTotalAffair(GameState game,ECountry country) => game.AreaMap.Where(v => v.Value.Country==country).Sum(v => v.Value.AffairParam.AffairNow*(v.Key==game.CountryMap.GetValueOrDefault(country)?.CapitalArea ? 1.5m : 1m));
 		internal static decimal GetAffairPower(GameState game,ECountry? country) => Commander.GetAffairsCommander(game,country).MyApplyF(v => Commander.CommanderRank(game,v,ERole.affair)).MyApplyF(affairsRank => affairsRank/5m+1);
 		internal static decimal GetAffairDifficult(GameState game,ECountry? country) => Math.Round((decimal)Math.Pow(GetAreaNum(game,country),0.5),4);

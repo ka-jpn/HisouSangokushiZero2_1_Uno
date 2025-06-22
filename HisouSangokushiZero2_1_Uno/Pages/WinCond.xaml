@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" ?>
 <UserControl 
-  x:Class="HisouSangokushiZero2_1_Uno.WinCond"
+  x:Class="HisouSangokushiZero2_1_Uno.Pages.WinCond"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   HorizontalAlignment="Center">
   <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-      <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ１："/>
-      <TextBlock x:Name="WinCondScenarioName1" FontFamily="{StaticResource Bold}"/>
+      <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ１："/>
+      <TextBlock x:Name="WinCondScenarioName1" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
     </StackPanel>
     <StackPanel x:Name="WinCondListPanel1" HorizontalAlignment="Center"/>
     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-      <TextBlock FontFamily="{StaticResource Bold}" Text="シナリオ２："/>
-      <TextBlock x:Name="WinCondScenarioName2" FontFamily="{StaticResource Bold}"/>
+      <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ２："/>
+      <TextBlock x:Name="WinCondScenarioName2" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
     </StackPanel>
     <StackPanel x:Name="WinCondListPanel2" HorizontalAlignment="Center"/>
   </StackPanel>
