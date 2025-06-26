@@ -1,15 +1,13 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.Foundation;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using Point = HisouSangokushiZero2_1_Uno.Code.DefType.Point;
 namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class Area {
   private static ScenarioData.Road[]? GetRoads(GameState game) => game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.RoadConnections;
   private static Point ConvertPointFromAreaPosition(Point areaPosition,Size mapSize,Size areaSize,Point mapGridCount,double infoFrameWidth) => new(areaPosition.X * (mapSize.Width - areaSize.Width - infoFrameWidth) / (mapGridCount.X - 1) + infoFrameWidth + areaSize.Width / 2,areaPosition.Y * (mapSize.Height - areaSize.Height - infoFrameWidth) / (mapGridCount.Y - 1) + infoFrameWidth + areaSize.Height / 2);
   internal static Point? GetAreaPoint(GameState game,EArea areaName,Size mapSize,Size areaSize,Point mapGridCount,double infoFrameWidth) => game.NowScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault)?.AreaMap.GetValueOrDefault(areaName)?.Position.MyApplyF(areaPos => ConvertPointFromAreaPosition(areaPos,mapSize,areaSize,mapGridCount,infoFrameWidth));
-  internal static EArea? GetCapitalArea(GameState game,ECountry countryName) => game.CountryMap.GetValueOrDefault(countryName)?.CapitalArea;
-  internal static EArea? ComputeCapitalArea(GameState game,ECountry countryName) => countryName == ECountry.漢 ? null : GetCountryAreaInfoMap(game,countryName).MyNullable().MaxBy(v => v?.Value.AffairParam.AffairNow)?.Key;
   internal static Dictionary<EArea,AreaInfo> GetCountryAreaInfoMap(GameState game,ECountry country) => game.AreaMap.Where(v => v.Value.Country == country).ToDictionary();
   internal static List<EArea> GetAdjacentAnotherCountryAllAreas(GameState game,ECountry country) => [.. GetCountryAreaInfoMap(game,country).SelectMany(areaInfo => GetAdjacentAnotherCountryAreas(game,country,areaInfo.Key)).Distinct()];
   internal static bool IsPlayerSelectable(GameState game,EArea? area) => area == null || (game.PlayCountry?.MyApplyF(playCountry => GetAdjacentAnotherCountryAllAreas(game,playCountry).Concat(GetCountryAreaInfoMap(game,playCountry).Keys)).Contains(area.Value) ?? true);

@@ -3,27 +3,31 @@
   x:Class="HisouSangokushiZero2_1_Uno.Pages.ChangeLog"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  HorizontalAlignment="Center">
-  <StackPanel>
-    <TextBlock Text="2023/09/28 公開"/>
-    <TextBlock Text="2024/07/01 ver1.0 機能拡張＆説明修正＆マップ更新"/>
-    <StackPanel Padding="20,0,0,0">
-      <TextBlock Text="・人物が1人以下の陣営に人物追加、ただし無理やり気味"/>
-      <TextBlock Text="・人物データに張超,曹寅陣営の欄がなかったので修正"/>
-      <TextBlock Text="・マップの見た目更新"/>
-      <TextBlock Text="・ゲーム中に毎ターンごとに勝利条件と達成具合が表示されるように"/>
-      <TextBlock Text="・役割にアイコンを割り当てた"/>
-      <TextBlock Text="・助力システムを実装、役割を変えることができるようになった"/>
+  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <StackPanel x:Name="ContentPanel">
+      <StackPanel HorizontalAlignment="Center">
+        <TextBlock Text="2023/09/28 公開"/>
+        <TextBlock Text="2024/07/01 ver1.0 機能拡張＆説明修正＆マップ更新"/>
+        <StackPanel Padding="20,0,0,0">
+          <TextBlock Text="・人物が1人以下の陣営に人物追加、ただし無理やり気味"/>
+          <TextBlock Text="・人物データに張超,曹寅陣営の欄がなかったので修正"/>
+          <TextBlock Text="・マップの見た目更新"/>
+          <TextBlock Text="・ゲーム中に毎ターンごとに勝利条件と達成具合が表示されるように"/>
+          <TextBlock Text="・役割にアイコンを割り当てた"/>
+          <TextBlock Text="・助力システムを実装、役割を変えることができるようになった"/>
+        </StackPanel>
+        <TextBlock Text="2025/06/08 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
+        <StackPanel Padding="20,0,0,0">
+          <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、陣営勝利条件の微調整、挙動の調整"/>
+          <TextBlock Text="・陣営勝利条件の達成による勝利はCPUが先に達成した場合は敗北に"/>
+        </StackPanel>
+        <TextBlock Text="2025/06/09 ver1.2 スマホでプレイする際にレイアウトが崩れていたのに対処"/>
+        <TextBlock Text="2025/06/11 ver1.3 アップデートの際、人物駒が動かせなくなっていたのを修正"/>
+        <TextBlock Text="2025/06/14 ver1.4 レイアウト微修正"/>
+        <TextBlock Text="2025/06/15 ver1.5 投稿ページに繋がらない不具合に対処＆レイアウト微修正"/>
+        <TextBlock Text="2025/06/19 ver1.6 レイアウト微修正＆画面のちらつき抑制"/>
+      </StackPanel>
     </StackPanel>
-    <TextBlock Text="2025/06/08 ver1.1 開発言語変更による作り直しにより差し替え公開"/>
-    <StackPanel Padding="20,0,0,0">
-      <TextBlock Text="・見た目変更、人物の追加、人物の登場時期の変更、陣営勝利条件の微調整、挙動の調整"/>
-      <TextBlock Text="・陣営勝利条件の達成による勝利はCPUが先に達成した場合は敗北に"/>
-    </StackPanel>
-    <TextBlock Text="2025/06/09 ver1.2 スマホでプレイする際にレイアウトが崩れていたのに対処"/>
-    <TextBlock Text="2025/06/11 ver1.3 アップデートの際、人物駒が動かせなくなっていたのを修正"/>
-    <TextBlock Text="2025/06/14 ver1.4 レイアウト微修正"/>
-    <TextBlock Text="2025/06/15 ver1.5 投稿ページに繋がらない不具合に対処＆レイアウト微修正"/>
-    <TextBlock Text="2025/06/19 ver1.6 "/>
-  </StackPanel>
+  </ScrollViewer>
 </UserControl>

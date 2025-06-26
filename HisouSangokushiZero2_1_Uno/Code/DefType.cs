@@ -1,11 +1,10 @@
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
+using Windows.Foundation;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	public static class DefType {
 		internal record Text(string Value);
-    public record Point(double X,double Y);
-    public record Size(double Width,double Height);
     public record Scenario(string Value);
     public record Person(string Value);
     public record Post(ERole PostRole,PostKind PostKind);

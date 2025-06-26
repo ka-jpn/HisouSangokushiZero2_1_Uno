@@ -18,15 +18,17 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static string BattleDeathPersonText(ERole role,List<PersonType> deathPersons,ECountry? battleCountry,Lang lang) => Ja.BattleDeathPersonText(role,deathPersons,battleCountry);
     internal static string RoleToText(ERole role,Lang lang) => Ja.RoleToText(role);
     internal static string EndPhaseButtonText(Phase phase,Lang lang) => Ja.EndPhaseButtonText(phase);
-    internal static string? NaturalDeathPersonText(List<PersonType> deathPersons,Lang lang) => Ja.NaturalDeathPersonText(deathPersons);
-    internal static string? WarDeathPersonText(List<PersonType> deathPersons,Lang lang) => Ja.WarDeathPersonText(deathPersons);
+    internal static string? AppearPersonText(ECountry country,List<PersonType> appearPersons) => Ja.AppearPersonText(country,appearPersons);
+    internal static string? FindPersonText(ECountry country,List<PersonType> findPersons) => Ja.FindPersonText(country,findPersons);
+    internal static string? NaturalDeathPersonText(ECountry country,List<PersonType> deathPersons,Lang lang) => Ja.NaturalDeathPersonText(country,deathPersons);
+    internal static string? WarDeathPersonText(ECountry? country,List<PersonType> deathPersons,Lang lang) => Ja.WarDeathPersonText(country,deathPersons);
     internal static string DefenseText(ECountry country,bool isTryAttack,Lang lang) => Ja.DefenseText(country,isTryAttack);
     internal static string RestText(ECountry country,int remainRestTurn,Lang lang) => Ja.RestText(country,remainRestTurn);
     internal static string ChangeHasCountryText(ECountry attackCountry,ECountry? defenseCountry,EArea targetArea,Lang lang) => Ja.ChangeHasCountryText(attackCountry,defenseCountry,targetArea);
     internal static string? FallCapitalText(ECountry? country,Lang lang) => Ja.FallCapitalText(country);
     internal static string? PerishCountryText(ECountry? country,Lang lang) => Ja.PerishCountryText(country);
     internal static string AppendUpdateMaxAreaNumLog(int? updatedMaxAreaNum,ECountry? defenseCountry,EArea targetArea,Lang lang) => Ja.AppendUpdateMaxAreaNumLog(updatedMaxAreaNum,defenseCountry,targetArea);
-
+    internal static string TurnHeadLogText(GameState game) => Ja.TurnHeadLogText(game);
     private static class Ja {
       internal static string GetCountryText(ECountry? country) => country?.ToString() ?? "自治";
       internal static string CommanderToText(CommanderType commander) => commander.MainPerson == null && commander.SubPerson == null ? "無名武官" : $"{commander.MainPerson?.Value ?? "無名武官"}と{commander.SubPerson?.Value ?? "無名武官"}";
@@ -36,14 +38,17 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       internal static string BattleDeathPersonText(ERole role,List<PersonType> deathPersons,ECountry? battleCountry) => $"{(role == ERole.attack ? $"{GetCountryText(battleCountry)}領に侵攻" : $"{GetCountryText(battleCountry)}軍の侵攻を守備")}した{string.Join("と",deathPersons.Select(v => v.Value))}が退却できず戦死";
       internal static string RoleToText(ERole role) => role switch { ERole.central => "中枢", ERole.affair => "内政", ERole.defense => "防衛", ERole.attack => "攻撃" };
       internal static string EndPhaseButtonText(Phase phase) => phase switch { Phase.Starting => "", Phase.Planning => "軍議終了", Phase.Execution => "確認", Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd => "ゲームログを表示" };
-      internal static string? NaturalDeathPersonText(List<PersonType> deathPersons) => deathPersons.Count != 0 ? $"{string.Join("と",deathPersons.Select(v => v.Value))}が死去" : null;
-      internal static string? WarDeathPersonText(List<PersonType> deathPersons) => deathPersons.Count != 0 ? $"{string.Join("と",deathPersons.Select(v => v.Value))}が戦死" : null;
+      internal static string? AppearPersonText(ECountry country,List<PersonType> appearPersons) => appearPersons.Count != 0 ? $"{country}に{string.Join("と",appearPersons.Select(v => v.Value))}が登場" : null;
+      internal static string? FindPersonText(ECountry country,List<PersonType> findPersons) => findPersons.Count != 0 ? $"{country}が{string.Join("と",findPersons.Select(v => v.Value))}を登用" : null;
+      internal static string? NaturalDeathPersonText(ECountry country,List<PersonType> deathPersons) => deathPersons.Count != 0 ? $"{country}の{string.Join("と",deathPersons.Select(v => v.Value))}が死去" : null;
+      internal static string? WarDeathPersonText(ECountry? country,List<PersonType> deathPersons) => deathPersons.Count != 0 ? $"{country}の{string.Join("と",deathPersons.Select(v => v.Value))}が戦死" : null;
       internal static string DefenseText(ECountry country,bool isTryAttack) => $"{(isTryAttack ? "(資金不足で攻撃中止)" : null)}{country}は防衛に専念";
       internal static string RestText(ECountry country,int remainRestTurn) => $"{country}は国力回復中(残り{remainRestTurn}ターン)";
       internal static string ChangeHasCountryText(ECountry attackCountry,ECountry? defenseCountry,EArea targetArea) => $"{GetCountryText(defenseCountry)}領の{targetArea}が{GetCountryText(attackCountry)}領に";
       internal static string FallCapitalText(ECountry? country) => $"{GetCountryText(country)}の首都が陥落";
       internal static string PerishCountryText(ECountry? country) => $"{GetCountryText(country)}が滅亡";
       internal static string AppendUpdateMaxAreaNumLog(int? updatedMaxAreaNum,ECountry? defenseCountry,EArea targetArea) => $"{GetCountryText(defenseCountry)}領の{targetArea}を攻略して最大領土数を{updatedMaxAreaNum}に更新";
+      internal static string TurnHeadLogText(GameState game) => $"------------{Turn.GetCalendarText(game)}------------";
     }
   }
 }

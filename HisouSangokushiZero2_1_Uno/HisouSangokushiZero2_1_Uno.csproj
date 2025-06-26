@@ -36,33 +36,18 @@
 		<EmbeddedResource Include="Platforms\WebAssembly\WasmScripts\myScript.js">
 		  <IsDefaultItem>true</IsDefaultItem>
 		</EmbeddedResource>
-		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=512m,nursery-size=64m,evacuation-threshold=66,major=marksweep" />
+		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=1g,nursery-size=128m,evacuation-threshold=66,major=marksweep" />
 	</ItemGroup>
 	<ItemGroup>
 		<UnoIcon Include="Assets\Icons\icon.svg" ForegroundFile="Assets\Icons\icon_foreground.svg" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Pages\ParamDataView.xaml.cs">
+	    <DependentUpon>ParamDataView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 	<PropertyGroup>
 		<UnoSplashScreenFile>Assets\Splash\splash_screen.svg</UnoSplashScreenFile>
 		<UnoSplashScreenColor>#DDE</UnoSplashScreenColor>
 	</PropertyGroup>
-	<ProjectExtensions><VisualStudio><UserProperties platforms_4webassembly_4manifest_1webmanifest__JsonSchema="" /></VisualStudio></ProjectExtensions>
-	<ItemGroup>
-	  <Compile Update="Pages\StateInfo.xaml.cs">
-	    <DependentUpon>StateInfo.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\Ask.xaml.cs">
-	    <DependentUpon>Ask.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Pages\Ask.xaml">
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Pages\StateInfo.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
 </Project>

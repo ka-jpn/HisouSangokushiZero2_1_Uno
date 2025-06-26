@@ -2,8 +2,7 @@ using HisouSangokushiZero2_1_Uno;
 using System;
 using Uno.UI.Hosting;
 internal class Program {
-  [STAThread]public static void Main(string[] args) {
-    App.InitializeLogging();
+  [STAThread]public static void Main(string[] _) {
     var host = UnoPlatformHostBuilder.Create()
         .App(() => new App())
         .UseX11()

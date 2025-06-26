@@ -25,7 +25,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 		internal static class Country {
 			internal static AttackResult? Attack(GameState game,ECountry? defenseSide,EArea target,Army attack,bool defenseSideFocusDefense,Lang lang) => DefenseArmy(game,defenseSide).MyApplyF(defense => AttackJudge(attack,defense,Distance(game,defenseSide,target),defenseSideFocusDefense)?.MyApplyF(judge => new AttackResult(defense,judge,Text.CountryInvadeText(attack,defense,target,judge,defenseSideFocusDefense,lang))));
 			private static Army DefenseArmy(GameState game,ECountry? defense) => Commander.GetDefenseCommander(game,defense).MyApplyF(commander => new Army(defense,commander,Commander.CommanderRank(game,commander,ERole.defense)));
-			private static int? Distance(GameState game,ECountry? defense,EArea target) => defense?.MyApplyF(defense => Code.Area.GetCapitalArea(game,defense)?.MyApplyF(capitalArea => Code.Area.GetAreaDistance(game,defense,capitalArea,target)));
+			private static int? Distance(GameState game,ECountry? defense,EArea target) => defense?.MyApplyF(defense => Code.Country.GetCapitalArea(game,defense)?.MyApplyF(capitalArea => Code.Area.GetAreaDistance(game,defense,capitalArea,target)));
 			private static AttackJudge? AttackJudge(Army attack,Army defense,int? dist,bool defenseSideFocusDefense) => (dist switch { 0 => 1, _ => (decimal?)null })?.MyApplyF(coefficient => JudgeAttack(attack.Rank,defense.Rank*coefficient,defenseSideFocusDefense));
 		}
 	}

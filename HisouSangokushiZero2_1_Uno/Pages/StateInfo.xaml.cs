@@ -1,14 +1,14 @@
 ﻿using HisouSangokushiZero2_1_Uno.Code;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class StateInfo:UserControl {
   private static Action nextButtonAction = () => { };
-  private static StateInfo page = null!;
+  internal static readonly StateInfo page = new();
   internal StateInfo() {
-    page = this;
     InitializeComponent();
     MyInit(this);
     static void MyInit(StateInfo page) {
@@ -20,11 +20,14 @@ internal sealed partial class StateInfo:UserControl {
     page.InfoContentsPanel.MySetChildren([..InfoContents]);
     page.NextButtonText.Text = buttonText;
     if(buttonHeight != null) {
-      page.NextButtonText.Height = buttonHeight.Value;
+      page.NextButton.Height = buttonHeight.Value;
       page.NextButton.Visibility=Visibility.Visible;
     } else {
       page.NextButton.Visibility = Visibility.Collapsed;
     }
     nextButtonAction = buttonAction;
+  }
+  internal static void ResizeElem(double scaleFactor) {
+    page.RenderTransform = new ScaleTransform() { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = page.Width,CenterY = page.Height };
   }
 }

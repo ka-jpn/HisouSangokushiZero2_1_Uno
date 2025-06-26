@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.Foundation;
 using Windows.UI;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;
@@ -233,7 +234,9 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
       }.AsReadOnly(),
       new Dictionary<ECountry,CountryInfo>(){
         {ECountry.漢,new CountryInfo(5000,1,new(Color.FromArgb(255,238,238,136)),
-          [["選べません(勝利条件なし)"]],
+          [
+            ["選べません(勝利条件なし)"]
+          ],
           (game)=>false,
           (game)=>[],
           0,0)},

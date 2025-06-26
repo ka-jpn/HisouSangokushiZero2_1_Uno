@@ -6,7 +6,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class GetGame {
 		private static ScenarioData.ScenarioInfo? GetScenario(Scenario? newScenario) => newScenario?.MyApplyF(ScenarioData.scenarios.GetValueOrDefault);
 		private static GameState InitGame(Scenario? scenario,ScenarioData.ScenarioInfo? scenarioInfo) => new(scenario,scenarioInfo?.AreaMap.ToDictionary()?? [],scenarioInfo?.CountryMap.ToDictionary()?? [],scenarioInfo?.PersonMap.ToDictionary()?? [],null,null,0,Phase.Starting,[],false,[],[],[],[]);
-		private static GameState InitState(GameState game) => game.MyApplyF(UpdateGame.InitAlivePersonPost).MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[])).MyApplyF(UpdateGame.UpdateCapitalArea).MyApplyF(UpdateGame.ClearTurnMyLog).MyApplyF(ClearLogMessage).MyApplyF(ClearGameLog);
+		private static GameState InitState(GameState game) => game.MyApplyF(UpdateGame.InitAlivePersonPost).MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[])).MyApplyF(UpdateGame.UpdateCapitalArea).MyApplyF(UpdateGame.ClearTurnLog).MyApplyF(ClearLogMessage).MyApplyF(ClearGameLog);
     private static GameState ClearLogMessage(GameState game) => game with { LogMessage = [] };
     private static GameState ClearGameLog(GameState game) => game with { GameLog = [] };
     private static GameState AppendStartMessage(GameState game) => UpdateGame.AppendLogMessage(game,[$"{BaseData.name.Value} ƒo[ƒWƒ‡ƒ“{BaseData.version.Value}"]);

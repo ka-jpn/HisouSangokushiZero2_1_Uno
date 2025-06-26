@@ -1,5 +1,4 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
-using HisouSangokushiZero2_1_Uno.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +12,20 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 		internal static GameState RemovePersonPost(GameState game,List<PersonType> removePersons) => game with { PersonMap=game.PersonMap.ToDictionary(v => v.Key,v => removePersons.Contains(v.Key) ? v.Value with { Post=null,GameDeathTurn = game.PlayTurn } : v.Value) };
 		internal static GameState InitAlivePersonPost(GameState game) => game.CountryMap.Keys.SelectMany(country => Enum.GetValues<ERole>().SelectMany(role => Post.GetInitPost(game,country,role))).ToDictionary().MyApplyF(v => SetPersonPost(game,v));
 		internal static GameState InitAppearPersonPost(GameState game) {
-			Dictionary<ECountry,Dictionary<PersonType,PostType>> appearPersonMap = game.CountryMap.Keys.Select(country => (country, Enum.GetValues<ERole>().SelectMany(role => Post.GetInitAppearPost(game,country,role)).ToDictionary())).ToDictionary();
-			Dictionary<ECountry,KeyValuePair<PersonType,PersonParam>> findPersonMap = game.CountryMap.Keys.Select(country => (appearPersonMap.GetValueOrDefault(country)?? []).Count==0&&Country.SuccessFindPersonRank(game,country) is int personRank ? Person.GenerateFindPerson(game,country,personRank) : (KeyValuePair<PersonType,PersonParam>?)null).MyNonNull().ToDictionary(v => v.Value.Country,v => v);
-			return appearPersonMap.Values.SelectMany(v => v).ToDictionary().MyApplyF(v => SetPersonPost(game,v)).MyApplyF(game => game with { PersonMap=game.PersonMap.Concat(findPersonMap.Values).ToDictionary(),CountryMap=game.CountryMap.ToDictionary(v => v.Key,v => findPersonMap.ContainsKey(v.Key) ? v.Value with { AnonymousPersonNum=v.Value.AnonymousPersonNum+1 } : v.Value) });
+			Dictionary<ECountry,Dictionary<PersonType,PostType>> appearPersonMap = game.CountryMap.Keys.Where(v=>!Country.IsPerish(game,v)).Select(country => (country, Enum.GetValues<ERole>().SelectMany(role => Post.GetInitAppearPost(game,country,role)).ToDictionary())).ToDictionary();
+			Dictionary<ECountry,Dictionary<PersonType,PersonParam>> findPersonMap = game.CountryMap.Keys.Where(v => !Country.IsPerish(game,v)).Select(country => (country, (appearPersonMap.GetValueOrDefault(country)?? []).Count==0? Person.FindPerson(game,country) : [])).ToDictionary();
+      List<string?> appendLog = [
+        ..game.CountryMap.Keys.SelectMany(country=> new List<string?>([
+          appearPersonMap.GetValueOrDefault(country)?.MyApplyF(countryAppearPerson => Text.AppearPersonText(country,[..countryAppearPerson.Keys])),
+          findPersonMap.GetValueOrDefault(country)?.MyApplyF(countryfindPerson => Text.FindPersonText(country,[.. countryfindPerson.Keys]))
+        ]))
+      ];
+      return appearPersonMap.Values.SelectMany(v => v).ToDictionary().MyApplyF(v => SetPersonPost(game,v)).MyApplyF(game => game with { PersonMap = game.PersonMap.Concat(findPersonMap.Values.SelectMany(v => v)).ToDictionary(),CountryMap = game.CountryMap.ToDictionary(v => v.Key,v => findPersonMap.GetValueOrDefault(v.Key)?.Count!=0 ? v.Value with { AnonymousPersonNum = v.Value.AnonymousPersonNum + 1 } : v.Value) }).MyApplyF(game => AppendLogMessage(game,appendLog));
 		}
 		internal static GameState PutWaitPersonPost(GameState game) => game.CountryMap.Keys.SelectMany(country => Enum.GetValues<ERole>().SelectMany(role => Post.GetPutWaitPost(game,country,role))).ToDictionary().MyApplyF(v => SetPersonPost(game,v));
-    internal static GameState RemoveNaturalDeathPersonPost(GameState game) => game.CountryMap.Keys.SelectMany(country => Enum.GetValues<ERole>().SelectMany(role => Person.GetNaturalDeathPostPersonMap(game,country,role).Keys)).ToList().MyApplyF(deathPersons => RemoveDeathPersonPost(game,deathPersons,Text.NaturalDeathPersonText([.. deathPersons],Lang.ja)));
-    internal static GameState RemoveWarDeathPersonPost(GameState game,List<PersonType> deathPersons) => RemoveDeathPersonPost(game,deathPersons,Text.WarDeathPersonText([.. deathPersons],Lang.ja));
-    private static GameState RemoveDeathPersonPost(GameState game,List<PersonType> deathPersons,string? appendLog) => RemovePersonPost(game,deathPersons).MyApplyF(game => AppendLogMessage(game,[appendLog]));
+    internal static GameState RemoveNaturalDeathPersonPost(GameState game) => game.CountryMap.Keys.Select(country => (country, Enum.GetValues<ERole>().SelectMany(role => Person.GetNaturalDeathPostPersonMap(game,country,role).Keys))).ToDictionary().MyApplyF(deathPersons => RemoveDeathPersonPost(game,[..deathPersons.Values.SelectMany(v=>v)],[..deathPersons.Select(v=>Text.NaturalDeathPersonText(v.Key,[.. v.Value],Lang.ja))]));
+    internal static GameState RemoveWarDeathPersonPost(GameState game,ECountry? country,List<PersonType> deathPersons) => RemoveDeathPersonPost(game,deathPersons,[Text.WarDeathPersonText(country, deathPersons,Lang.ja)]);
+    private static GameState RemoveDeathPersonPost(GameState game,List<PersonType> deathPersons,List<string?> appendLog) => RemovePersonPost(game,deathPersons).MyApplyF(game => AppendLogMessage(game,appendLog));
     internal static GameState AutoPutPostCPU(GameState game,ECountry[] exceptCountrys) => game.CountryMap.Keys.Except(game.PlayCountry.MyMaybeToList().Concat(exceptCountrys)).SelectMany(country => Enum.GetValues<ERole>().SelectMany(role => Post.GetAutoPutPost(game,country,role))).ToDictionary().MyApplyF(v => SetPersonPost(game,v));
 		internal static GameState PutPersonFromUI(GameState game,PersonType? putPerson,PostType? putPost) => putPerson!=null&&putPost!=null ? SetPersonPost(game,new() { { putPerson,putPost } }) : game;
 		internal static GameState AttachGameStartData(GameState game,ECountry? countryName) => countryName is ECountry country ? game with { PlayCountry=country,PlayTurn=0 } : game;
@@ -28,12 +33,12 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       return game.MyApplyF(game => AppendLogMessage(game,[$"{game.PlayCountry}でプレイ開始"])).MyApplyF(game => AppendTurnLog(game,[$"{game.PlayCountry}でプレイ開始"]))
         .MyApplyF(game => AppendGameLog(game,[$"{game.PlayCountry}でプレイ開始 領土数{game.PlayCountry?.MyApplyF(country => Country.GetAreaNum(game,country))} {string.Join(',',Enum.GetValues<ERole>().SelectMany(role => game.PlayCountry?.MyApplyF(country => Person.GetInitPersonMap(game,country,role)).Select(v => v.Key.Value) ?? []))}"]));
     }
-    internal static GameState UpdateCapitalArea(GameState game) => game with { CountryMap=game.CountryMap.ToDictionary(v => v.Key,countryInfo => countryInfo.Value with { CapitalArea=Area.ComputeCapitalArea(game,countryInfo.Key) }) };
+    internal static GameState UpdateCapitalArea(GameState game) => game with { CountryMap=game.CountryMap.ToDictionary(v => v.Key,countryInfo => countryInfo.Value with { CapitalArea=Country.ComputeCapitalArea(game,countryInfo.Key) }) };
 		internal static GameState PayAttackFunds(GameState game,ECountry country) => game with { CountryMap=game.CountryMap.MyUpdate(country,(_,countryInfo) => countryInfo with { Fund=countryInfo.Fund-Country.CalcAttackFund(game,country) }) };
     internal static GameState AppendGameLog(GameState game,List<string?> appendMessages) => game with { GameLog = [.. game.GameLog,.. appendMessages.MyNonNull().Select(v=>$"{Turn.GetCalendarText(game)}:{v}")] };
     internal static GameState AppendLogMessage(GameState game,List<string?> appendMessages) => game with { LogMessage = [.. game.LogMessage,.. appendMessages.MyNonNull()] };
     internal static GameState AppendTurnLog(GameState game,List<string?> appendMessages) => game with { TrunLog = [.. game.TrunLog,.. appendMessages.MyNonNull()] };
-    internal static GameState ClearTurnMyLog(GameState game) => game with { TrunLog = [] };
+    internal static GameState ClearTurnLog(GameState game) => game with { TrunLog = [] };
     internal static GameState CountryAttack(GameState game,ECountry attackSide,EArea target,Army attack,Army defense,AttackJudge judge) {
 			return judge switch { AttackJudge.crush => Crush(game,attackSide,target,defense), AttackJudge.win => Win(game,attackSide,target), AttackJudge.lose => Lose(game,attackSide), AttackJudge.rout => Rout(game,attackSide,attack,defense) };
 			static GameState Crush(GameState game,ECountry attackSide,EArea target,Army defense) => DeathCommander(game,defense,ERole.defense,attackSide);
@@ -55,7 +60,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
         static bool IsFallCapital(GameState game,EArea targetArea,ECountry? defenseCountry) => defenseCountry?.MyApplyF(game.CountryMap.GetValueOrDefault)?.CapitalArea == targetArea;
         static GameState PerishCountry(GameState game,ECountry attackCountry,ECountry? defenseCountry) {
           List<PersonType> defenseCountryPerson = [.. defenseCountry?.MyApplyF(country=>Enum.GetValues<ERole>().SelectMany(role => Person.GetAlivePersonMap(game,country,role)).Select(v => v.Key))??[]];
-          return game.MyApplyF(game => AppendTurnLog(game,[Text.PerishCountryText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendLogMessage(game,[Text.PerishCountryText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendGameLog(game,[Text.PerishCountryText(defenseCountry,Lang.ja)])).MyApplyF(game => RemoveWarDeathPersonPost(game,defenseCountryPerson)).MyApplyF(game => defenseCountry?.MyApplyF(country => game with { CountryMap = game.CountryMap.MyUpdate(country,(_,info) => info with { PerishFrom = attackCountry }) }) ?? game);
+          return game.MyApplyF(game => AppendTurnLog(game,[Text.PerishCountryText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendLogMessage(game,[Text.PerishCountryText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendGameLog(game,[Text.PerishCountryText(defenseCountry,Lang.ja)])).MyApplyF(game => RemoveWarDeathPersonPost(game,defenseCountry,defenseCountryPerson)).MyApplyF(game => defenseCountry?.MyApplyF(country => game with { CountryMap = game.CountryMap.MyUpdate(country,(_,info) => info with { PerishFrom = attackCountry }) }) ?? game);
         }
         static GameState AppendChangeHasCountryLog(GameState game,ECountry attackCountry,ECountry? defenseCountry,EArea targetArea) {
           return AppendLogMessage(game,[Text.ChangeHasCountryText(attackCountry,defenseCountry,targetArea,Lang.ja)]).MyApplyF(game => AppendTurnLog(game,[Text.ChangeHasCountryText(attackCountry,defenseCountry,targetArea,Lang.ja)]));
@@ -63,7 +68,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
         static GameState FallCapital(GameState game,ECountry? defenseCountry) {
           List<PersonType> defenseCountryCapitalPerson = [.. defenseCountry?.MyApplyF(country => Enum.GetValues<ERole>().SelectMany(role => Person.GetAlivePersonMap(game,country,role)).Where(v => v.Value.Post?.PostKind.MaybeArea == null).Select(v => v.Key)) ?? []];
           List<PersonType> deathPerson = [.. defenseCountryCapitalPerson.Where(_ => MyRandom.RandomJudge(0.5))];
-          return game.MyApplyF(game => AppendTurnLog(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendLogMessage(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game => RemoveWarDeathPersonPost(game,deathPerson));
+          return game.MyApplyF(game => AppendTurnLog(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendLogMessage(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game => RemoveWarDeathPersonPost(game,defenseCountry,deathPerson));
         }
 			  static GameState FallArea(GameState game,ECountry attackCountry,ECountry? defenseCountry,EArea targetArea) {
           return game.MyApplyF(game => IsPlayerUpdateMaxAreaNum(game)? AppendUpdateMaxAreaNumLog(game,defenseCountry,targetArea):game).MyApplyF(game=>FallDamageArea(game,targetArea)).MyApplyF(game=> UpdateMaxAreaNum(game,attackCountry,targetArea));
@@ -93,7 +98,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       static GameState UpdatePersonMap(GameState game,List<PersonType> deathPersons) => game with { PersonMap = deathPersons.Aggregate(game.PersonMap,(fold,value) => fold.MyUpdate(value,(_,param) => param with { Post = null,GameDeathTurn = game.PlayTurn })) };
     }
     internal static GameState NextTurn(GameState game) {
-      return game.MyApplyF(UpdateCapitalArea).MyApplyF(AddTurn).MyApplyF(InOutFunds).MyApplyF(AddAffair).MyApplyF(InitAppearPersonPost).MyApplyF(RemoveDeathPersonPost).MyApplyF(PutWaitPersonPost);
+      return game.MyApplyF(UpdateCapitalArea).MyApplyF(AddTurn).MyApplyF(AddTurnHeadLog).MyApplyF(InOutFunds).MyApplyF(AddAffair).MyApplyF(InitAppearPersonPost).MyApplyF(RemoveDeathPersonPost).MyApplyF(PutWaitPersonPost);
       static GameState AddTurn(GameState game) => game with { PlayTurn = game.PlayTurn + 1 };
       static GameState InOutFunds(GameState game) => game with { CountryMap = game.CountryMap.ToDictionary(v => v.Key,v => v.Value with { Fund = v.Value.Fund + Country.GetInFund(game,v.Key) - Country.GetOutFund(game,v.Key) }) };
       static GameState AddAffair(GameState game) => game with {
@@ -111,6 +116,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
         decimal areaAffairPower = 1 - area.Value.AffairParam.AffairNow / area.Value.AffairParam.AffairsMax;
         return Math.Round(countryAffairPower * personAffairPower * areaAffairPower,4);
       }
+      static GameState AddTurnHeadLog(GameState game) => AppendLogMessage(game,[Text.TurnHeadLogText(game)]);
     }
     internal static GameState GameEndJudge(GameState game) {
       return SetWinCountrys(game).MyApplyF(game => IsPerish(game) ? PerishEnd(game) : IsWinEnd(game) ? WinEnd(game) : IsOtherWinEnd(game) ? OtherWinEnd(game) : IsTurnLimitOver(game) ? TurnLimitOverEnd(game) : game);

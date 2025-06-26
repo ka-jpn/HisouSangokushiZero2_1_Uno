@@ -26,9 +26,9 @@
       <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400"/>
       <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
     <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
-    <local:StateInfo x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-    <local:Ask Grid.RowSpan="2"/>
-    <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    <Grid x:Name="AskPanel" Grid.RowSpan="2"/>
+    <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition/>
@@ -54,7 +54,7 @@
           <RowDefinition Height="Auto"/>
           <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid x:Name="InfoButtonsPanel" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}">
+        <Grid x:Name="InfoButtonsPanel" Height="{x:Bind code:UIUtil.infoButtonHeight.Value}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -66,7 +66,7 @@
             <TextBlock Text="ルール詳細"/>
           </Button>
           <Button Grid.Column="1" x:Name="WinCondButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
-            <TextBlock Text="陣営ごとの勝利条件"/>
+            <TextBlock Text="各陣営の勝利条件"/>
           </Button>
           <Button Grid.Column="2" x:Name="PersonDataButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
             <TextBlock Text="人物・陣営データ"/>
@@ -78,9 +78,7 @@
             <TextBlock Text="設定"/>
           </Button>
         </Grid>
-        <ScrollViewer x:Name="InfoScrollPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5">
-          <StackPanel x:Name="InfoContentPanel" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        </ScrollViewer>
+        <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5"/>
       </Grid>
     </Grid>
     <Canvas x:Name="MovePersonCanvas" Grid.RowSpan="2"/>

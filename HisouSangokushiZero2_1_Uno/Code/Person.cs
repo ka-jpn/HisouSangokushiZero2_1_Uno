@@ -24,11 +24,14 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static decimal CalcRank(GameState game,PersonType person,ERole role) => game.PersonMap.GetValueOrDefault(person)?.MyApplyF(param => CalcRank(param,role)) ?? 0m;
     internal static decimal CalcRank(PersonParam personParam,ERole role) => personParam.Rank + (personParam.Role == role ? 0 : -1);
     internal static int GetAppearYear(PersonParam personParam) => personParam.GameAppearYear ?? personParam.BirthYear + majorityAge;
-    internal static KeyValuePair<PersonType,PersonParam> GenerateFindPerson(GameState game,ECountry country,int personRank) {
-      ERole personRole = Enum.GetValues<ERole>().MyPickAny();
-      int birthYear = Turn.GetYear(game) - majorityAge - MyRandom.GenerateInt(0,40);
-      int deathYear = Math.Max(birthYear + majorityAge + MyRandom.GenerateInt(0,60),Turn.GetYear(game) + 3);
-      return new(new($"{country}無名{game.CountryMap.GetValueOrDefault(country)?.AnonymousPersonNum + 1}"),new(personRole,personRank,birthYear,deathYear,country,null,null,new(personRole,new())));
+    internal static Dictionary<PersonType,PersonParam> FindPerson(GameState game,ECountry country) {
+      return Country.FindPersonRank(game,country) is int findPersonRank ? GeneratPersonData(game,country,findPersonRank) : [];
+      static Dictionary<PersonType,PersonParam> GeneratPersonData(GameState game,ECountry country,int personRank) {
+        ERole personRole = Enum.GetValues<ERole>().MyPickAny();
+        int birthYear = Turn.GetYear(game) - majorityAge - MyRandom.GenerateInt(0,40);
+        int deathYear = Math.Max(birthYear + majorityAge + MyRandom.GenerateInt(0,60),Turn.GetYear(game) + 3);
+        return new([new(new($"{country}無名{game.CountryMap.GetValueOrDefault(country)?.AnonymousPersonNum + 1}"),new(personRole,personRank,birthYear,deathYear,country,null,null,new(personRole,new())))]);
+      }
     }
   }
 }

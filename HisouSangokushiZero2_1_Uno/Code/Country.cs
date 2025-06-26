@@ -25,7 +25,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static List<EArea> GetAreas(GameState game,ECountry? country) => [.. game.AreaMap.Where(v => v.Value.Country == country).Select(v => v.Key)];
     internal static int GetAreaNum(GameState game,ECountry? country) => GetAreas(game,country).Count;
     internal static ECountry? GetAreaCountry(GameState game,EArea area) => game.AreaMap.GetValueOrDefault(area)?.Country;
-		internal static int? SuccessFindPersonRank(GameState game,ECountry country) {
+		internal static int? FindPersonRank(GameState game,ECountry country) {
 			decimal mainRank = Person.GetPostPerson(game,country,new(ERole.central,new(PostHead.main)))?.Value.MyApplyF(v => Person.CalcRank(v,ERole.central))??0;
 			decimal subRank = Person.GetPostPerson(game,country,new(ERole.central,new(PostHead.sub)))?.Value.MyApplyF(v => Person.CalcRank(v,ERole.central))??0;
 			decimal findPersonRank = mainRank+subRank/2;
@@ -42,5 +42,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static bool IsPerish(GameState game,ECountry country) => GetPerishFrom(game,country) != null;
     internal static int HasAreaCount(GameState game,ECountry country,EArea[] areas) => GetAreas(game,country).Intersect(areas).Count();
     internal static bool HasAreas(GameState game,ECountry country,EArea[] areas) => HasAreaCount(game,country,areas) == areas.Length;
+    internal static EArea? GetCapitalArea(GameState game,ECountry countryName) => game.CountryMap.GetValueOrDefault(countryName)?.CapitalArea;
+    internal static EArea? ComputeCapitalArea(GameState game,ECountry countryName) => countryName == ECountry.Š¿ ? null : Area.GetCountryAreaInfoMap(game,countryName).MyNullable().MaxBy(v => v?.Value.AffairParam.AffairNow)?.Key;
   }
 }

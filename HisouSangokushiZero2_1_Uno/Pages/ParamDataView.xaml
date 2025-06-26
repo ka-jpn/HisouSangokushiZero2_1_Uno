@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" ?>
+<UserControl 
+  x:Class="HisouSangokushiZero2_1_Uno.Pages.ParamDataView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <StackPanel x:Name="ContentPanel">
+      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+        <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ１："/>
+        <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
+      </StackPanel>
+      <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
+      <VariableSizedWrapGrid x:Name="PersonDataListPanel1" VerticalChildrenAlignment="Center" Orientation="Horizontal"/>
+      <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
+      <StackPanel x:Name="CountryDataListPanel1" HorizontalAlignment="Center"/>
+      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+        <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ２："/>
+        <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
+      </StackPanel>
+      <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
+      <VariableSizedWrapGrid x:Name="PersonDataListPanel2" VerticalChildrenAlignment="Center" Orientation="Horizontal"/>
+      <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
+      <StackPanel x:Name="CountryDataListPanel2" HorizontalAlignment="Center"/>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
