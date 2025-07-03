@@ -1,53 +1,29 @@
 ﻿<Project Sdk="Uno.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
-
 		<OutputType>Exe</OutputType>
 		<UnoSingleProject>true</UnoSingleProject>		
 		<!-- Display name -->
 		<ApplicationTitle>HisouSangokushiZero2_1_Uno</ApplicationTitle>
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.HisouSangokushiZero2_1_Uno</ApplicationId>
+		<ApplicationId>karintougames.HisouSangokushiZero2_1_Uno</ApplicationId>
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.6</ApplicationDisplayVersion>
-		<ApplicationVersion>1.6</ApplicationVersion>
+		<ApplicationVersion>1.6.2</ApplicationVersion>
 		<!-- Package Publisher -->
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
 		<Description>HisouSangokushiZero2_1 powered by Uno Platform.</Description>
-		<UnoFeatures>
-			SkiaRenderer;
-			Svg;
-		</UnoFeatures>
 		<WasmShellWebAppBasePath>./</WasmShellWebAppBasePath>
 		<DefaultLanguage>ja</DefaultLanguage>
 		<PackageCertificateThumbprint>5956E064D89E03046852D192A86E07739DF29AD5</PackageCertificateThumbprint>
 		<AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>
-	</PropertyGroup>
-	<PropertyGroup>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
-		<UnoDragDropExternalSupport>false</UnoDragDropExternalSupport>
-		<WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
-		<PublishTrimmed>true</PublishTrimmed>
+		<UnoFeatures>
+			SkiaRenderer;
+			Svg;
+		</UnoFeatures>
 	</PropertyGroup>
 	<ItemGroup>
-		<BlazorLinkerDescriptor Include="LinkerConfig.xml" />
-		<EmbeddedResource Include="Platforms\WebAssembly\WasmScripts\myScript.js">
-		  <IsDefaultItem>true</IsDefaultItem>
-		</EmbeddedResource>
-		<WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=1g,nursery-size=128m,evacuation-threshold=66,major=marksweep" />
+	  <PackageReference Include="MessagePack" />
 	</ItemGroup>
-	<ItemGroup>
-		<UnoIcon Include="Assets\Icons\icon.svg" ForegroundFile="Assets\Icons\icon_foreground.svg" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="Pages\ParamDataView.xaml.cs">
-	    <DependentUpon>ParamDataView.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	<PropertyGroup>
-		<UnoSplashScreenFile>Assets\Splash\splash_screen.svg</UnoSplashScreenFile>
-		<UnoSplashScreenColor>#DDE</UnoSplashScreenColor>
-	</PropertyGroup>
 </Project>

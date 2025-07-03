@@ -26,8 +26,8 @@
       <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400"/>
       <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
     <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
-    <Grid x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-    <Grid x:Name="AskPanel" Grid.RowSpan="2"/>
+    <local:StateInfo x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    <local:Ask x:Name="AskPanel" Grid.RowSpan="2"/>
     <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
@@ -78,7 +78,13 @@
             <TextBlock Text="設定"/>
           </Button>
         </Grid>
-        <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5"/>
+        <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5">          ,
+          <local:Explain x:Name="ExplainPanel" Visibility="Collapsed"/>
+          <local:WinCond x:Name="WinCondPanel" Visibility="Collapsed"/>
+          <local:ParamList x:Name="ParamListPanel" Visibility="Collapsed"/>
+          <local:ChangeLog x:Name="ChangeLogPanel" Visibility="Collapsed"/>
+          <local:Setting x:Name="SettingPanel" Visibility="Collapsed"/>
+        </Grid>
       </Grid>
     </Grid>
     <Canvas x:Name="MovePersonCanvas" Grid.RowSpan="2"/>

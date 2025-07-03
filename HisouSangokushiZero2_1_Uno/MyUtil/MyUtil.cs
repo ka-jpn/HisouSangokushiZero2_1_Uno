@@ -9,7 +9,7 @@ public static class MyUtil {
 }
 public static class 汎用拡張メソッド {
   ///<summary>文字列中の指定した文字の出現回数をカウントする</summary>
-  public static int MyCountChar(this string s,char c) => s.Length - s.Replace(c.ToString(),"").Length;
+  public static int MyCountChar(this string s,char c) => s.Length - s.Replace(c.ToString(),string.Empty).Length;
   ///<summary>アクションを指定した回数実行する</summary>
   public static void MyTimes(this Action action,int count) => Enumerable.Repeat(action,count).ToList().ForEach(action => action());
   ///<summary>見つからなかった場合にFindIndexが-1を返すのをnullに置換</summary>

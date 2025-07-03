@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" ?>
 <UserControl 
-  x:Class="HisouSangokushiZero2_1_Uno.Pages.ParamDataView"
+  x:Class="HisouSangokushiZero2_1_Uno.Pages.ParamList"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

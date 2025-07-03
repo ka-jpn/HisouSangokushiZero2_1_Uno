@@ -24,10 +24,10 @@ internal sealed partial class WinCond:UserControl {
         page.WinCondScenarioName2.Text = BaseData.scenarios.ElementAtOrDefault(1)?.Value;
         page.WinCondListPanel2.MySetChildren([.. CreateWinCondList(1,2)]).MyApplyA(v => { v.BorderThickness = UIUtil.dataListFrameThickness; v.BorderBrush = UIUtil.dataListFrameBrush; });
         static StackPanel[] CreateWinCondList(int scenarioNo,int chunkBlockNum) {
-          ScenarioData.ScenarioInfo? maybeScenarioInfo = ScenarioData.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
-          Dictionary<ECountry,CountryInfo>[] chunkedCountryInfoMaps = maybeScenarioInfo?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
-          return maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedCountryInfoMaps.Select(chunkedCountryInfoMap => CreateWinCondPanel(scenarioInfo,chunkedCountryInfoMap)).ToArray()) ?? [];
-          static StackPanel CreateWinCondPanel(ScenarioData.ScenarioInfo scenarioInfo,Dictionary<ECountry,CountryInfo> includeCountryInfoMap) {
+          Scenario.ScenarioData? maybeScenarioData = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
+          Dictionary<ECountry,CountryData>[] chunkedCountryDataMaps = maybeScenarioData?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
+          return maybeScenarioData?.MyApplyF(scenarioInfo => chunkedCountryDataMaps.Select(chunkedCountryInfoMap => CreateWinCondPanel(scenarioInfo,chunkedCountryInfoMap)).ToArray()) ?? [];
+          static StackPanel CreateWinCondPanel(Scenario.ScenarioData scenarioInfo,Dictionary<ECountry,CountryData> includeCountryInfoMap) {
             return new StackPanel { Background = UIUtil.dataListFrameBrush }.MySetChildren([
               CreateCountryDataLine(Color.FromArgb(255,240,240,240),new TextBlock { Text="陣営名",HorizontalAlignment=HorizontalAlignment.Center },[new TextBlock { Text="勝利条件",HorizontalAlignment=HorizontalAlignment.Center }]),
               .. includeCountryInfoMap.Select(countryInfo => CreateCountryDataLine(

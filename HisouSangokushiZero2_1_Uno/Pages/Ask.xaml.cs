@@ -10,8 +10,6 @@ namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class Ask:UserControl {
   private static readonly double titleTextScaleFactor = 1.25;
   private static Action OkButtonAction = () => { };
-  private static List<TextBlock> contentTextBlocks = [];
-  internal static readonly Ask page = new();
   internal Ask() {
     InitializeComponent();
     MyInit(this);
@@ -21,17 +19,16 @@ internal sealed partial class Ask:UserControl {
       static void ExeOkButtonAction() => OkButtonAction();
     }
   }
-  internal static void SetElems(string titleText,List<TextBlock> contents,string okButtonText,bool isOkButtonEnabled,Action okButtonAction,bool isOkButtonClickClose,Size parentSize,double scaleFactor) {
-    contentTextBlocks = contents;
+  internal static void SetElems(Ask page,string titleText,List<TextBlock> contents,string okButtonText,bool isOkButtonEnabled,Action okButtonAction,bool isOkButtonClickClose,Size parentSize,double scaleFactor) {
     page.TitleTextBlock.Text = titleText;
     page.ContentsPanel.MySetChildren([.. contents]);
     OkButtonAction = () => { okButtonAction(); page.Visibility = isOkButtonClickClose ? Visibility.Collapsed : Visibility.Visible; };
     page.OkButtonText.Text = okButtonText;
     page.OkButton.IsEnabled = isOkButtonEnabled;
     page.Visibility = Visibility.Visible;
-    ResizeElem(parentSize,scaleFactor);
+    ResizeElem(page,parentSize,scaleFactor);
   }
-  internal static void ResizeElem(Size parentSize,double scaleFactor) {
+  internal static void ResizeElem(Ask page,Size parentSize,double scaleFactor) {
     page.Margin = new(UIUtil.infoFrameWidth.Value * scaleFactor);
     page.Width = parentSize.Width - page.Margin.Left - page.Margin.Right;
     page.Height = parentSize.Height - page.Margin.Top - page.Margin.Bottom;
@@ -40,7 +37,7 @@ internal sealed partial class Ask:UserControl {
     page.ContentsView.Width = Math.Min(page.Width - 20 * scaleFactor,(600 * 2 + 10 / scaleFactor) * scaleFactor);
     page.ContentsView.Height = page.Height * 0.5;
     page.ContentsPanel.Width = page.ContentsView.Width / scaleFactor - 15;
-    page.ContentsPanel.Height = contentTextBlocks.Sum(v => Math.Max(BasicStyle.textHeight,v.RenderSize.Height));
+    page.ContentsPanel.Height = page.ContentsPanel.Children.Sum(v => Math.Max(BasicStyle.textHeight,v.RenderSize.Height));
     page.ContentsPanel.Margin = new(page.ContentsPanel.Width * (scaleFactor - 1) / 2,0,page.ContentsPanel.Width * (scaleFactor - 1) / 2,page.ContentsPanel.Height * (scaleFactor - 1));
     page.ContentsPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = page.ContentsPanel.Width / 2 };
     page.OkButton.Width = Math.Min((page.Width / 2 - 5 - 5d / 2) / scaleFactor,600);

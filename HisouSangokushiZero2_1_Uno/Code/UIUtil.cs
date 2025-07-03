@@ -31,6 +31,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static readonly double personRankFontScale = 1.5;
     internal static readonly double personNameFontScale = 1.75;
     internal static readonly SolidColorBrush transparentBrush = new(Colors.Transparent);
+    internal static readonly SolidColorBrush RedBrush = new(Colors.Red);
     internal static readonly SolidColorBrush landRoadBrush = new(Color.FromArgb(150,120,120,50));
     internal static readonly SolidColorBrush waterRoadBrush = new(Color.FromArgb(150,50,50,150));
     internal static readonly SolidColorBrush dataBackBrush = new(Color.FromArgb(255,240,240,240));
@@ -43,11 +44,11 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static double CalcFullWidthTextLength(string str) => str.Length - str.Count("0123456789-.()".Contains) * 0.4 - str.Count(" ".Contains) * 0.8;
     internal static double CalcDataListElemWidth(double textlength) => BasicStyle.fontsize * textlength + dataListFrameThickness.Left + dataListFrameThickness.Right;
     internal static StackPanel[] CreatePersonDataList(int scenarioNo,int chunkBlockNum) {
-      ScenarioData.ScenarioInfo? maybeScenarioInfo = ScenarioData.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
-      Dictionary<DefType.Person,PersonParam>[] chunkedPersonInfoMaps = maybeScenarioInfo?.PersonMap.MyApplyF(elems => elems.OrderBy(v => v.Value.Country).ThenBy(v => v.Value.Role).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
+      KeyValuePair<ScenarioId,Scenario.ScenarioData>? maybeScenarioInfo = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo);
+      Dictionary<PersonId,PersonData>[] chunkedPersonInfoMaps = maybeScenarioInfo?.Value.PersonMap.MyApplyF(elems => elems.OrderBy(v => v.Value.Country).ThenBy(v => v.Value.Role).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
       StackPanel[] personDataBlock = maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedPersonInfoMaps.Select(chunkedPersonInfoMap => CreatePersonDataPanel(scenarioInfo,chunkedPersonInfoMap)).ToArray()) ?? [];
       return personDataBlock;
-      static StackPanel CreatePersonDataPanel(ScenarioData.ScenarioInfo scenarioInfo,Dictionary<DefType.Person,PersonParam> includePersonInfoMap) {
+      static StackPanel CreatePersonDataPanel(KeyValuePair<ScenarioId,Scenario.ScenarioData> scenarioInfo,Dictionary<PersonId,PersonData> includePersonInfoMap) {
         return new StackPanel { Background = dataListFrameBrush }.MySetChildren([
           CreatePersonDataLine(
           dataBackBrush,
@@ -59,13 +60,13 @@ namespace HisouSangokushiZero2_1_Uno.Code {
           new TextBlock { Text="登場",HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text="没年",HorizontalAlignment=HorizontalAlignment.Center }
         ), .. includePersonInfoMap.Select(personInfo => CreatePersonDataLine(
-          scenarioInfo.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewBrush??transparentBrush,
+          scenarioInfo.Value.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewBrush??transparentBrush,
           new TextBlock { Text=personInfo.Value.Country.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text=personInfo.Key.Value,Margin=new(0,0,-BasicStyle.fontsize*(CalcFullWidthTextLength(personInfo.Key.Value)-3),0),RenderTransform=new ScaleTransform() { ScaleX=Math.Min(1,3/CalcFullWidthTextLength(personInfo.Key.Value)) } },
           new Image{ Source=new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")),Width=BasicStyle.fontsize,Height=BasicStyle.fontsize,HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Center },
           new TextBlock { Text=personInfo.Value.Rank.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text=personInfo.Value.BirthYear.ToString(),HorizontalAlignment=HorizontalAlignment.Center },
-          new TextBlock { Text=Person.GetAppearYear(personInfo.Value).MyApplyF(appearYear=>appearYear>=scenarioInfo.StartYear?appearYear.ToString():"登場"),HorizontalAlignment=HorizontalAlignment.Center },
+          new TextBlock { Text=Person.GetAppearYear(scenarioInfo.Key,personInfo.Key).MyApplyF(appearYear=>appearYear>=scenarioInfo.Value.StartYear?appearYear.ToString():"登場"),HorizontalAlignment=HorizontalAlignment.Center },
           new TextBlock { Text=personInfo.Value.DeathYear.ToString(),HorizontalAlignment=HorizontalAlignment.Center }
         ))
         ]);
@@ -83,10 +84,10 @@ namespace HisouSangokushiZero2_1_Uno.Code {
       }
     }
     internal static StackPanel[] CreateCountryDataList(int scenarioNo,int chunkBlockNum) {
-      ScenarioData.ScenarioInfo? maybeScenarioInfo = ScenarioData.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
-      Dictionary<ECountry,CountryInfo>[] chunkedCountryInfoMaps = maybeScenarioInfo?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
+      Scenario.ScenarioData? maybeScenarioInfo = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
+      Dictionary<ECountry,CountryData>[] chunkedCountryInfoMaps = maybeScenarioInfo?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
       return maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedCountryInfoMaps.Select(chunkedCountryInfoMap => CreateCountryDataPanel(scenarioInfo,chunkedCountryInfoMap)).ToArray()) ?? [];
-      static StackPanel CreateCountryDataPanel(ScenarioData.ScenarioInfo scenarioInfo,Dictionary<ECountry,CountryInfo> includeCountryInfoMap) {
+      static StackPanel CreateCountryDataPanel(Scenario.ScenarioData scenarioInfo,Dictionary<ECountry,CountryData> includeCountryInfoMap) {
         return new StackPanel { Background = dataListFrameBrush }.MySetChildren([
           CreateCountryDataLine(
           dataBackBrush,

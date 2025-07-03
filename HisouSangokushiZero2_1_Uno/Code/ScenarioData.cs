@@ -6,11 +6,11 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.Person;
+using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.PersonId;
 namespace HisouSangokushiZero2_1_Uno.Code;
-internal static class ScenarioData {
+internal static class Scenario {
   internal record Road(EArea From,EArea To,RoadKind Kind,int Easiness,int? EasinessReverse = null);
-  internal record ScenarioInfo(int StartYear,int EndYear,EArea[] ChinaAreas,Road[] RoadConnections,ReadOnlyDictionary<EArea,AreaInfo> AreaMap,ReadOnlyDictionary<ECountry,CountryInfo> CountryMap,ReadOnlyDictionary<PersonType,PersonParam> PersonMap);
+  internal record ScenarioData(int StartYear,int EndYear,EArea[] ChinaAreas,Road[] RoadConnections,ReadOnlyDictionary<EArea,AreaData> AreaMap,ReadOnlyDictionary<ECountry,CountryData> CountryMap,ReadOnlyDictionary<PersonType,PersonData> PersonMap);
   private static readonly EArea[] baseChinaAreas = [
     EArea.襄平,EArea.土垠, EArea.薊, EArea.代, EArea.南皮, EArea.濮陽, EArea.鄴, EArea.平陽, EArea.劇, EArea.淮陰,EArea.彭城, EArea.洛陽, EArea.平輿, EArea.酸棗, EArea.長安, EArea.金城,
       EArea.武威, EArea.敦煌,EArea.宛, EArea.襄陽, EArea.鄂, EArea.臨沅, EArea.臨湘, EArea.泉陵, EArea.郴, EArea.秣陵, EArea.舒,EArea.山陰, EArea.東侯官,EArea.番禺, EArea.合浦, EArea.龍編,
@@ -153,94 +153,94 @@ internal static class ScenarioData {
     new Road(EArea.白狼,EArea.丸都,RoadKind.land,1),
     new Road(EArea.丸都,EArea.沃沮,RoadKind.land,1),
   ];
-internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
-  new(BaseData.scenarios.ElementAtOrDefault(0)??new(""),new ScenarioInfo(190,230,baseChinaAreas,baseRoadConnections,
-      new Dictionary<EArea,AreaInfo>(){
-        {EArea.襄平,new AreaInfo(new Point(7,1),new AffairsParam(50,15),ECountry.公孫度)},
-        {EArea.番汗,new AreaInfo(new Point(8,1),new AffairsParam(10,7),ECountry.濊)},
-        {EArea.朝鮮,new AreaInfo(new Point(8,2),new AffairsParam(20,12),ECountry.濊)},
-        {EArea.土垠,new AreaInfo(new Point(6,1.1),new AffairsParam(20,8),ECountry.公孫瓚)},
-        {EArea.薊,new AreaInfo(new Point(5,1),new AffairsParam(60,25),ECountry.劉虞)},
-        {EArea.代,new AreaInfo(new Point(4,1),new AffairsParam(35,15),ECountry.黒山賊)},
-        {EArea.南皮,new AreaInfo(new Point(5,2),new AffairsParam(120,60),ECountry.袁紹)},
-        {EArea.濮陽,new AreaInfo(new Point(5,3),new AffairsParam(90,45),ECountry.劉岱)},
-        {EArea.鄴,new AreaInfo(new Point(4,2),new AffairsParam(100,60),ECountry.韓馥)},
-        {EArea.劇,new AreaInfo(new Point(6,2.9),new AffairsParam(70,35),ECountry.焦和)},
-        {EArea.淮陰,new AreaInfo(new Point(6,4),new AffairsParam(70,40),ECountry.張超)},
-        {EArea.彭城,new AreaInfo(new Point(5,4),new AffairsParam(70,40),ECountry.陶謙)},
-        {EArea.平陽,new AreaInfo(new Point(3,2),new AffairsParam(30,15),ECountry.張楊)},
-        {EArea.洛陽,new AreaInfo(new Point(3,3),new AffairsParam(240,160),ECountry.董卓)},
-        {EArea.平輿,new AreaInfo(new Point(4,4),new AffairsParam(80,40),ECountry.袁術)},
-        {EArea.酸棗,new AreaInfo(new Point(4,3),new AffairsParam(100,45),ECountry.曹操)},
-        {EArea.長安,new AreaInfo(new Point(2,3),new AffairsParam(180,90),ECountry.董卓)},
-        {EArea.金城,new AreaInfo(new Point(1,3),new AffairsParam(30,12),ECountry.韓遂)},
-        {EArea.武威,new AreaInfo(new Point(1,2),new AffairsParam(20,8),ECountry.董卓)},
-        {EArea.居延,new AreaInfo(new Point(1,1),new AffairsParam(10,2),null)},
-        {EArea.敦煌,new AreaInfo(new Point(0,1),new AffairsParam(30,10),null)},
-        {EArea.宛,new AreaInfo(new Point(3,4),new AffairsParam(90,45),ECountry.張咨)},
-        {EArea.襄陽,new AreaInfo(new Point(3,5),new AffairsParam(80,35),ECountry.王叡)},
-        {EArea.鄂,new AreaInfo(new Point(4,5),new AffairsParam(80,25),ECountry.劉表)},
-        {EArea.臨沅,new AreaInfo(new Point(3,6),new AffairsParam(70,25),ECountry.曹寅)},
-        {EArea.臨湘,new AreaInfo(new Point(4,6),new AffairsParam(60,30),ECountry.孫堅)},
-        {EArea.秣陵,new AreaInfo(new Point(6,5),new AffairsParam(100,30),ECountry.漢)},
-        {EArea.舒,new AreaInfo(new Point(5,5),new AffairsParam(50,20),ECountry.漢)},
-        {EArea.泉陵,new AreaInfo(new Point(3,7),new AffairsParam(50,25),ECountry.漢)},
-        {EArea.郴,new AreaInfo(new Point(4,7),new AffairsParam(50,25),ECountry.漢)},
-        {EArea.鄱陽,new AreaInfo(new Point(5,6),new AffairsParam(40,10),null)},
-        {EArea.南城,new AreaInfo(new Point(5,7),new AffairsParam(30,8),null)},
-        {EArea.山陰,new AreaInfo(new Point(6.1,6),new AffairsParam(50,20),ECountry.漢)},
-        {EArea.東侯官,new AreaInfo(new Point(6,7),new AffairsParam(40,10),ECountry.漢)},
-        {EArea.南鄭,new AreaInfo(new Point(1,4),new AffairsParam(70,25),ECountry.蘇固)},
-        {EArea.房陵,new AreaInfo(new Point(2,4),new AffairsParam(40,15),ECountry.漢)},
-        {EArea.綿竹,new AreaInfo(new Point(1,5),new AffairsParam(40,25),ECountry.劉焉)},
-        {EArea.成都,new AreaInfo(new Point(1,6),new AffairsParam(90,25),ECountry.劉焉)},
-        {EArea.漢嘉,new AreaInfo(new Point(0,6),new AffairsParam(20,8),null)},
-        {EArea.魚復,new AreaInfo(new Point(2,5),new AffairsParam(40,15),ECountry.漢)},
-        {EArea.邛都,new AreaInfo(new Point(0,7),new AffairsParam(20,8),null)},
-        {EArea.涪陵,new AreaInfo(new Point(2,6),new AffairsParam(50,20),ECountry.漢)},
-        {EArea.朱提,new AreaInfo(new Point(1,7),new AffairsParam(20,10),ECountry.馬相)},
-        {EArea.番禺,new AreaInfo(new Point(5.1,8),new AffairsParam(40,15),ECountry.漢)},
-        {EArea.合浦,new AreaInfo(new Point(4,8),new AffairsParam(40,10),ECountry.漢)},
-        {EArea.龍編,new AreaInfo(new Point(3,8),new AffairsParam(45,20),ECountry.士燮)},
-        {EArea.日南,new AreaInfo(new Point(3,9),new AffairsParam(20,8),ECountry.南越)},
-        {EArea.且蘭,new AreaInfo(new Point(2,7),new AffairsParam(10,3),null)},
-        {EArea.滇池,new AreaInfo(new Point(1,8),new AffairsParam(15,8),null)},
-        {EArea.西随,new AreaInfo(new Point(2,8),new AffairsParam(10,3),null)},
-        {EArea.不韋,new AreaInfo(new Point(0,8),new AffairsParam(15,7),ECountry.南蛮)},
-        {EArea.緬甸,new AreaInfo(new Point(0,9),new AffairsParam(10,4),null)},
-        {EArea.哀牢,new AreaInfo(new Point(1,9),new AffairsParam(10,4),null)},
-        {EArea.南越,new AreaInfo(new Point(2,9),new AffairsParam(20,10),ECountry.南越)},
-        {EArea.朱崖,new AreaInfo(new Point(4.2,9),new AffairsParam(10,2),null)},
-        {EArea.台北,new AreaInfo(new Point(7,7.9),new AffairsParam(10,2),null)},
-        {EArea.台南,new AreaInfo(new Point(6.9,8.9),new AffairsParam(10,2),null)},
-        {EArea.伊吾,new AreaInfo(new Point(0,0),new AffairsParam(10,6),ECountry.北匈奴)},
-        {EArea.汶江,new AreaInfo(new Point(0,5),new AffairsParam(10,5),ECountry.羌)},
-        {EArea.湔氐,new AreaInfo(new Point(0,4),new AffairsParam(10,5),ECountry.氐)},
-        {EArea.西海,new AreaInfo(new Point(0,3),new AffairsParam(10,6),ECountry.氐)},
-        {EArea.羌,new AreaInfo(new Point(0,2),new AffairsParam(10,6),ECountry.羌)},
-        {EArea.朔方,new AreaInfo(new Point(3,1),new AffairsParam(10,6),ECountry.南匈奴)},
-        {EArea.臨河,new AreaInfo(new Point(2,1),new AffairsParam(20,5),ECountry.南匈奴)},
-        {EArea.北地,new AreaInfo(new Point(2,2),new AffairsParam(20,10),ECountry.董卓)},
-        {EArea.鮮卑,new AreaInfo(new Point(4,0),new AffairsParam(10,6),ECountry.鮮卑)},
-        {EArea.弾汗,new AreaInfo(new Point(3,0),new AffairsParam(10,8),ECountry.鮮卑)},
-        {EArea.丁零,new AreaInfo(new Point(2,0),new AffairsParam(10,6),ECountry.鮮卑)},
-        {EArea.堅昆,new AreaInfo(new Point(1,0),new AffairsParam(10,5),ECountry.鮮卑)},
-        {EArea.烏桓,new AreaInfo(new Point(5,0),new AffairsParam(10,7),ECountry.烏丸)},
-        {EArea.白狼,new AreaInfo(new Point(6,0),new AffairsParam(10,6),ECountry.烏丸)},
-        {EArea.沃沮,new AreaInfo(new Point(8,0),new AffairsParam(10,6),ECountry.沃沮)},
-        {EArea.丸都,new AreaInfo(new Point(7,0),new AffairsParam(10,7),ECountry.高句麗)},
-        {EArea.目支,new AreaInfo(new Point(8,3),new AffairsParam(10,6),ECountry.馬韓)},
-        {EArea.首里,new AreaInfo(new Point(8,7),new AffairsParam(10,2),ECountry.琉球)},
+internal static readonly Dictionary<ScenarioId,ScenarioData> scenarios = new([
+  new(BaseData.scenarios.ElementAtOrDefault(0)??new(string.Empty),new ScenarioData(190,230,baseChinaAreas,baseRoadConnections,
+      new Dictionary<EArea,AreaData>(){
+        {EArea.襄平,new(new Point(7,1),new AffairsParam(50,15),ECountry.公孫度)},
+        {EArea.番汗,new(new Point(8,1),new AffairsParam(10,7),ECountry.濊)},
+        {EArea.朝鮮,new(new Point(8,2),new AffairsParam(20,12),ECountry.濊)},
+        {EArea.土垠,new(new Point(6,1.1),new AffairsParam(20,8),ECountry.公孫瓚)},
+        {EArea.薊,new(new Point(5,1),new AffairsParam(60,25),ECountry.劉虞)},
+        {EArea.代,new(new Point(4,1),new AffairsParam(35,15),ECountry.黒山賊)},
+        {EArea.南皮,new(new Point(5,2),new AffairsParam(120,60),ECountry.袁紹)},
+        {EArea.濮陽,new(new Point(5,3),new AffairsParam(90,45),ECountry.劉岱)},
+        {EArea.鄴,new(new Point(4,2),new AffairsParam(100,60),ECountry.韓馥)},
+        {EArea.劇,new(new Point(6,2.9),new AffairsParam(70,35),ECountry.焦和)},
+        {EArea.淮陰,new(new Point(6,4),new AffairsParam(70,40),ECountry.張超)},
+        {EArea.彭城,new(new Point(5,4),new AffairsParam(70,40),ECountry.陶謙)},
+        {EArea.平陽,new(new Point(3,2),new AffairsParam(30,15),ECountry.張楊)},
+        {EArea.洛陽,new(new Point(3,3),new AffairsParam(240,160),ECountry.董卓)},
+        {EArea.平輿,new(new Point(4,4),new AffairsParam(80,40),ECountry.袁術)},
+        {EArea.酸棗,new(new Point(4,3),new AffairsParam(100,45),ECountry.曹操)},
+        {EArea.長安,new(new Point(2,3),new AffairsParam(180,90),ECountry.董卓)},
+        {EArea.金城,new(new Point(1,3),new AffairsParam(30,12),ECountry.韓遂)},
+        {EArea.武威,new(new Point(1,2),new AffairsParam(20,8),ECountry.董卓)},
+        {EArea.居延,new(new Point(1,1),new AffairsParam(10,2),null)},
+        {EArea.敦煌,new(new Point(0,1),new AffairsParam(30,10),null)},
+        {EArea.宛,new(new Point(3,4),new AffairsParam(90,45),ECountry.張咨)},
+        {EArea.襄陽,new(new Point(3,5),new AffairsParam(80,35),ECountry.王叡)},
+        {EArea.鄂,new(new Point(4,5),new AffairsParam(80,25),ECountry.劉表)},
+        {EArea.臨沅,new(new Point(3,6),new AffairsParam(70,25),ECountry.曹寅)},
+        {EArea.臨湘,new(new Point(4,6),new AffairsParam(60,30),ECountry.孫堅)},
+        {EArea.秣陵,new(new Point(6,5),new AffairsParam(100,30),ECountry.漢)},
+        {EArea.舒,new(new Point(5,5),new AffairsParam(50,20),ECountry.漢)},
+        {EArea.泉陵,new(new Point(3,7),new AffairsParam(50,25),ECountry.漢)},
+        {EArea.郴,new(new Point(4,7),new AffairsParam(50,25),ECountry.漢)},
+        {EArea.鄱陽,new(new Point(5,6),new AffairsParam(40,10),null)},
+        {EArea.南城,new(new Point(5,7),new AffairsParam(30,8),null)},
+        {EArea.山陰,new(new Point(6.1,6),new AffairsParam(50,20),ECountry.漢)},
+        {EArea.東侯官,new(new Point(6,7),new AffairsParam(40,10),ECountry.漢)},
+        {EArea.南鄭,new(new Point(1,4),new AffairsParam(70,25),ECountry.蘇固)},
+        {EArea.房陵,new(new Point(2,4),new AffairsParam(40,15),ECountry.漢)},
+        {EArea.綿竹,new(new Point(1,5),new AffairsParam(40,25),ECountry.劉焉)},
+        {EArea.成都,new(new Point(1,6),new AffairsParam(90,25),ECountry.劉焉)},
+        {EArea.漢嘉,new(new Point(0,6),new AffairsParam(20,8),null)},
+        {EArea.魚復,new(new Point(2,5),new AffairsParam(40,15),ECountry.漢)},
+        {EArea.邛都,new(new Point(0,7),new AffairsParam(20,8),null)},
+        {EArea.涪陵,new(new Point(2,6),new AffairsParam(50,20),ECountry.漢)},
+        {EArea.朱提,new(new Point(1,7),new AffairsParam(20,10),ECountry.馬相)},
+        {EArea.番禺,new(new Point(5.1,8),new AffairsParam(40,15),ECountry.漢)},
+        {EArea.合浦,new(new Point(4,8),new AffairsParam(40,10),ECountry.漢)},
+        {EArea.龍編,new(new Point(3,8),new AffairsParam(45,20),ECountry.士燮)},
+        {EArea.日南,new(new Point(3,9),new AffairsParam(20,8),ECountry.南越)},
+        {EArea.且蘭,new(new Point(2,7),new AffairsParam(10,3),null)},
+        {EArea.滇池,new(new Point(1,8),new AffairsParam(15,8),null)},
+        {EArea.西随,new(new Point(2,8),new AffairsParam(10,3),null)},
+        {EArea.不韋,new(new Point(0,8),new AffairsParam(15,7),ECountry.南蛮)},
+        {EArea.緬甸,new(new Point(0,9),new AffairsParam(10,4),null)},
+        {EArea.哀牢,new(new Point(1,9),new AffairsParam(10,4),null)},
+        {EArea.南越,new(new Point(2,9),new AffairsParam(20,10),ECountry.南越)},
+        {EArea.朱崖,new(new Point(4.2,9),new AffairsParam(10,2),null)},
+        {EArea.台北,new(new Point(7,7.9),new AffairsParam(10,2),null)},
+        {EArea.台南,new(new Point(6.9,8.9),new AffairsParam(10,2),null)},
+        {EArea.伊吾,new(new Point(0,0),new AffairsParam(10,6),ECountry.北匈奴)},
+        {EArea.汶江,new(new Point(0,5),new AffairsParam(10,5),ECountry.羌)},
+        {EArea.湔氐,new(new Point(0,4),new AffairsParam(10,5),ECountry.氐)},
+        {EArea.西海,new(new Point(0,3),new AffairsParam(10,6),ECountry.氐)},
+        {EArea.羌,new(new Point(0,2),new AffairsParam(10,6),ECountry.羌)},
+        {EArea.朔方,new(new Point(3,1),new AffairsParam(10,6),ECountry.南匈奴)},
+        {EArea.臨河,new(new Point(2,1),new AffairsParam(20,5),ECountry.南匈奴)},
+        {EArea.北地,new(new Point(2,2),new AffairsParam(20,10),ECountry.董卓)},
+        {EArea.鮮卑,new(new Point(4,0),new AffairsParam(10,6),ECountry.鮮卑)},
+        {EArea.弾汗,new(new Point(3,0),new AffairsParam(10,8),ECountry.鮮卑)},
+        {EArea.丁零,new(new Point(2,0),new AffairsParam(10,6),ECountry.鮮卑)},
+        {EArea.堅昆,new(new Point(1,0),new AffairsParam(10,5),ECountry.鮮卑)},
+        {EArea.烏桓,new(new Point(5,0),new AffairsParam(10,7),ECountry.烏丸)},
+        {EArea.白狼,new(new Point(6,0),new AffairsParam(10,6),ECountry.烏丸)},
+        {EArea.沃沮,new(new Point(8,0),new AffairsParam(10,6),ECountry.沃沮)},
+        {EArea.丸都,new(new Point(7,0),new AffairsParam(10,7),ECountry.高句麗)},
+        {EArea.目支,new(new Point(8,3),new AffairsParam(10,6),ECountry.馬韓)},
+        {EArea.首里,new(new Point(8,7),new AffairsParam(10,2),ECountry.琉球)},
       }.AsReadOnly(),
-      new Dictionary<ECountry,CountryInfo>(){
-        {ECountry.漢,new CountryInfo(5000,1,new(Color.FromArgb(255,238,238,136)),
+      new Dictionary<ECountry,CountryData>(){
+        {ECountry.漢,new(5000,1,new(Color.FromArgb(255,238,238,136)),
           [
             ["選べません(勝利条件なし)"]
           ],
           (game)=>false,
           (game)=>[],
           0,0)},
-        {ECountry.公孫度,new CountryInfo(100,1,new(Color.FromArgb(255,136,204,136)),
+        {ECountry.公孫度,new(100,1,new(Color.FromArgb(255,136,204,136)),
           [
             ["西暦210年以降","13都市以上領有"],
             ["※西暦210年以降4年毎1都市緩和","※襄平を領有していたら2都市軽減"]
@@ -256,7 +256,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.公孫度)}都市",null }
           },
           0,0)},
-        {ECountry.公孫瓚,new CountryInfo(2000,1,new(Color.FromArgb(255,221,170,102)),
+        {ECountry.公孫瓚,new(2000,1,new(Color.FromArgb(255,221,170,102)),
           [
             ["西暦210年以降","14都市以上領有"],
             ["※西暦210年以降4年毎1都市緩和","※鮮卑が滅亡したら1都市軽減","※烏丸が滅亡したら2都市軽減","※烏丸を滅亡させたら1都市軽減"]
@@ -274,7 +274,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.公孫瓚)}都市",null }
           },
           0,0)},
-        {ECountry.劉虞,new CountryInfo(500,1,new(Color.FromArgb(255, 221, 136, 136)),
+        {ECountry.劉虞,new(500,1,new(Color.FromArgb(255, 221, 136, 136)),
           [
             ["西暦210年以降","8都市以上領有"],
             ["※西暦210年以降5年毎1都市緩和","※鮮卑が滅亡したら1都市厳格化","※烏丸が滅亡したら2都市厳格化","※公孫瓚が烏丸を滅亡させたら2都市厳格化"]
@@ -292,7 +292,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.劉虞)}都市",null }
           },
           0,0)},
-        {ECountry.黒山賊,new CountryInfo(500,1,new(Color.FromArgb(255, 119, 119, 119)),
+        {ECountry.黒山賊,new(500,1,new(Color.FromArgb(255, 119, 119, 119)),
           [
             ["西暦210年以降","13都市以上領有"],
             ["※西暦210年以降4年毎1都市緩和"]
@@ -307,7 +307,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.黒山賊)}都市",null }
           },
           0,0)},
-        {ECountry.袁紹,new CountryInfo(1500,1,new(Color.FromArgb(255, 204, 204, 119)),
+        {ECountry.袁紹,new(1500,1,new(Color.FromArgb(255, 204, 204, 119)),
           [
             ["西暦210年以降","中華領域15都市以上領有","曹操以上の領土を領有","袁術以上の領土を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -324,7 +324,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "袁術以上の領土を領有",Country.GetAreaNum(game,ECountry.袁紹)>=Country.GetAreaNum(game,ECountry.袁術) }
           },
           0,0)},
-        {ECountry.韓馥,new CountryInfo(600,1,new(Color.FromArgb(255, 187, 153, 221)),
+        {ECountry.韓馥,new(600,1,new(Color.FromArgb(255, 187, 153, 221)),
           [
             ["西暦210年以降","中華領域7都市以上領有","鄴を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -340,7 +340,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "鄴を領有",Country.HasAreas(game,ECountry.韓馥,[EArea.鄴]) }
           },
           0,0)},
-        {ECountry.張楊,new CountryInfo(300,1,new(Color.FromArgb(255, 153, 221, 187)),
+        {ECountry.張楊,new(300,1,new(Color.FromArgb(255, 153, 221, 187)),
           [
             ["西暦210年以降","中華領域7都市以上領有"],
             ["※西暦210年以降5年毎1都市緩和"]
@@ -355,7 +355,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.張楊,Area.GetChinaAreas(0))}都市",null }
           },
           0,1)},
-        {ECountry.焦和,new CountryInfo(200,1,new(Color.FromArgb(255, 221, 170, 221)),
+        {ECountry.焦和,new(200,1,new(Color.FromArgb(255, 221, 170, 221)),
           [
             ["西暦210年以降","中華領域7都市以上領有","劇を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -371,7 +371,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "劇を領有",Country.HasAreas(game,ECountry.焦和,[EArea.劇]) }
           },
           0,0)},
-        {ECountry.劉岱,new CountryInfo(300,1,new(Color.FromArgb(255, 221, 221, 170)),
+        {ECountry.劉岱,new(300,1,new(Color.FromArgb(255, 221, 221, 170)),
           [
             ["西暦210年以降","中華領域7都市以上領有","濮陽を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -387,7 +387,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "濮陽を領有",Country.HasAreas(game,ECountry.劉岱,[EArea.濮陽]) }
           },
           0,0)},
-        {ECountry.曹操,new CountryInfo(600,1,new(Color.FromArgb(255, 187, 187, 255)),
+        {ECountry.曹操,new(600,1,new(Color.FromArgb(255, 187, 187, 255)),
           [
             ["西暦210年以降","中華領域15都市以上領有","袁紹が滅亡"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -403,7 +403,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "袁紹が滅亡",Country.IsPerish(game,ECountry.袁紹) }
           },
           0,0)},
-        {ECountry.董卓,new CountryInfo(3000,1,new(Color.FromArgb(255, 153, 153, 136)),
+        {ECountry.董卓,new(3000,1,new(Color.FromArgb(255, 153, 153, 136)),
           [
             ["中華領域5都市以上領有","長安を領有","資金10000以上所持"]
           ],
@@ -415,7 +415,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "資金10000以上所持",Country.GetFund(game,ECountry.董卓)>=10000 }
           },
           0,0)},
-        {ECountry.韓遂,new CountryInfo(100,1,new(Color.FromArgb(255, 204, 153, 136)),
+        {ECountry.韓遂,new(100,1,new(Color.FromArgb(255, 204, 153, 136)),
           [
             ["西暦210年以降","12都市以上領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -430,7 +430,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.韓遂)}都市",null }
           },
           0,0)},
-        {ECountry.陶謙,new CountryInfo(100,1,new(Color.FromArgb(255, 136, 221, 119)),
+        {ECountry.陶謙,new(100,1,new(Color.FromArgb(255, 136, 221, 119)),
           [
             ["西暦210年以降","中華領域7都市以上領有","彭城を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -446,7 +446,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "彭城を領有",Country.HasAreas(game,ECountry.陶謙,[EArea.彭城]) }
           },
           0,0)},
-        {ECountry.張超,new CountryInfo(150,1,new(Color.FromArgb(255, 204, 170, 119)),
+        {ECountry.張超,new(150,1,new(Color.FromArgb(255, 204, 170, 119)),
           [
             ["西暦210年以降","中華領域7都市以上領有","淮陰を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -462,7 +462,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "淮陰を領有",Country.HasAreas(game,ECountry.張超,[EArea.淮陰]) }
           },
           0,1)},
-        {ECountry.袁術,new CountryInfo(1000,1,new(Color.FromArgb(255, 238, 153, 221)),
+        {ECountry.袁術,new(1000,1,new(Color.FromArgb(255, 238, 153, 221)),
           [
             ["西暦210年以降","中華領域12都市以上領有","袁紹以上の領土を領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -478,7 +478,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "袁紹以上の領土を領有",Country.GetAreaNum(game,ECountry.袁術)>=Country.GetAreaNum(game,ECountry.袁紹) }
           },
           0,0)},
-        {ECountry.張咨,new CountryInfo(500,1,new(Color.FromArgb(255, 238, 238, 238)),
+        {ECountry.張咨,new(500,1,new(Color.FromArgb(255, 238, 238, 238)),
           [
             ["西暦210年以降","中華領域7都市以上領有","宛を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -494,7 +494,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "宛を領有",Country.HasAreas(game,ECountry.張咨,[EArea.宛]) }
           },
           0,2)},
-        {ECountry.王叡,new CountryInfo(500,1,new(Color.FromArgb(255,204,221,187)),
+        {ECountry.王叡,new(500,1,new(Color.FromArgb(255,204,221,187)),
           [
             ["西暦210年以降","中華領域7都市以上領有","襄陽を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -510,7 +510,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "襄陽を領有",Country.HasAreas(game,ECountry.王叡,[EArea.襄陽]) }
           },
           0,2)},
-        {ECountry.劉表,new CountryInfo(100,1,new(Color.FromArgb(255,187,204,221)),
+        {ECountry.劉表,new(100,1,new(Color.FromArgb(255,187,204,221)),
           [
             ["西暦210年以降","中華領域9都市以上領有","襄陽を領有","鄂を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -527,7 +527,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "鄂を領有",Country.HasAreas(game,ECountry.劉表,[EArea.鄂]) }
           },
           0,0)},
-        {ECountry.孫堅,new CountryInfo(200,1,new(Color.FromArgb(255,255,187,187)),
+        {ECountry.孫堅,new(200,1,new(Color.FromArgb(255,255,187,187)),
           [
             ["西暦210年以降","15都市以上領有"],
             ["※西暦210年以降4年毎1都市緩和","※洛陽を領有していたら5都市軽減"]
@@ -543,7 +543,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.孫堅,Area.GetChinaAreas(0))}都市",null }
           },
           0,0)},
-        {ECountry.曹寅,new CountryInfo(100,1,new(Color.FromArgb(255,153,204,221)),
+        {ECountry.曹寅,new(100,1,new(Color.FromArgb(255,153,204,221)),
           [
             ["西暦210年以降","中華領域7都市以上領有","臨沅を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -559,7 +559,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "臨沅を領有",Country.HasAreas(game,ECountry.曹寅,[EArea.臨沅]) }
           },
           0,1)},
-        {ECountry.蘇固,new CountryInfo(100,1,new(Color.FromArgb(255,204,204,238)),
+        {ECountry.蘇固,new(100,1,new(Color.FromArgb(255,204,204,238)),
           [
             ["西暦210年以降","中華領域7都市以上領有","南鄭を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -575,7 +575,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"南鄭を領有",Country.HasAreas(game,ECountry.蘇固,[EArea.南鄭]) }
           },
           0,0)},
-        {ECountry.劉焉,new CountryInfo(200,1,new(Color.FromArgb(255,187,238,187)),
+        {ECountry.劉焉,new(200,1,new(Color.FromArgb(255,187,238,187)),
           [
             ["西暦210年以降","9都市以上領有","成都を領有","綿竹を領有","馬相が滅亡"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -593,7 +593,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "馬相が滅亡",Country.IsPerish(game,ECountry.馬相) }
           },
           0,0)},
-        {ECountry.馬相,new CountryInfo(300,1,new(Color.FromArgb(255,221,187,187)),
+        {ECountry.馬相,new(300,1,new(Color.FromArgb(255,221,187,187)),
           [
             ["西暦210年以降","11都市以上領有","成都を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -609,7 +609,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "成都を領有",Country.HasAreas(game,ECountry.馬相,[EArea.成都]) }
           },
           0,1)},
-        {ECountry.士燮,new CountryInfo(300,1,new(Color.FromArgb(255,187,255,255)),
+        {ECountry.士燮,new(300,1,new(Color.FromArgb(255,187,255,255)),
           [
             ["西暦210年以降","8都市以上領有","龍編を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -625,7 +625,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "龍編を領有",Country.HasAreas(game,ECountry.士燮,[EArea.龍編]) }
           },
           0,0)},
-        {ECountry.南蛮,new CountryInfo(100,1,new(Color.FromArgb(255,204,221,119)),
+        {ECountry.南蛮,new(100,1,new(Color.FromArgb(255,204,221,119)),
           [
             ["西暦210年以降","8都市以上領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -640,7 +640,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.南蛮)}都市",null }
           },
           0,0)},
-        {ECountry.北匈奴,new CountryInfo(100,1,new(Color.FromArgb(255,221,204,119)),
+        {ECountry.北匈奴,new(100,1,new(Color.FromArgb(255,221,204,119)),
           [
             ["西暦210年以降","中華領域5都市以上領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -655,7 +655,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 中華領域{Country.HasAreaCount(game,ECountry.北匈奴,Area.GetChinaAreas(0))}都市",null }
           },
           0,0)},
-        {ECountry.羌,new CountryInfo(200,1,new(Color.FromArgb(255,187,187,119)),
+        {ECountry.羌,new(200,1,new(Color.FromArgb(255,187,187,119)),
           [
             ["氐が滅亡","内政値150以上"]
           ],
@@ -667,7 +667,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
 
           },
           0,0)},
-        {ECountry.氐,new CountryInfo(200,1,new(Color.FromArgb(255,238,204,102)),
+        {ECountry.氐,new(200,1,new(Color.FromArgb(255,238,204,102)),
           [
             ["羌が滅亡","内政値150以上"]
           ],
@@ -678,7 +678,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.氐)}",null }
           },
           0,0)},
-        {ECountry.南匈奴,new CountryInfo(200,1,new(Color.FromArgb(255,204,221,153)),
+        {ECountry.南匈奴,new(200,1,new(Color.FromArgb(255,204,221,153)),
           [
             ["西暦210年以降","8都市以上領有","北地を領有","朔方を領有","臨河を領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -696,7 +696,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "臨河を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.臨河]) }
           },
           0,0)},
-        {ECountry.鮮卑,new CountryInfo(200,1,new(Color.FromArgb(255,170,221,153)),
+        {ECountry.鮮卑,new(200,1,new(Color.FromArgb(255,170,221,153)),
           [
             ["西暦210年以降","12都市以上領有","弾汗を領有","鮮卑を領有"],
             ["※西暦210年以降4年毎1都市緩和"],
@@ -713,7 +713,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "鮮卑を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.鮮卑]) }
           },
           0,0)},
-        {ECountry.烏丸,new CountryInfo(100,1,new(Color.FromArgb(255,204,238,102)),
+        {ECountry.烏丸,new(100,1,new(Color.FromArgb(255,204,238,102)),
           [
             ["西暦210年以降","8都市以上領有","烏桓を領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -729,7 +729,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "烏桓を領有",Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]) }
           },
           0,0)},
-        {ECountry.高句麗,new CountryInfo(200,1,new(Color.FromArgb(255,221,153,187)),
+        {ECountry.高句麗,new(200,1,new(Color.FromArgb(255,221,153,187)),
           [
             ["西暦210年以降","8都市以上領有","襄平を領有","番汗を領有","朝鮮を領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -747,7 +747,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "朝鮮を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.朝鮮]) }
           },
           0,0)},
-        {ECountry.沃沮,new CountryInfo(50,1,new(Color.FromArgb(255,153,187,221)),
+        {ECountry.沃沮,new(50,1,new(Color.FromArgb(255,153,187,221)),
           [
             ["西暦210年以降","7都市以上領有","沃沮を領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -763,7 +763,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "沃沮を領有",Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]) }
           },
           0,0)},
-        {ECountry.馬韓,new CountryInfo(100,1,new(Color.FromArgb(255,170,238,136)),
+        {ECountry.馬韓,new(100,1,new(Color.FromArgb(255,170,238,136)),
           [
             ["西暦210年以降","7都市以上領有","番汗を領有","朝鮮を領有","目支を領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -781,7 +781,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "目支を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.目支]) }
           },
           0,0)},
-        {ECountry.琉球,new CountryInfo(50,1,new(Color.FromArgb(255,204,170,153)),
+        {ECountry.琉球,new(50,1,new(Color.FromArgb(255,204,170,153)),
           [
             ["西暦210年以降","内政値11以上","首里を領有","資金1000以上"],
             ["※西暦210年以降5年毎内政値1緩和"],
@@ -798,7 +798,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "資金1000以上",Country.GetFund(game,ECountry.琉球)>=1000 }
           },
           0,1)},
-        {ECountry.南越,new CountryInfo(100,1,new(Color.FromArgb(255,204,170,221)),
+        {ECountry.南越,new(100,1,new(Color.FromArgb(255,204,170,221)),
           [
             ["西暦210年以降","内政値80以上","南越を領有","日南を領有"],
             ["※西暦210年以降1年毎内政値1緩和"],
@@ -815,7 +815,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "日南を領有",Country.HasAreas(game,ECountry.南越,[EArea.日南]) }
           },
           0,0)},
-        {ECountry.濊,new CountryInfo(100,1,new(Color.FromArgb(255,187,170,153)),
+        {ECountry.濊,new(100,1,new(Color.FromArgb(255,187,170,153)),
           [
             ["西暦210年以降","8都市以上領有","番汗を領有","朝鮮を領有","目支を領有"],
             ["※西暦210年以降5年毎1都市緩和"],
@@ -834,7 +834,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
           },
           0,0)},
       }.AsReadOnly(),
-      new Dictionary<PersonType,PersonParam> {
+      new Dictionary<PersonType,PersonData> {
         {new("陳温"),new(ERole.affair,1,155,193,ECountry.漢)},
         {new("華歆"),new(ERole.affair,1,157,231,ECountry.漢)},
         {new("盛憲"),new(ERole.affair,1,159,192,ECountry.漢)},
@@ -1224,88 +1224,88 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
         {new("不耐侯"),new(ERole.defense,1,170,225,ECountry.濊)},
       }.AsReadOnly()
     )),
-    new(BaseData.scenarios.ElementAtOrDefault(1)??new(""),new ScenarioInfo(225,275,
+    new(BaseData.scenarios.ElementAtOrDefault(1)??new(string.Empty),new ScenarioData(225,275,
       [..baseChinaAreas.Except(AreaDiffs.ElementAtOrDefault(1)?.Keys.ToList()??[]).Concat(AreaDiffs.ElementAtOrDefault(1)?.Values.ToList()?? []).Except([EArea.離石]).Concat([EArea.南城])],
       [..baseRoadConnections.Select(v=>v with { From=AreaDiffs.ElementAtOrDefault(1)?.TryGetValue(v.From,out EArea diffFrom)??false ? diffFrom : v.From,To=AreaDiffs.ElementAtOrDefault(1)?.TryGetValue(v.To,out EArea diffTo)??false ? diffTo : v.To }).Concat([new Road(EArea.成都,EArea.魚復,RoadKind.land,2),new Road(EArea.臨湘,EArea.南城,RoadKind.land,1),new Road(EArea.龍編,EArea.南越,RoadKind.land,1)])],
-      new Dictionary<EArea,AreaInfo>(){
-        {EArea.襄平,new AreaInfo(new Point(7,1),new AffairsParam(50,30),ECountry.燕)},
-        {EArea.番汗,new AreaInfo(new Point(8,1),new AffairsParam(10,8),ECountry.燕)},
-        {EArea.朝鮮,new AreaInfo(new Point(8,2),new AffairsParam(20,8),ECountry.燕)},
-        {EArea.陽楽,new AreaInfo(new Point(6,1.1),new AffairsParam(20,6),ECountry.魏)},
-        {EArea.薊,new AreaInfo(new Point(5,1),new AffairsParam(60,25),ECountry.魏)},
-        {EArea.代,new AreaInfo(new Point(4,1),new AffairsParam(35,15),ECountry.魏)},
-        {EArea.南皮,new AreaInfo(new Point(5,2),new AffairsParam(110,55),ECountry.魏)},
-        {EArea.魯,new AreaInfo(new Point(5,3),new AffairsParam(80,40),ECountry.魏)},
-        {EArea.晋陽,new AreaInfo(new Point(4,2),new AffairsParam(50,20),ECountry.魏)},
-        {EArea.劇,new AreaInfo(new Point(6,2.9),new AffairsParam(60,30),ECountry.魏)},
-        {EArea.淮陰,new AreaInfo(new Point(6,4),new AffairsParam(70,20),ECountry.魏)},
-        {EArea.陰陵,new AreaInfo(new Point(5,4),new AffairsParam(60,20),ECountry.魏)},
-        {EArea.離石,new AreaInfo(new Point(3,2),new AffairsParam(20,10),ECountry.南匈奴)},
-        {EArea.洛陽,new AreaInfo(new Point(3,3),new AffairsParam(120,70),ECountry.魏)},
-        {EArea.平輿,new AreaInfo(new Point(4,4),new AffairsParam(80,30),ECountry.魏)},
-        {EArea.酸棗,new AreaInfo(new Point(4,3),new AffairsParam(100,70),ECountry.魏)},
-        {EArea.長安,new AreaInfo(new Point(2,3),new AffairsParam(120,50),ECountry.魏)},
-        {EArea.金城,new AreaInfo(new Point(1,3),new AffairsParam(30,12),ECountry.魏)},
-        {EArea.武威,new AreaInfo(new Point(1,2),new AffairsParam(20,8),ECountry.魏)},
-        {EArea.居延,new AreaInfo(new Point(1,1),new AffairsParam(10,2),null)},
-        {EArea.敦煌,new AreaInfo(new Point(0,1),new AffairsParam(30,10),null)},
-        {EArea.宛,new AreaInfo(new Point(3,4),new AffairsParam(80,35),ECountry.魏)},
-        {EArea.襄陽,new AreaInfo(new Point(3,5),new AffairsParam(90,40),ECountry.魏)},
-        {EArea.武昌,new AreaInfo(new Point(4,5),new AffairsParam(80,35),ECountry.呉)},
-        {EArea.臨沅,new AreaInfo(new Point(3,6),new AffairsParam(70,20),ECountry.呉)},
-        {EArea.臨湘,new AreaInfo(new Point(4,6),new AffairsParam(70,35),ECountry.呉)},
-        {EArea.建業,new AreaInfo(new Point(6,5),new AffairsParam(110,60),ECountry.呉)},
-        {EArea.舒,new AreaInfo(new Point(5,5),new AffairsParam(50,20),ECountry.呉)},
-        {EArea.泉陵,new AreaInfo(new Point(3,7),new AffairsParam(50,20),ECountry.呉)},
-        {EArea.郴,new AreaInfo(new Point(4,7),new AffairsParam(50,25),ECountry.呉)},
-        {EArea.鄱陽,new AreaInfo(new Point(5,6),new AffairsParam(40,5),ECountry.呉)},
-        {EArea.南城,new AreaInfo(new Point(5,7),new AffairsParam(30,10),ECountry.呉)},
-        {EArea.山陰,new AreaInfo(new Point(6.1,6),new AffairsParam(55,25),ECountry.呉)},
-        {EArea.東侯官,new AreaInfo(new Point(6,7),new AffairsParam(45,15),ECountry.呉)},
-        {EArea.南鄭,new AreaInfo(new Point(1,4),new AffairsParam(70,40),ECountry.蜀漢)},
-        {EArea.房陵,new AreaInfo(new Point(2,4),new AffairsParam(40,15),ECountry.魏)},
-        {EArea.葭萌,new AreaInfo(new Point(1,5),new AffairsParam(40,15),ECountry.蜀漢)},
-        {EArea.成都,new AreaInfo(new Point(1,6),new AffairsParam(90,50),ECountry.蜀漢)},
-        {EArea.漢嘉,new AreaInfo(new Point(0,6),new AffairsParam(20,8),ECountry.蜀漢)},
-        {EArea.魚復,new AreaInfo(new Point(2,5),new AffairsParam(50,15),ECountry.蜀漢)},
-        {EArea.邛都,new AreaInfo(new Point(0,7),new AffairsParam(20,8),ECountry.南蛮)},
-        {EArea.涪陵,new AreaInfo(new Point(2,6),new AffairsParam(50,20),ECountry.蜀漢)},
-        {EArea.朱提,new AreaInfo(new Point(1,7),new AffairsParam(20,10),ECountry.南蛮)},
-        {EArea.番禺,new AreaInfo(new Point(5.1,8),new AffairsParam(40,15),ECountry.呉)},
-        {EArea.合浦,new AreaInfo(new Point(4,8),new AffairsParam(45,15),ECountry.士燮)},
-        {EArea.龍編,new AreaInfo(new Point(3,8),new AffairsParam(50,30),ECountry.士燮)},
-        {EArea.日南,new AreaInfo(new Point(3,9),new AffairsParam(20,10),ECountry.士燮)},
-        {EArea.且蘭,new AreaInfo(new Point(2,7),new AffairsParam(10,3),null)},
-        {EArea.滇池,new AreaInfo(new Point(1,8),new AffairsParam(15,8),ECountry.南蛮)},
-        {EArea.西随,new AreaInfo(new Point(2,8),new AffairsParam(10,3),null)},
-        {EArea.不韋,new AreaInfo(new Point(0,8),new AffairsParam(15,7),ECountry.南蛮)},
-        {EArea.緬甸,new AreaInfo(new Point(0,9),new AffairsParam(10,4),null)},
-        {EArea.哀牢,new AreaInfo(new Point(1,9),new AffairsParam(10,4),null)},
-        {EArea.南越,new AreaInfo(new Point(2,9),new AffairsParam(20,10),ECountry.南越)},
-        {EArea.朱崖,new AreaInfo(new Point(4.2,9),new AffairsParam(10,2),null)},
-        {EArea.台北,new AreaInfo(new Point(7,7.9),new AffairsParam(10,2),null)},
-        {EArea.台南,new AreaInfo(new Point(6.9,8.9),new AffairsParam(10,2),null)},
-        {EArea.伊吾,new AreaInfo(new Point(0,0),new AffairsParam(10,6),ECountry.北匈奴)},
-        {EArea.汶江,new AreaInfo(new Point(0,5),new AffairsParam(10,5),ECountry.羌)},
-        {EArea.湔氐,new AreaInfo(new Point(0,4),new AffairsParam(10,5),ECountry.氐)},
-        {EArea.西海,new AreaInfo(new Point(0,3),new AffairsParam(10,6),ECountry.氐)},
-        {EArea.羌,new AreaInfo(new Point(0,2),new AffairsParam(10,6),ECountry.羌)},
-        {EArea.朔方,new AreaInfo(new Point(3,1),new AffairsParam(10,6),ECountry.南匈奴)},
-        {EArea.臨河,new AreaInfo(new Point(2,1),new AffairsParam(20,5),ECountry.南匈奴)},
-        {EArea.北地,new AreaInfo(new Point(2,2),new AffairsParam(20,10),ECountry.南匈奴)},
-        {EArea.鮮卑,new AreaInfo(new Point(4,0),new AffairsParam(10,6),ECountry.鮮卑)},
-        {EArea.弾汗,new AreaInfo(new Point(3,0),new AffairsParam(10,8),ECountry.鮮卑)},
-        {EArea.丁零,new AreaInfo(new Point(2,0),new AffairsParam(10,6),ECountry.鮮卑)},
-        {EArea.堅昆,new AreaInfo(new Point(1,0),new AffairsParam(10,5),ECountry.鮮卑)},
-        {EArea.烏桓,new AreaInfo(new Point(5,0),new AffairsParam(10,7),ECountry.烏丸)},
-        {EArea.白狼,new AreaInfo(new Point(6,0),new AffairsParam(10,6),ECountry.烏丸)},
-        {EArea.沃沮,new AreaInfo(new Point(8,0),new AffairsParam(10,6),ECountry.沃沮)},
-        {EArea.丸都,new AreaInfo(new Point(7,0),new AffairsParam(10,7),ECountry.高句麗)},
-        {EArea.目支,new AreaInfo(new Point(8,3),new AffairsParam(10,6),ECountry.馬韓)},
-        {EArea.首里,new AreaInfo(new Point(8,7),new AffairsParam(10,2),ECountry.琉球)},
+      new Dictionary<EArea,AreaData>(){
+        {EArea.襄平,new(new Point(7,1),new AffairsParam(50,30),ECountry.燕)},
+        {EArea.番汗,new(new Point(8,1),new AffairsParam(10,8),ECountry.燕)},
+        {EArea.朝鮮,new(new Point(8,2),new AffairsParam(20,8),ECountry.燕)},
+        {EArea.陽楽,new(new Point(6,1.1),new AffairsParam(20,6),ECountry.魏)},
+        {EArea.薊,new(new Point(5,1),new AffairsParam(60,25),ECountry.魏)},
+        {EArea.代,new(new Point(4,1),new AffairsParam(35,15),ECountry.魏)},
+        {EArea.南皮,new(new Point(5,2),new AffairsParam(110,55),ECountry.魏)},
+        {EArea.魯,new(new Point(5,3),new AffairsParam(80,40),ECountry.魏)},
+        {EArea.晋陽,new(new Point(4,2),new AffairsParam(50,20),ECountry.魏)},
+        {EArea.劇,new(new Point(6,2.9),new AffairsParam(60,30),ECountry.魏)},
+        {EArea.淮陰,new(new Point(6,4),new AffairsParam(70,20),ECountry.魏)},
+        {EArea.陰陵,new(new Point(5,4),new AffairsParam(60,20),ECountry.魏)},
+        {EArea.離石,new(new Point(3,2),new AffairsParam(20,10),ECountry.南匈奴)},
+        {EArea.洛陽,new(new Point(3,3),new AffairsParam(120,70),ECountry.魏)},
+        {EArea.平輿,new(new Point(4,4),new AffairsParam(80,30),ECountry.魏)},
+        {EArea.酸棗,new(new Point(4,3),new AffairsParam(100,70),ECountry.魏)},
+        {EArea.長安,new(new Point(2,3),new AffairsParam(120,50),ECountry.魏)},
+        {EArea.金城,new(new Point(1,3),new AffairsParam(30,12),ECountry.魏)},
+        {EArea.武威,new(new Point(1,2),new AffairsParam(20,8),ECountry.魏)},
+        {EArea.居延,new(new Point(1,1),new AffairsParam(10,2),null)},
+        {EArea.敦煌,new(new Point(0,1),new AffairsParam(30,10),null)},
+        {EArea.宛,new(new Point(3,4),new AffairsParam(80,35),ECountry.魏)},
+        {EArea.襄陽,new(new Point(3,5),new AffairsParam(90,40),ECountry.魏)},
+        {EArea.武昌,new(new Point(4,5),new AffairsParam(80,35),ECountry.呉)},
+        {EArea.臨沅,new(new Point(3,6),new AffairsParam(70,20),ECountry.呉)},
+        {EArea.臨湘,new(new Point(4,6),new AffairsParam(70,35),ECountry.呉)},
+        {EArea.建業,new(new Point(6,5),new AffairsParam(110,60),ECountry.呉)},
+        {EArea.舒,new(new Point(5,5),new AffairsParam(50,20),ECountry.呉)},
+        {EArea.泉陵,new(new Point(3,7),new AffairsParam(50,20),ECountry.呉)},
+        {EArea.郴,new(new Point(4,7),new AffairsParam(50,25),ECountry.呉)},
+        {EArea.鄱陽,new(new Point(5,6),new AffairsParam(40,5),ECountry.呉)},
+        {EArea.南城,new(new Point(5,7),new AffairsParam(30,10),ECountry.呉)},
+        {EArea.山陰,new(new Point(6.1,6),new AffairsParam(55,25),ECountry.呉)},
+        {EArea.東侯官,new(new Point(6,7),new AffairsParam(45,15),ECountry.呉)},
+        {EArea.南鄭,new(new Point(1,4),new AffairsParam(70,40),ECountry.蜀漢)},
+        {EArea.房陵,new(new Point(2,4),new AffairsParam(40,15),ECountry.魏)},
+        {EArea.葭萌,new(new Point(1,5),new AffairsParam(40,15),ECountry.蜀漢)},
+        {EArea.成都,new(new Point(1,6),new AffairsParam(90,50),ECountry.蜀漢)},
+        {EArea.漢嘉,new(new Point(0,6),new AffairsParam(20,8),ECountry.蜀漢)},
+        {EArea.魚復,new(new Point(2,5),new AffairsParam(50,15),ECountry.蜀漢)},
+        {EArea.邛都,new(new Point(0,7),new AffairsParam(20,8),ECountry.南蛮)},
+        {EArea.涪陵,new(new Point(2,6),new AffairsParam(50,20),ECountry.蜀漢)},
+        {EArea.朱提,new(new Point(1,7),new AffairsParam(20,10),ECountry.南蛮)},
+        {EArea.番禺,new(new Point(5.1,8),new AffairsParam(40,15),ECountry.呉)},
+        {EArea.合浦,new(new Point(4,8),new AffairsParam(45,15),ECountry.士燮)},
+        {EArea.龍編,new(new Point(3,8),new AffairsParam(50,30),ECountry.士燮)},
+        {EArea.日南,new(new Point(3,9),new AffairsParam(20,10),ECountry.士燮)},
+        {EArea.且蘭,new(new Point(2,7),new AffairsParam(10,3),null)},
+        {EArea.滇池,new(new Point(1,8),new AffairsParam(15,8),ECountry.南蛮)},
+        {EArea.西随,new(new Point(2,8),new AffairsParam(10,3),null)},
+        {EArea.不韋,new(new Point(0,8),new AffairsParam(15,7),ECountry.南蛮)},
+        {EArea.緬甸,new(new Point(0,9),new AffairsParam(10,4),null)},
+        {EArea.哀牢,new(new Point(1,9),new AffairsParam(10,4),null)},
+        {EArea.南越,new(new Point(2,9),new AffairsParam(20,10),ECountry.南越)},
+        {EArea.朱崖,new(new Point(4.2,9),new AffairsParam(10,2),null)},
+        {EArea.台北,new(new Point(7,7.9),new AffairsParam(10,2),null)},
+        {EArea.台南,new(new Point(6.9,8.9),new AffairsParam(10,2),null)},
+        {EArea.伊吾,new(new Point(0,0),new AffairsParam(10,6),ECountry.北匈奴)},
+        {EArea.汶江,new(new Point(0,5),new AffairsParam(10,5),ECountry.羌)},
+        {EArea.湔氐,new(new Point(0,4),new AffairsParam(10,5),ECountry.氐)},
+        {EArea.西海,new(new Point(0,3),new AffairsParam(10,6),ECountry.氐)},
+        {EArea.羌,new(new Point(0,2),new AffairsParam(10,6),ECountry.羌)},
+        {EArea.朔方,new(new Point(3,1),new AffairsParam(10,6),ECountry.南匈奴)},
+        {EArea.臨河,new(new Point(2,1),new AffairsParam(20,5),ECountry.南匈奴)},
+        {EArea.北地,new(new Point(2,2),new AffairsParam(20,10),ECountry.南匈奴)},
+        {EArea.鮮卑,new(new Point(4,0),new AffairsParam(10,6),ECountry.鮮卑)},
+        {EArea.弾汗,new(new Point(3,0),new AffairsParam(10,8),ECountry.鮮卑)},
+        {EArea.丁零,new(new Point(2,0),new AffairsParam(10,6),ECountry.鮮卑)},
+        {EArea.堅昆,new(new Point(1,0),new AffairsParam(10,5),ECountry.鮮卑)},
+        {EArea.烏桓,new(new Point(5,0),new AffairsParam(10,7),ECountry.烏丸)},
+        {EArea.白狼,new(new Point(6,0),new AffairsParam(10,6),ECountry.烏丸)},
+        {EArea.沃沮,new(new Point(8,0),new AffairsParam(10,6),ECountry.沃沮)},
+        {EArea.丸都,new(new Point(7,0),new AffairsParam(10,7),ECountry.高句麗)},
+        {EArea.目支,new(new Point(8,3),new AffairsParam(10,6),ECountry.馬韓)},
+        {EArea.首里,new(new Point(8,7),new AffairsParam(10,2),ECountry.琉球)},
       }.AsReadOnly(),
-      new Dictionary<ECountry,CountryInfo>(){
-        {ECountry.魏,new CountryInfo(1000,1,new(Color.FromArgb(255,187,187,255)),
+      new Dictionary<ECountry,CountryData>(){
+        {ECountry.魏,new(1000,1,new(Color.FromArgb(255,187,187,255)),
           [
             ["呉が滅亡","蜀漢が滅亡","中華領域の65%以上領有"],
             ["※蜀漢を滅亡させたら10%軽減","※呉を滅亡させたら5%軽減"]
@@ -1321,7 +1321,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.魏,v)/v.Length*100):0}%領有",null }
           },
           0,0)},
-        {ECountry.呉,new CountryInfo(1000,1,new(Color.FromArgb(255,255,187,187)),
+        {ECountry.呉,new(1000,1,new(Color.FromArgb(255,255,187,187)),
           [
             ["魏以上の領土を領有","蜀漢以上の領土を領有","中華領域の50%以上領有"],
             ["※魏を滅亡させたら10%軽減","※蜀漢を滅亡させたら8%軽減"]
@@ -1337,7 +1337,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.呉,v)/v.Length*100):0}%領有",null }
           },
           0,0)},
-        {ECountry.蜀漢,new CountryInfo(1000,1,new(Color.FromArgb(255,187,255,187)),
+        {ECountry.蜀漢,new(1000,1,new(Color.FromArgb(255,187,255,187)),
           [
             ["魏が滅亡","中華領域の65%以上領有"],
             ["※魏を滅亡させたら25%軽減","※呉を滅亡させたら5%軽減"]
@@ -1352,7 +1352,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.蜀漢,v)/v.Length*100):0}%領有",null }
           },
           0,0)},
-        {ECountry.燕,new CountryInfo(500,1,new(Color.FromArgb(255,255,187,255)),
+        {ECountry.燕,new(500,1,new(Color.FromArgb(255,255,187,255)),
           [
             ["西暦255年以降","16都市以上領有"],
             ["※西暦255年以降2年毎1都市緩和"]
@@ -1367,7 +1367,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.燕)}都市",null }
           },
           0,0)},
-        {ECountry.士燮,new CountryInfo(800,1,new(Color.FromArgb(255,187,255,255)),
+        {ECountry.士燮,new(800,1,new(Color.FromArgb(255,187,255,255)),
           [
             ["西暦255年以降","9都市以上領有"],
             ["※西暦255年以降4年毎1都市緩和"],
@@ -1382,7 +1382,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.士燮)}都市",null }
           },
           0,0)},
-        {ECountry.南蛮,new CountryInfo(500,1,new(Color.FromArgb(255,204,221,119)),
+        {ECountry.南蛮,new(500,1,new(Color.FromArgb(255,204,221,119)),
           [
             ["蜀漢が滅亡","西暦255年以降","10都市以上領有"],
             ["※西暦255年以降4年毎1都市緩和","※蜀漢を滅亡させたら2都市軽減"]
@@ -1399,7 +1399,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Country.GetAreaNum(game,ECountry.南蛮)}都市",null }
           },
           0,0)},
-        {ECountry.北匈奴,new CountryInfo(100,1,new(Color.FromArgb(255,221,204,119)),
+        {ECountry.北匈奴,new(100,1,new(Color.FromArgb(255,221,204,119)),
           [
             ["西暦255年以降","中華領域5都市以上領有"],
             ["※西暦255年以降5年毎1都市緩和"]
@@ -1414,7 +1414,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 {Area.GetChinaAreas(1).MyApplyF(v=>Country.GetAreas(game,ECountry.北匈奴).Intersect(v).Count())}都市",null }
           },
           0,0)},
-        {ECountry.羌,new CountryInfo(300,1,new(Color.FromArgb(255,187,187,119)),
+        {ECountry.羌,new(300,1,new(Color.FromArgb(255,187,187,119)),
           [
             ["氐が滅亡","内政値150以上"]
           ],
@@ -1425,7 +1425,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.羌)}",null }
           },
           0,0)},
-        {ECountry.氐,new CountryInfo(300,1,new(Color.FromArgb(255,238,204,102)),
+        {ECountry.氐,new(300,1,new(Color.FromArgb(255,238,204,102)),
           [
             ["羌が滅亡","内政値150以上"]
           ],
@@ -1436,7 +1436,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.氐)}",null }
           },
           0,0)},
-        {ECountry.南匈奴,new CountryInfo(300,1,new(Color.FromArgb(255,204,221,153)),
+        {ECountry.南匈奴,new(300,1,new(Color.FromArgb(255,204,221,153)),
           [
             ["西暦255年以降","8都市以上領有","北地を領有","朔方を領有","臨河を領有"],
             ["※西暦255年以降5年毎1都市緩和"],
@@ -1454,7 +1454,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "臨河を領有",Country.HasAreas(game,ECountry.南匈奴,[EArea.臨河]) }
           },
           0,0)},
-        {ECountry.鮮卑,new CountryInfo(500,1,new(Color.FromArgb(255,170,221,153)),
+        {ECountry.鮮卑,new(500,1,new(Color.FromArgb(255,170,221,153)),
           [
             ["西暦255年以降","12都市以上領有","弾汗を領有","鮮卑を領有"],
             ["※西暦255年以降4年毎1都市緩和"],
@@ -1471,7 +1471,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "鮮卑を領有",Country.HasAreas(game,ECountry.鮮卑,[EArea.鮮卑]) }
           },
           0,0)},
-        {ECountry.烏丸,new CountryInfo(100,1,new(Color.FromArgb(255,204,238,102)),
+        {ECountry.烏丸,new(100,1,new(Color.FromArgb(255,204,238,102)),
           [
             ["西暦255年以降","8都市以上領有","烏桓を領有"],
             ["※西暦255年以降5年毎1都市緩和"],
@@ -1487,7 +1487,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "烏桓を領有",Country.HasAreas(game,ECountry.烏丸,[EArea.烏桓]) }
           },
           0,0)},
-        {ECountry.高句麗,new CountryInfo(200,1,new(Color.FromArgb(255,221,153,187)),
+        {ECountry.高句麗,new(200,1,new(Color.FromArgb(255,221,153,187)),
           [
             ["西暦255年以降","8都市以上領有","襄平を領有","番汗を領有","朝鮮を領有"],
             ["※西暦255年以降5年毎1都市緩和"],
@@ -1505,7 +1505,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "朝鮮を領有",Country.HasAreas(game,ECountry.高句麗,[EArea.朝鮮]) }
           },
           0,0)},
-        {ECountry.沃沮,new CountryInfo(100,1,new(Color.FromArgb(255,153,187,221)),
+        {ECountry.沃沮,new(100,1,new(Color.FromArgb(255,153,187,221)),
           [
             ["西暦255年以降","7都市以上領有","沃沮を領有"],
             ["※西暦255年以降5年毎1都市緩和"],
@@ -1521,7 +1521,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "沃沮を領有",Country.HasAreas(game,ECountry.沃沮,[EArea.沃沮]) }
           },
           0,0)},
-        {ECountry.馬韓,new CountryInfo(300,1,new(Color.FromArgb(255,170,238,136)),
+        {ECountry.馬韓,new(300,1,new(Color.FromArgb(255,170,238,136)),
           [
             ["西暦255年以降","7都市以上領有","番汗を領有","朝鮮を領有","目支を領有"],
             ["※西暦255年以降5年毎1都市緩和"],
@@ -1539,7 +1539,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "目支を領有",Country.HasAreas(game,ECountry.馬韓,[EArea.目支]) }
           },
           0,0)},
-        {ECountry.琉球,new CountryInfo(100,1,new(Color.FromArgb(255,204,170,153)),
+        {ECountry.琉球,new(100,1,new(Color.FromArgb(255,204,170,153)),
           [
             ["西暦255年以降","内政値11以上","首里を領有","資金1000以上"],
             ["※西暦255年以降5年毎内政値1緩和"],
@@ -1556,7 +1556,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
             { "資金1000以上",Country.GetFund(game,ECountry.琉球)>=1000 }
           },
           0,1)},
-        {ECountry.南越,new CountryInfo(200,1,new(Color.FromArgb(255,204,170,221)),
+        {ECountry.南越,new(200,1,new(Color.FromArgb(255,204,170,221)),
           [
             ["西暦255年以降","内政値80以上","南越を領有","日南を領有"],
             ["※西暦255年以降1年毎内政値1緩和"],
@@ -1574,7 +1574,7 @@ internal static readonly Dictionary<Scenario,ScenarioInfo> scenarios = new([
           },
           0,0)},
       }.AsReadOnly(),
-      new Dictionary<PersonType,PersonParam> {
+      new Dictionary<PersonType,PersonData> {
         {new("王建"),new(ERole.central,1,170,238,ECountry.燕,200)},
         {new("柳甫"),new(ERole.central,1,180,238,ECountry.燕)},
         {new("賈範"),new(ERole.affair,1,190,237,ECountry.燕)},

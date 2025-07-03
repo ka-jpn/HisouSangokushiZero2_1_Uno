@@ -7,7 +7,6 @@ using System.Collections.Generic;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class StateInfo:UserControl {
   private static Action nextButtonAction = () => { };
-  internal static readonly StateInfo page = new();
   internal StateInfo() {
     InitializeComponent();
     MyInit(this);
@@ -16,7 +15,7 @@ internal sealed partial class StateInfo:UserControl {
       static void ClickNextButton() => nextButtonAction();
     }
   }
-  internal static void Show(List<UIElement> InfoContents,string buttonText,double? buttonHeight,Action buttonAction) {
+  internal static void Show(StateInfo page,List<UIElement> InfoContents,string buttonText,double? buttonHeight,Action buttonAction) {
     page.InfoContentsPanel.MySetChildren([..InfoContents]);
     page.NextButtonText.Text = buttonText;
     if(buttonHeight != null) {
@@ -27,7 +26,8 @@ internal sealed partial class StateInfo:UserControl {
     }
     nextButtonAction = buttonAction;
   }
-  internal static void ResizeElem(double scaleFactor) {
+  internal static void ResizeElem(StateInfo page, double scaleFactor) {
+    page.Margin = new(0,page.Height*(scaleFactor-1),0,0);
     page.RenderTransform = new ScaleTransform() { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = page.Width,CenterY = page.Height };
   }
 }

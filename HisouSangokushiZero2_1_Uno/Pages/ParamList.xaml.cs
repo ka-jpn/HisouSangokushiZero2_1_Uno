@@ -5,13 +5,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Linq;
 namespace HisouSangokushiZero2_1_Uno.Pages;
-internal sealed partial class ParamDataView:UserControl {
-  internal ParamDataView() {
+internal sealed partial class ParamList:UserControl {
+  internal ParamList() {
     InitializeComponent();
     MyInit(this);
-    static void MyInit(ParamDataView page) {
+    static void MyInit(ParamList page) {
       SetUIElements(page);
-      static void SetUIElements(ParamDataView page) {
+      static void SetUIElements(ParamList page) {
         page.PersonDataScenarioName1.Text = BaseData.scenarios.ElementAtOrDefault(0)?.Value;
         page.PersonDataListPanel1.MySetChildren([.. UIUtil.CreatePersonDataList(0,12)]);
         page.CountryDataListPanel1.MySetChildren([.. UIUtil.CreateCountryDataList(0,2)]);
@@ -21,7 +21,7 @@ internal sealed partial class ParamDataView:UserControl {
       }
     }
   }
-  internal static void ResizeElem(ParamDataView page,double scaleFactor) {
+  internal static void ResizeElem(ParamList page,double scaleFactor) {
     double pageWidth = page.RenderSize.Width;
     double contentWidth = pageWidth / scaleFactor - 5;
     page.Scroll.Width = pageWidth;
