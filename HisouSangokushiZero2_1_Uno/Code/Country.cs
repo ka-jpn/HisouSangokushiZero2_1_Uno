@@ -1,20 +1,18 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
-using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.UI;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class Country {
-    private static readonly SolidColorBrush nonCountryBrush = new(Color.FromArgb(255,240,240,240));
-    internal static SolidColorBrush GetCountryBrush(GameState game,ECountry? country) => country?.MyApplyF(v=>game.NowScenario?.MyApplyF(Scenario.scenarios.GetValueOrDefault)?.CountryMap.GetValueOrDefault(v))?.ViewBrush ?? nonCountryBrush;
+    private static readonly Color nonCountryColor = new(255,240,240,240);
+    internal static Color GetCountryColor(GameState game,ECountry? country) => country?.MyApplyF(v=>game.NowScenario?.MyApplyF(Scenario.scenarios.GetValueOrDefault)?.CountryMap.GetValueOrDefault(v))?.ViewColor ?? nonCountryColor;
 		internal static decimal GetTotalAffair(GameState game,ECountry country) => game.AreaMap.Where(v => v.Value.Country==country).Sum(v => v.Value.AffairParam.AffairNow*(v.Key==game.CountryMap.GetValueOrDefault(country)?.CapitalArea ? 1.5m : 1m));
 		internal static decimal GetAffairPower(GameState game,ECountry? country) => Commander.GetAffairsCommander(game,country).MyApplyF(v => Commander.CommanderRank(game,v,ERole.affair)).MyApplyF(affairsRank => affairsRank/5m+1);
 		internal static decimal GetAffairDifficult(GameState game,ECountry? country) => Math.Round((decimal)Math.Pow(GetAreaNum(game,country),0.5),4);
 		internal static decimal GetInFund(GameState game,ECountry country) => GetAreaNum(game,country)==0 ? 0 : Math.Round(GetTotalAffair(game,country)*GetAffairPower(game,country)/GetAffairDifficult(game,country)+10m/GetAreaNum(game,country),4);
 		internal static decimal GetOutFund(GameState game,ECountry country) {
-			Dictionary<PersonId,PersonInfo> deployedPersonMap = Enum.GetValues<ERole>().SelectMany(role => Person.GetAlivePersonMap(game,country,role).ExceptBy(Person.GetWaitPostPersonMap(game,country,role).Keys,v=>v.Key)).ToDictionary();
+			Dictionary<PersonId,PersonData> deployedPersonMap = Enum.GetValues<ERole>().SelectMany(role => Person.GetAlivePersonMap(game,country,role).ExceptBy(Person.GetWaitPostPersonMap(game,country,role).Keys,v=>v.Key)).ToDictionary();
 			decimal backCost = GetAreaNum(game,country)==0 ? 0 : Math.Round((decimal)(1-Math.Pow(0.9,(double)GetAffairDifficult(game,country)))*GetTotalAffair(game,country)/GetAffairDifficult(game,country),4);
 			decimal roleCost = deployedPersonMap.Sum(v => v.Value.Post?.PostKind.MaybeHead==PostHead.main ? 1 : v.Value.Post?.PostKind.MaybeHead==PostHead.sub ? 0.5m : v.Value.Post?.PostKind.MaybeArea!=null ? 0.5m : 0);
       decimal affairCost = deployedPersonMap.Sum(v => v.Value.Post?.PostKind.MaybeArea != null && v.Value.Post?.PostRole == ERole.affair ? Person.CalcRoleRank(game,v.Key,ERole.affair) * 2 : 0);

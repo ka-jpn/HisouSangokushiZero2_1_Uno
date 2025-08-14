@@ -9,7 +9,7 @@
     <EmbeddedResource Include="Platforms\WebAssembly\WasmCSS\myStyle.css" />
     <EmbeddedResource Include="Platforms\WebAssembly\WasmScripts\myScript.js" />
     <LinkerDescriptor Include="LinkerConfig.xml" />
-    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=2g,nursery-size=128m,evacuation-threshold=40,major=marksweep" />
+    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=1g,nursery-size=128m,evacuation-threshold=66,major=marksweep" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="MessagePack" Version="3.1.4" />

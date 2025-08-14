@@ -10,11 +10,13 @@ internal sealed partial class Setting:UserControl {
     static void MyInit(Setting page) {
       RefreshUIElements(page);
       AttachEvents(page);
-      UIUtil.SwitchViewModeAction.Add(() => RefreshUIElements(page));
+      UIUtil.SwitchViewModeActions.Add(() => RefreshUIElements(page));
       static void RefreshUIElements(Setting page) {
         page.ViewModeText.Text = UIUtil.viewMode == UIUtil.ViewMode.fix ? "固定幅" : "フィット";
       }
       static void AttachEvents(Setting page) {
+        page.SaveGameButton.Click += (_,_) => UIUtil.SaveGame();
+        page.LoadGameButton.Click += (_,_) => UIUtil.LoadGame();
         page.InitGameButton.Click += (_,_) => UIUtil.InitGame();
         page.InnerSwitchViewModeButton.Click += (_,_) => { UIUtil.SwitchViewMode(); RefreshUIElements(page); };
       }
@@ -27,8 +29,9 @@ internal sealed partial class Setting:UserControl {
     page.ContentPanel.Width = contentWidth;
     page.ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
     page.InnerSwitchViewModeButton.MaxWidth = contentWidth - page.ViewModeCaption.RenderSize.Width - page.ViewModeText.Width - 10;
+    page.SaveGameButton.MaxWidth = contentWidth - 10;
+    page.LoadGameButton.MaxWidth = contentWidth - 10;
     page.InitGameButton.MaxWidth = contentWidth - 10;
-
     page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
   }
 }

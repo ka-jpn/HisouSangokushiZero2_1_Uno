@@ -19,9 +19,9 @@
 		<PackageCertificateThumbprint>5956E064D89E03046852D192A86E07739DF29AD5</PackageCertificateThumbprint>
 		<AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>
 		<UnoFeatures>
-			SkiaRenderer;
-			Svg;
-		</UnoFeatures>
+      SkiaRenderer;
+      Svg;
+    </UnoFeatures>
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="MessagePack" />

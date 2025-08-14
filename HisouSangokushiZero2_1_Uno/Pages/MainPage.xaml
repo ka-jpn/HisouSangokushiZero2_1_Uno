@@ -23,7 +23,7 @@
         </Grid>
       </Grid>
       </ScrollViewer>
-      <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="400"/>
+      <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="450"/>
       <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
     <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
     <local:StateInfo x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>

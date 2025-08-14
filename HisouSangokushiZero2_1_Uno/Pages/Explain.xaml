@@ -116,6 +116,7 @@
       <TextBlock Text="データがある人物の登用、いなければ無名人物の登用が行われます" HorizontalAlignment="Center"/>
       <TextBlock Text="データがある人物は秋ターンに担当人物の能力に関係なく確実に登用され、陣営に追加されます" HorizontalAlignment="Center"/>
       <TextBlock Text="無名人物は (筆頭ランク+次席ランク/2+1)/30 の確率で毎ターンの始めに成功判定され、陣営に追加されます" HorizontalAlignment="Center"/>
+      <TextBlock Text="基本的に無名人物はランク1ですが、まれにランク2が出現することがあります" HorizontalAlignment="Center"/>
       <TextBlock Text="登用された人物が配置できるポストがない場合、配置できるようになるまで人物駒の出現は延期されます" HorizontalAlignment="Center"/>
       <StackPanel Height="10"/>
       <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="首都内政担当人物による内政について" HorizontalAlignment="Center"/>

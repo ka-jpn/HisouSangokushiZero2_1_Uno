@@ -37,7 +37,8 @@ internal sealed partial class Ask:UserControl {
     page.ContentsView.Width = Math.Min(page.Width - 20 * scaleFactor,(600 * 2 + 10 / scaleFactor) * scaleFactor);
     page.ContentsView.Height = page.Height * 0.5;
     page.ContentsPanel.Width = page.ContentsView.Width / scaleFactor - 15;
-    page.ContentsPanel.Height = page.ContentsPanel.Children.Sum(v => Math.Max(BasicStyle.textHeight,v.RenderSize.Height));
+    page.ContentsPanel.Children.ToList().ForEach(child => child.Measure(new(page.ContentsPanel.Width,double.PositiveInfinity)));
+    page.ContentsPanel.Height = page.ContentsPanel.Children.Sum(v => Math.Max(BasicStyle.textHeight,v.DesiredSize.Height));
     page.ContentsPanel.Margin = new(page.ContentsPanel.Width * (scaleFactor - 1) / 2,0,page.ContentsPanel.Width * (scaleFactor - 1) / 2,page.ContentsPanel.Height * (scaleFactor - 1));
     page.ContentsPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = page.ContentsPanel.Width / 2 };
     page.OkButton.Width = Math.Min((page.Width / 2 - 5 - 5d / 2) / scaleFactor,600);

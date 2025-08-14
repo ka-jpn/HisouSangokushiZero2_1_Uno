@@ -27,6 +27,7 @@
         <TextBlock Text="2025/06/14 ver1.4 レイアウト微修正"/>
         <TextBlock Text="2025/06/15 ver1.5 投稿ページに繋がらない不具合に対処＆レイアウト微修正"/>
         <TextBlock Text="2025/06/28 ver1.6 レイアウト微修正＆画面のちらつき抑制"/>
+        <TextBlock Text="2025/08/12 ver1.7 セーブ機能追加"/>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>
