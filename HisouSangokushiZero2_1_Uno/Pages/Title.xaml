@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" ?>
+<Page 
+  x:Class="HisouSangokushiZero2_1_Uno.Pages.Title"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
+  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#DDE">
+  <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <StackPanel Height="50"/>
+      <TextBlock HorizontalAlignment="Center" Text="悲愴三国志" Foreground="#687" FontSize="50" Height="55"/>
+      <TextBlock HorizontalAlignment="Center" Text="Zero2" Foreground="#687" FontSize="45" Height="50"/>
+      <TextBlock HorizontalAlignment="Center" Text="バージョン１" Foreground="#687" FontSize="40" Height="45"/>
+      <StackPanel Height="10"/>
+      <Button HorizontalAlignment="Center" x:Name="StartButton" Height="50" Width="300">
+        <TextBlock Text="新規スタート"/>
+      </Button>
+      <StackPanel Height="10"/>
+      <Button HorizontalAlignment="Center" x:Name="LoadButton" Height="50" Width="300">
+        <TextBlock Text="ロードして続きから"/>
+      </Button>
+      <StackPanel Height="10"/>
+      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="45">
+        <TextBlock Text="ver." FontSize="30"/>
+        <TextBlock Text="{x:Bind code:BaseData.version.Value}" FontSize="30"/>
+      </StackPanel>
+    </StackPanel>
+  </Viewbox>
+</Page>

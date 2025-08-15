@@ -8,8 +8,8 @@
 		<!-- App Identifier -->
 		<ApplicationId>karintougames.HisouSangokushiZero2_1_Uno</ApplicationId>
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.6</ApplicationDisplayVersion>
-		<ApplicationVersion>1.6.2</ApplicationVersion>
+		<ApplicationDisplayVersion>1.7</ApplicationDisplayVersion>
+		<ApplicationVersion>1.7.1</ApplicationVersion>
 		<!-- Package Publisher -->
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
@@ -25,5 +25,18 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="MessagePack" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Pages\Title.xaml.cs">
+	    <DependentUpon>Title.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\Game.xaml.cs">
+	    <DependentUpon>Game.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Pages\Title.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 </Project>

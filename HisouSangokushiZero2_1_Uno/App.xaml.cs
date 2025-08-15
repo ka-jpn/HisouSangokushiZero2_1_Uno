@@ -34,7 +34,7 @@ public partial class App:Application {
 			// When the navigation stack isn't restored navigate to the first page,
 			// configuring the new page by passing required information as a navigation
 			// parameter
-			rootFrame.Navigate(typeof(MainPage),args.Arguments);
+			rootFrame.Navigate(typeof(Title),args.Arguments);
 		}
 		MainWindow.SetWindowIcon();
 		// Ensure the current window is active

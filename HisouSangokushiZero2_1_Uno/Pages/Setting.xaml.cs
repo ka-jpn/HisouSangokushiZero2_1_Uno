@@ -1,4 +1,5 @@
 ﻿using HisouSangokushiZero2_1_Uno.Code;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Linq;
@@ -19,6 +20,7 @@ internal sealed partial class Setting:UserControl {
         page.LoadGameButton.Click += (_,_) => UIUtil.LoadGame();
         page.InitGameButton.Click += (_,_) => UIUtil.InitGame();
         page.InnerSwitchViewModeButton.Click += (_,_) => { UIUtil.SwitchViewMode(); RefreshUIElements(page); };
+        page.BackTitleButton.Click += (_,_) => (Window.Current?.Content as Frame)?.Navigate(typeof(Title));
       }
     }
   }

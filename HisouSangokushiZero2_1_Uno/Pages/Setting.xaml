@@ -28,8 +28,12 @@
         <TextBlock Text="ゲームを初期化"/>
       </Button>
       <StackPanel Height="40"/>
-      <StackPanel Orientation="Horizontal">
-        <TextBlock Text="バージョン"/>
+      <Button x:Name="BackTitleButton" Width="700" Height="100" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
+        <TextBlock Text="タイトルに戻る"/>
+      </Button>
+      <StackPanel Height="40"/>
+      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+        <TextBlock Text="ver."/>
         <TextBlock Text="{x:Bind code:BaseData.version.Value}"/>
       </StackPanel>
     </StackPanel>
