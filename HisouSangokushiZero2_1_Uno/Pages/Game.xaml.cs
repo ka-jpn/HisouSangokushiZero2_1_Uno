@@ -12,9 +12,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
+using Commander = HisouSangokushiZero2_1_Uno.Code.Commander;
 using Post = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
 using Text = HisouSangokushiZero2_1_Uno.Code.Text;
+using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class Game:Page {
   private enum InfoPanelState { Explain, WinCond, ParamDataView, ChangeLog, Setting };
@@ -167,24 +168,30 @@ internal sealed partial class Game:Page {
       static void ExecutionMoveFlag(Game page,GameState game) {
         game.ArmyTargetMap.Where(v => v.Value != null).ToDictionary(attackInfo => GetFlag(game,attackInfo.Key),attackInfo => CalcFlagMovePos(page,game,attackInfo)).MyApplyA(flagMap => page.MapAnimationElementsCanvas.MySetChildren([.. flagMap.Keys])).MyApplyA(flagMap => MoveFlags(page,flagMap));
         static Grid GetFlag(GameState game,ECountry attackCountry) {
-          if(UI.countryFlagMap.TryGetValue(attackCountry,out Grid? flag)) {
-            return flag;
-          } else {
-            return CreateFlag(game,attackCountry).MyApplyA(createdFlag => UI.countryFlagMap = UI.countryFlagMap.MyAdd(attackCountry,createdFlag));
+          Grid rawFlag = UI.countryFlagMap.TryGetValue(attackCountry,out Grid? flag) ? flag : CreateFlag(game,attackCountry).MyApplyA(createdFlag => UI.countryFlagMap = UI.countryFlagMap.MyAdd(attackCountry,createdFlag));
+          return rawFlag.MyApplyF(v=>AttachFlag(game,v,attackCountry));
+          static Grid CreateFlag(GameState game,ECountry attackCountry) {
+            string flagText = attackCountry.ToString();
+            TextBlock flagTextBlock = new() { Text = flagText,RenderTransform = new ScaleTransform { ScaleX = Math.Min(1,(double)2 / flagText.Length) * 2,ScaleY = 2 },Width = Math.Min(2,flagText.Length) * BasicStyle.fontsize * 2,Height = BasicStyle.fontsize * 2 };
+            Grid flagPanel = new() { Width = BasicStyle.fontsize * 4,Height = BasicStyle.fontsize * 3,Background = Country.GetCountryColor(game,attackCountry).ToBrush(),HorizontalAlignment = HorizontalAlignment.Left,VerticalAlignment = VerticalAlignment.Top };
+            Image attackImage = new() { Source = new SvgImageSource(new($"ms-appx:///Assets/Svg/army.svg")),Width = BasicStyle.fontsize * 4,Height = BasicStyle.fontsize * 4,HorizontalAlignment = HorizontalAlignment.Right };
+            Grid attackImagePanel = new Grid() { Width = BasicStyle.fontsize * 6,Height = BasicStyle.fontsize * 5 }.MySetChildren([attackImage,flagPanel.MySetChildren([flagTextBlock])]);
+            return attackImagePanel;
           }
-        }
-        static Grid CreateFlag(GameState game,ECountry attackCountry) {
-          string flagText = attackCountry.ToString();
-          TextBlock flagTextBlock = new() { Text = flagText,RenderTransform = new ScaleTransform { ScaleX = Math.Min(1,(double)2 / flagText.Length) * 2,ScaleY = 2 },Width = Math.Min(2,flagText.Length) * BasicStyle.fontsize * 2,Height = BasicStyle.fontsize * 2 };
-          Grid flagPanel = new() { Width = BasicStyle.fontsize * 4,Height = BasicStyle.fontsize * 3,Background = Country.GetCountryColor(game,attackCountry).ToBrush(),HorizontalAlignment = HorizontalAlignment.Left,VerticalAlignment = VerticalAlignment.Top };
-          Image attackImage = new() { Source = new SvgImageSource(new($"ms-appx:///Assets/Svg/army.svg")),Width = BasicStyle.fontsize * 4,Height = BasicStyle.fontsize * 4,HorizontalAlignment = HorizontalAlignment.Right };
-          Grid attackImagePanel = new Grid() { Width = BasicStyle.fontsize * 6,Height = BasicStyle.fontsize * 5,Visibility = Visibility.Collapsed }.MySetChildren([attackImage,flagPanel.MySetChildren([flagTextBlock])]);
-          return attackImagePanel;
+          static Grid AttachFlag(GameState game,Grid rawFlag,ECountry attackCountry) {
+            string attackRank=Commander.CommanderRank(game,Commander.GetAttackCommander(game,attackCountry),ERole.attack).ToString();
+            Image attackRankImage = new() { Source = new SvgImageSource(new($"ms-appx:///Assets/Svg/rank.svg")),Width = BasicStyle.fontsize * 4,Height = BasicStyle.fontsize * 15,VerticalAlignment = VerticalAlignment.Bottom };
+            Image[] attackRankNumImage = [.. attackRank.Select(GetSvg)];
+            StackPanel attackRankPanel = new StackPanel { Orientation=Orientation.Horizontal,HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Bottom }.MySetChildren([attackRankImage,..attackRankNumImage]);
+            return new Grid() { Width = BasicStyle.fontsize * 6,Height = BasicStyle.fontsize * 5,Visibility = Visibility.Collapsed }.MySetChildren([rawFlag,attackRankPanel]);
+            static Image GetSvg(char ch) => new() { Source = new SvgImageSource(new($"ms-appx:///Assets/Svg/{GetSvgFileName(ch)}.svg")),Width = BasicStyle.fontsize * 1,Height = BasicStyle.fontsize * 1.5,VerticalAlignment = VerticalAlignment.Bottom };
+            static string GetSvgFileName(char ch) => ch == '.' ? "dot" : ch.ToString();
+          }
         }
         static List<Point> CalcFlagMovePos(Game page,GameState game,KeyValuePair<ECountry,EArea?> attackInfo) {
           Point? srcPoint = Country.GetCapitalArea(game,attackInfo.Key)?.MyApplyF(capital => Area.GetAreaPoint(game,capital,UIUtil.mapSize,UIUtil.areaSize,UIUtil.mapGridCount,UIUtil.infoFrameWidth.Value));
           Point? dstPoint = attackInfo.Value?.MyApplyF(target => Area.GetAreaPoint(game,target,UIUtil.mapSize,UIUtil.areaSize,UIUtil.mapGridCount,UIUtil.infoFrameWidth.Value));
-          List<Point> posList = [.. Enumerable.Range(0,60 + 1).Select(v => (double)v / 60).Select(lerpWeight => srcPoint is Point src && dstPoint is Point dst ? new Point(double.Lerp(src.X,dst.X,lerpWeight),double.Lerp(src.Y,dst.Y,lerpWeight)) : (Point?)null).MyNonNull()];
+          List<Point> posList = [.. Enumerable.Range(0,60 + 1).Select(v => (double)v / 60).Select(lerpWeight => srcPoint is Point src && dstPoint is Point dst ? new Point(double.Lerp(src.X,dst.X,lerpWeight),double.Lerp(src.Y,dst.Y,lerpWeight)) : null).MyNonNull()];
           return posList;
         }
         static void MoveFlags(Game page,Dictionary<Grid,List<Point>> flags) {
