@@ -28,6 +28,13 @@
         <TextBlock Text="2025/06/15 ver1.5 投稿ページに繋がらない不具合に対処＆レイアウト微修正"/>
         <TextBlock Text="2025/06/28 ver1.6 レイアウト微修正＆画面のちらつき抑制"/>
         <TextBlock Text="2025/08/15 ver1.7 セーブ機能追加＆タイトルページ追加"/>
+        <TextBlock Text="2025/08/20 ver1.8 タイトルページ改善＆首都接続範囲判定がらみ調整"/>
+        <StackPanel Padding="20,0,0,0">
+          <TextBlock Text="・タイトルページが文字化けすることがあるので対処"/>
+          <TextBlock Text="・首都接続範囲判定を組み込み、遷都・人物配置変更・侵攻を接続範囲で制限"/>
+          <TextBlock Text="・行軍旗の表示経路を直線的から自領土を経由しながらに改善"/>
+        </StackPanel>
+        <TextBlock Text="2025/09/01 ver1.9 キャラによる導入説明追加＆旗表示の不具合修正"/>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>

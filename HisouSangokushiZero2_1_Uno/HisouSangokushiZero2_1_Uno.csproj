@@ -8,8 +8,8 @@
 		<!-- App Identifier -->
 		<ApplicationId>karintougames.HisouSangokushiZero2_1_Uno</ApplicationId>
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.7</ApplicationDisplayVersion>
-		<ApplicationVersion>1.7.1</ApplicationVersion>
+		<ApplicationDisplayVersion>1.9</ApplicationDisplayVersion>
+		<ApplicationVersion>1.9</ApplicationVersion>
 		<!-- Package Publisher -->
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->
@@ -22,21 +22,11 @@
       SkiaRenderer;
       Svg;
     </UnoFeatures>
+    <WasmShellEnableSkia>true</WasmShellEnableSkia>
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="MessagePack" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Update="Pages\Title.xaml.cs">
-	    <DependentUpon>Title.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\Game.xaml.cs">
-	    <DependentUpon>Game.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Pages\Title.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" />
 	</ItemGroup>
 </Project>

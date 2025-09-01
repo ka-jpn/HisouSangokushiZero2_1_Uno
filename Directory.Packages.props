@@ -9,10 +9,12 @@
     <EmbeddedResource Include="Platforms\WebAssembly\WasmCSS\myStyle.css" />
     <EmbeddedResource Include="Platforms\WebAssembly\WasmScripts\myScript.js" />
     <LinkerDescriptor Include="LinkerConfig.xml" />
-    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=850m,nursery-size=128m,evacuation-threshold=66,major=marksweep" />
+    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=800m,nursery-size=128m,evacuation-threshold=66,major=marksweep" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="MessagePack" Version="3.1.4" />
+    <PackageVersion Include="SkiaSharp" Version="3.119.0" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.WebAssembly" Version="3.119.0" />
   </ItemGroup>
   <PropertyGroup>
     <UnoSplashScreenFile>Assets\Splash\splash_screen.svg</UnoSplashScreenFile>
@@ -23,5 +25,7 @@
     <!--<WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>-->
     <PublishTrimmed>true</PublishTrimmed>
     <!--<WasmShellEnableIDBFS>true</WasmShellEnableIDBFS>-->
+    <WasmShellEnableSkia>true</WasmShellEnableSkia>
+    <SvgSkiaVersion>3.0.3</SvgSkiaVersion>
   </PropertyGroup>
 </Project>

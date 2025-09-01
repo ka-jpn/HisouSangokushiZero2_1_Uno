@@ -67,8 +67,9 @@ namespace HisouSangokushiZero2_1_Uno.Code {
         }
         static GameState FallCapital(GameState game,ECountry? defenseCountry) {
           List<PersonId> defenseCountryCapitalPerson = [.. defenseCountry?.MyApplyF(country => Enum.GetValues<ERole>().SelectMany(role => Person.GetAlivePersonMap(game,country,role)).Where(v => v.Value.Post?.PostKind.MaybeArea == null).Select(v => v.Key)) ?? []];
-          List<PersonId> deathPerson = [.. defenseCountryCapitalPerson.Where(_ => MyRandom.RandomJudge(0.5))];
-          return game.MyApplyF(game => AppendTurnNewLog(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendNewLog(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game => RemoveWarDeathPersonPost(game,defenseCountry,deathPerson));
+          List<PersonId> defenseCountrySortiePerson = [.. defenseCountry?.MyApplyF(country => game.ArmyTargetMap.GetValueOrDefault(country) is null ? [] : Commander.GetAttackCommander(game,country).MyApplyF(v => new List<PersonId?>{ v.MainPerson,v.SubPerson }.MyNonNull()))??[]];
+          List<PersonId> deathPerson = [.. defenseCountryCapitalPerson.Except(defenseCountrySortiePerson).Where(_ => MyRandom.RandomJudge(0.5))];
+          return game.MyApplyF(game => AppendTurnNewLog(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game => AppendNewLog(game,[Text.FallCapitalText(defenseCountry,Lang.ja)])).MyApplyF(game=>AppendGameLog(game,defenseCountry==game.PlayCountry?[Text.FallPlayerCapitalText(defenseCountry?.MyApplyF(game.CountryMap.GetValueOrDefault)?.CapitalArea,Lang.ja),Text.FallPlayerCapitalDeathPersonText(deathPerson,Lang.ja)] :[])).MyApplyF(game => RemoveWarDeathPersonPost(game,defenseCountry,deathPerson));
         }
 			  static GameState FallArea(GameState game,ECountry attackCountry,ECountry? defenseCountry,EArea targetArea) {
           return game.MyApplyF(game => IsPlayerUpdateMaxAreaNum(game)? AppendUpdateMaxAreaNumLog(game,defenseCountry,targetArea):game).MyApplyF(game=>FallDamageArea(game,targetArea)).MyApplyF(game=> UpdateMaxAreaNum(game,attackCountry,targetArea));
@@ -116,7 +117,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
         decimal areaAffairPower = 1 - area.Value.AffairParam.AffairNow / area.Value.AffairParam.AffairsMax;
         return Math.Round(countryAffairPower * personAffairPower * areaAffairPower,4);
       }
-      static GameState AddTurnHeadLog(GameState game) => AppendNewLog(game,[Text.TurnHeadLogText(game)]);
+      static GameState AddTurnHeadLog(GameState game) => AppendNewLog(game,[Text.TurnHeadLogText(game,Lang.ja)]);
     }
     internal static GameState GameEndJudge(GameState game) {
       return SetWinCountrys(game).MyApplyF(game => IsPerish(game) ? PerishEnd(game) : IsWinEnd(game) ? WinEnd(game) : IsOtherWinEnd(game) ? OtherWinEnd(game) : IsTurnLimitOver(game) ? TurnLimitOverEnd(game) : game);

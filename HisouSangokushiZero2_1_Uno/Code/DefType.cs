@@ -6,9 +6,10 @@ namespace HisouSangokushiZero2_1_Uno.Code;
 public static class DefType {
   internal record Text(string Value);
   internal record Size(double Width,double Height);
+  internal record TaskToken();
   [MessagePackObject(true)] public record Point(double X,double Y);
   [MessagePackObject(true)] public record Color(byte A,byte R,byte G,byte B);
-  internal record CountryWinCondition(string[][] Messages,Func<GameState,bool> JudgeFunc,Func<GameState,Dictionary<string,bool?>> ProgressExplainFunc);
+  internal record CountryWinCondition(string[][]? Messages,Func<GameState,bool> JudgeFunc,Func<GameState,Dictionary<string,bool?>> ProgressExplainFunc);
   [MessagePackObject(true)] public record AreaData(Point Position,AffairsParam AffairParam,ECountry? Country);
   [MessagePackObject(true)] public record CountryData(decimal Fund,int NavyLevel,Color ViewColor,int SleepTurnNum,int AnonymousPersonNum,int? MaxAreaNum = null,EArea? CapitalArea = null,ECountry? PerishFrom = null);
   [MessagePackObject(true)] public record PersonData(ERole Role,int Rank,int BirthYear,int DeathYear,ECountry Country,int? GameAppearYear = null,int? GameDeathTurn = null,Post? Post = null);
@@ -26,6 +27,8 @@ public static class DefType {
   internal record Commander(PersonId? MainPerson,PersonId? SubPerson);
   internal record Army(ECountry? Country,Commander Commander,decimal Rank);
   internal record AttackResult(Army Defense,AttackJudge Judge,string InvadeText);
+  internal record Road(EArea From,EArea To,RoadKind Kind,int Easiness,int? EasinessReverse = null);
+  internal record ScenarioData(int StartYear,int EndYear,EArea[] ChinaAreas,Road[] RoadConnections,IReadOnlyDictionary<EArea,AreaData> AreaMap,IReadOnlyDictionary<ECountry,CountryWinCondition> WinConditionMap,IReadOnlyDictionary<ECountry,CountryData> CountryMap,IReadOnlyDictionary<PersonId,PersonData> PersonMap);
   internal enum Lang { ja };
   public enum PostHead { main, sub };
   public enum Phase { Starting, Planning, Execution, PerishEnd, TurnLimitOverEnd, WinEnd, OtherWinEnd };

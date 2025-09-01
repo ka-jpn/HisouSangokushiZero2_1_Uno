@@ -15,6 +15,6 @@ namespace HisouSangokushiZero2_1_Uno.Code {
 		internal static CommanderType GetDefenseCommander(GameState game,ECountry? defenseCountry) => GetCommander(game,defenseCountry,ERole.defense);
 		internal static CommanderType GetAttackCommander(GameState game,ECountry? attackCountry) => GetCommander(game,attackCountry,ERole.attack);
 		internal static CommanderType AreaCommander(GameState game,ECountry? defenseCountry,EArea defenseArea) => (defenseCountry?.MyApplyF(v => GetAreaDefensePersonMap(game,v,defenseArea))?? []).MyApplyF(PersonMapToCommander);
-		internal static decimal CommanderRank(GameState game,CommanderType commander,ERole role) => (commander.MainPerson?.MyApplyF(v => Person.CalcRoleRank(game,v,role))??0)+(commander.SubPerson?.MyApplyF(v => Person.CalcRoleRank(game,v,role)/2)??0);
+		internal static decimal CommanderRank(GameState game,CommanderType commander,ERole role) => (commander.MainPerson?.MyApplyF(v => Person.CalcRoleRank(game,v,role))??0)+(commander.SubPerson?.MyApplyF(v => Person.CalcRoleRank(game,v,role)/2m)??0);
 	}
 }

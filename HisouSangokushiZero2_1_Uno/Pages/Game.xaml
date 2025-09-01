@@ -17,7 +17,7 @@
     <ScrollViewer Grid.Row="0">
       <Grid x:Name="MapPanel">
         <Grid x:Name="MapInnerPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{x:Bind code:UIUtil.mapSize.Width}" Height="{x:Bind code:UIUtil.mapSize.Height}">
-          <Image Source="/Assets/Svg/map.svg" Stretch="Fill"></Image>
+          <Image Source="ms-appx:///Assets/Svg/map.svg" Stretch="Fill"></Image>
           <Canvas x:Name="MapElementsCanvas"/>
           <Canvas x:Name="MapAnimationElementsCanvas"/>
         </Grid>
@@ -28,6 +28,7 @@
     <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
     <local:StateInfo x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
     <local:Ask x:Name="AskPanel" Grid.RowSpan="2"/>
+    <local:CharacterRemark x:Name="CharacterRemarkPanel" Grid.RowSpan="2"/>
     <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>

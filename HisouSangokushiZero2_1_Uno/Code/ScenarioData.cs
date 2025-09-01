@@ -6,8 +6,6 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using PersonType = HisouSangokushiZero2_1_Uno.Code.DefType.PersonId;
 namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class Scenario {
-  internal record Road(EArea From,EArea To,RoadKind Kind,int Easiness,int? EasinessReverse = null);
-  internal record ScenarioData(int StartYear,int EndYear,EArea[] ChinaAreas,Road[] RoadConnections,IReadOnlyDictionary<EArea,AreaData> AreaMap,IReadOnlyDictionary<ECountry,CountryWinCondition> WinConditionMap,IReadOnlyDictionary<ECountry,CountryData> CountryMap,IReadOnlyDictionary<PersonType,PersonData> PersonMap);
   private static readonly EArea[] baseChinaAreas = [
     EArea.襄平,EArea.土垠, EArea.薊, EArea.代, EArea.南皮, EArea.濮陽, EArea.鄴, EArea.平陽, EArea.劇, EArea.淮陰,EArea.彭城, EArea.洛陽, EArea.平輿, EArea.酸棗, EArea.長安, EArea.金城,
     EArea.武威, EArea.敦煌,EArea.宛, EArea.襄陽, EArea.鄂, EArea.臨沅, EArea.臨湘, EArea.泉陵, EArea.郴, EArea.秣陵, EArea.舒,EArea.山陰, EArea.東侯官,EArea.番禺, EArea.合浦, EArea.龍編,
@@ -232,9 +230,7 @@ internal static class Scenario {
         }.AsReadOnly(),
         new Dictionary<ECountry,CountryWinCondition>(){
           {ECountry.漢,new(
-            [
-              ["選べません(勝利条件なし)"]
-            ],
+            null,
             (game)=>false,
             (game)=>[])
           },

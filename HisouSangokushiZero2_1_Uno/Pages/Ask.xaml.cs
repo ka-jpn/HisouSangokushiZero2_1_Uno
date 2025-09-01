@@ -19,14 +19,14 @@ internal sealed partial class Ask:UserControl {
       static void ExeOkButtonAction() => OkButtonAction();
     }
   }
-  internal static void SetElems(Ask page,string titleText,List<TextBlock> contents,string okButtonText,bool isOkButtonEnabled,Action okButtonAction,bool isOkButtonClickClose,Size parentSize,double scaleFactor) {
+  internal static void SetElems(Ask page,string titleText,List<TextBlock> contents,string okButtonText,Action? okButtonAction,bool isOkButtonClickClose,Size parentSize) {
     page.TitleTextBlock.Text = titleText;
     page.ContentsPanel.MySetChildren([.. contents]);
-    OkButtonAction = () => { okButtonAction(); page.Visibility = isOkButtonClickClose ? Visibility.Collapsed : Visibility.Visible; };
+    OkButtonAction = () => { okButtonAction?.Invoke(); page.Visibility = isOkButtonClickClose ? Visibility.Collapsed : Visibility.Visible; };
     page.OkButtonText.Text = okButtonText;
-    page.OkButton.IsEnabled = isOkButtonEnabled;
+    page.OkButton.IsEnabled = okButtonAction!=null;
     page.Visibility = Visibility.Visible;
-    ResizeElem(page,parentSize,scaleFactor);
+    ResizeElem(page,parentSize,UIUtil.GetScaleFactor(parentSize));
   }
   internal static void ResizeElem(Ask page,Size parentSize,double scaleFactor) {
     page.Margin = new(UIUtil.infoFrameWidth.Value * scaleFactor);

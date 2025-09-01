@@ -6,27 +6,30 @@
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#DDE">
   <Grid>
-    <Image Source="/Assets/Svg/map.svg" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"/>
+    <Image Source="ms-appx:///Assets/Svg/map.svg" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"/>
     <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Height="50"/>
-        <Image Source="/Assets/Svg/悲愴三国志.svg" Height="60" Margin="5"/>
-        <Image Source="/Assets/Svg/Zero2.svg" Height="40" Margin="5"/>
-        <Image Source="/Assets/Svg/バージョン1.svg" Height="35" Margin="5"/>
+        <Image Source="ms-appx:///Assets/Svg/悲愴三国志.svg" Height="60" Margin="5"/>
+        <Image Source="ms-appx:///Assets/Svg/Zero2.svg" Height="40" Margin="5"/>
+        <Image Source="ms-appx:///Assets/Svg/バージョン1.svg" Height="35" Margin="5"/>
         <StackPanel Height="10"/>
         <Button HorizontalAlignment="Center" x:Name="StartButton" Height="50" Width="300">
-          <Image Source="/Assets/Svg/新規スタート.svg" Height="25"/>
+          <Image Source="ms-appx:///Assets/Svg/新規スタート.svg" Height="25"/>
         </Button>
         <StackPanel Height="10"/>
         <Button HorizontalAlignment="Center" x:Name="LoadButton" Height="50" Width="300">
-          <Image Source="/Assets/Svg/ロードして続きから.svg" Height="25"/>
+          <Image Source="ms-appx:///Assets/Svg/ロードして続きから.svg" Height="25"/>
         </Button>
         <StackPanel Height="10"/>
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="45">
           <TextBlock Text="ver." FontSize="30"/>
-          <TextBlock Text="{x:Bind code:BaseData.version.Value}" FontSize="25"/>
+          <TextBlock Text="{x:Bind code:BaseData.version.Value}" FontSize="30"/>
         </StackPanel>
       </StackPanel>
     </Viewbox>
+    <Button x:Name="TopSwitchViewModeButton" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#AFFF" Padding="0">
+      <TextBlock x:Name="SwitchViewModeButtonText"/>
+    </Button>
   </Grid>
 </Page>

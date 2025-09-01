@@ -24,16 +24,16 @@ internal sealed partial class WinCond:UserControl {
         page.WinCondScenarioName2.Text = BaseData.scenarios.ElementAtOrDefault(1)?.Value;
         page.WinCondListPanel2.MySetChildren([.. CreateWinCondList(1,2)]).MyApplyA(v => { v.BorderThickness = UIUtil.dataListFrameThickness; v.BorderBrush = UIUtil.dataListFrameColor.ToBrush(); });
         static StackPanel[] CreateWinCondList(int scenarioNo,int chunkBlockNum) {
-          Scenario.ScenarioData? maybeScenarioData = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
+          ScenarioData? maybeScenarioData = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
           Dictionary<ECountry,CountryData>[] chunkedCountryDataMaps = maybeScenarioData?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
           return maybeScenarioData?.MyApplyF(scenarioInfo => chunkedCountryDataMaps.Select(chunkedCountryInfoMap => CreateWinCondPanel(scenarioInfo,chunkedCountryInfoMap)).ToArray()) ?? [];
-          static StackPanel CreateWinCondPanel(Scenario.ScenarioData scenarioInfo,Dictionary<ECountry,CountryData> includeCountryInfoMap) {
+          static StackPanel CreateWinCondPanel(ScenarioData scenarioInfo,Dictionary<ECountry,CountryData> includeCountryInfoMap) {
             return new StackPanel { Background = UIUtil.dataListFrameColor.ToBrush() }.MySetChildren([
               CreateCountryDataLine(new Color(255,240,240,240),new TextBlock { Text="陣営名",HorizontalAlignment=HorizontalAlignment.Center },[new TextBlock { Text="勝利条件",HorizontalAlignment=HorizontalAlignment.Center }]),
               .. includeCountryInfoMap.Select(countryInfo => CreateCountryDataLine(
                 scenarioInfo.CountryMap.GetValueOrDefault(countryInfo.Key)?.ViewColor??new(0,0,0,0),
                 new TextBlock { Text=countryInfo.Key.ToString(),HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Center },
-                scenarioInfo.WinConditionMap.GetValueOrDefault(countryInfo.Key)?.Messages.MyApplyF(messages=>new List<UIElement?>{
+                scenarioInfo.WinConditionMap.GetValueOrDefault(countryInfo.Key)?.Messages?.MyApplyF(messages=>new List<UIElement?>{
                   messages.ElementAtOrDefault(0)?.MyApplyF(v=>string.Join('＆',v)).MyApplyF(v=>new TextBlock { Text=v,HorizontalAlignment=HorizontalAlignment.Left }),
                   messages.ElementAtOrDefault(1)?.MyApplyF(v=>string.Join(' ',v)).MyApplyF(v=>new TextBlock { Text=v,HorizontalAlignment=HorizontalAlignment.Left })
                 }).MyNonNull() ?? []

@@ -43,11 +43,11 @@ namespace HisouSangokushiZero2_1_Uno.Code;
   internal static double CalcFullWidthTextLength(string str) => str.Length - str.Count("0123456789-.()".Contains) * 0.4 - str.Count(" ".Contains) * 0.8;
   internal static double CalcDataListElemWidth(double textlength) => BasicStyle.fontsize * textlength + dataListFrameThickness.Left + dataListFrameThickness.Right;
   internal static StackPanel[] CreatePersonDataList(int scenarioNo,int chunkBlockNum) {
-    KeyValuePair<ScenarioId,Scenario.ScenarioData>? maybeScenarioInfo = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo);
+    KeyValuePair<ScenarioId,ScenarioData>? maybeScenarioInfo = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo);
     Dictionary<PersonId,PersonData>[] chunkedPersonInfoMaps = maybeScenarioInfo?.Value.PersonMap.MyApplyF(elems => elems.OrderBy(v => v.Value.Country).ThenBy(v => v.Value.Role).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
     StackPanel[] personDataBlock = maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedPersonInfoMaps.Select(chunkedPersonInfoMap => CreatePersonDataPanel(scenarioInfo,chunkedPersonInfoMap)).ToArray()) ?? [];
     return personDataBlock;
-    static StackPanel CreatePersonDataPanel(KeyValuePair<ScenarioId,Scenario.ScenarioData> scenarioInfo,Dictionary<PersonId,PersonData> includePersonInfoMap) {
+    static StackPanel CreatePersonDataPanel(KeyValuePair<ScenarioId,ScenarioData> scenarioInfo,Dictionary<PersonId,PersonData> includePersonInfoMap) {
       return new StackPanel { Background = dataListFrameColor.ToBrush() }.MySetChildren([
         CreatePersonDataLine(
           dataBackColor,
@@ -83,10 +83,10 @@ namespace HisouSangokushiZero2_1_Uno.Code;
     }
   }
   internal static StackPanel[] CreateCountryDataList(int scenarioNo,int chunkBlockNum) {
-    Scenario.ScenarioData? maybeScenarioInfo = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
+    ScenarioData? maybeScenarioInfo = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
     Dictionary<ECountry,CountryData>[] chunkedCountryInfoMaps = maybeScenarioInfo?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
     return maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedCountryInfoMaps.Select(chunkedCountryInfoMap => CreateCountryDataPanel(scenarioInfo,chunkedCountryInfoMap)).ToArray()) ?? [];
-    static StackPanel CreateCountryDataPanel(Scenario.ScenarioData scenarioInfo,Dictionary<ECountry,CountryData> includeCountryInfoMap) {
+    static StackPanel CreateCountryDataPanel(ScenarioData scenarioInfo,Dictionary<ECountry,CountryData> includeCountryInfoMap) {
       return new StackPanel { Background = dataListFrameColor.ToBrush() }.MySetChildren([
         CreateCountryDataLine(
           dataBackColor,
@@ -116,6 +116,7 @@ namespace HisouSangokushiZero2_1_Uno.Code;
     Uno.Foundation.WebAssemblyRuntime.InvokeJS($"window.parent.{viewMode}();");
 #endif
   }
+  internal static double GetScaleFactor(Windows.Foundation.Size size) => Math.Max(Math.Max(fixModeMaxWidth,size.Width) / mapSize.Width,Math.Max(fixModeMaxWidth,size.Height) / mapSize.Height);
   internal static void SaveGame() => SaveGameActions.ForEach(v => v());
   internal static void LoadGame() => LoadGameActions.ForEach(v => v());
   internal static void InitGame() => InitGameActions.ForEach(v => v());
