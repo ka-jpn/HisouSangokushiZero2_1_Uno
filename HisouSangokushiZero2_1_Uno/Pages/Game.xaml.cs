@@ -21,7 +21,6 @@ namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class Game:Page {
   private enum InfoPanelState { Explain, WinCond, ParamDataView, ChangeLog, Setting };
   private record AreaElems(Border Back,TextBlock AreaNameText,StackPanel DefensePersonPanel,StackPanel AffairPersonPanel,Post DefensePost,Post AffairPost,TextBlock AffairText,TextBlock ExText,Grid WrapPanel);
-  private record CentralPostElems(Dictionary<PostHead,Post> HeadPost,Post[] OtherPosts);
   private static readonly DispatcherQueue dispatcher = DispatcherQueue.GetForCurrentThread();
   private static readonly Dictionary<Post,StackPanel> playerCountryPostPersonPanel = Enum.GetValues<ERole>().SelectMany(role => new List<(Post, StackPanel)>([
     .. Enum.GetValues<PostHead>().Select(headPost=>(new Post(role,new(headPost)),new StackPanel())),
@@ -216,12 +215,13 @@ internal sealed partial class Game:Page {
 #if __WASM__
         Uno.Foundation.WebAssemblyRuntime.InvokeJS($"top.location.href='{url}';");
 #else
-      _ = Windows.System.Launcher.LaunchUriAsync(new Uri(url));
+        _ = Windows.System.Launcher.LaunchUriAsync(new Uri(url));
 #endif
       }
     }
     static GameState EndPlanningPhase(Game page,GameState game) {
-      return game.MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[ECountry.漢])).MyApplyF(CalcArmyTarget).MyApplyF(game => game with { Phase = Phase.Execution }).MyApplyA(game => UpdateAreaPanels(page,game)).MyApplyA(game=>ExecutionMoveFlag(page,game)).MyApplyF(ArmyAttack).MyApplyA(game => UI.UpdateLogMessageUI(page,game));
+      return game.MyApplyA(_ => ResetTurnUI(page)).MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[ECountry.漢])).MyApplyF(CalcArmyTarget).MyApplyF(game => game with { Phase = Phase.Execution }).MyApplyA(game => UpdateAreaPanels(page,game)).MyApplyA(game => ExecutionMoveFlag(page,game)).MyApplyF(ArmyAttack).MyApplyA(game => UI.UpdateLogMessageUI(page,game)).MyApplyA(game => CharacterRemark.SetElems(page.CharacterRemarkPanel,game.PlayCountry,Text.CharacterRemarkTexts(game,Lang.ja),page.ContentGrid,game.PlayTurn <= 2));
+      static void ResetTurnUI(Game page) => page.CharacterRemarkPanel.Visibility = Visibility.Collapsed; 
       static GameState CalcArmyTarget(GameState game) {
         Dictionary<ECountry,EArea?> playerArmyTargetMap = game.PlayCountry.MyMaybeToList().Where(country => !Country.IsSleep(game,country)).ToDictionary(v => v,v => game.ArmyTargetMap.GetValueOrDefault(v));
         Dictionary<ECountry,EArea?> NPCArmyTargetMap = game.CountryMap.Keys.Except(game.PlayCountry.MyMaybeToList()).Where(country => !Country.IsSleep(game,country)).ToDictionary(country => country,country => country == ECountry.漢 ? null : RandomSelectNPCAttackTarget(game,country));
@@ -231,8 +231,7 @@ internal sealed partial class Game:Page {
       static void ExecutionMoveFlag(Game page,GameState game) {
         game.ArmyTargetMap.Where(v => v.Value != null && Country.SuccessAttack(game,v.Key)).ToDictionary(attackInfo => GetFlag(game,attackInfo.Key),attackInfo => CalcFlagMovePos(game,attackInfo)).MyApplyA(flagMap => page.MapAnimationElementsCanvas.MySetChildren([.. flagMap.Keys])).MyApplyA(flagMap => MoveFlags(page,flagMap));
         static Grid GetFlag(GameState game,ECountry attackCountry) {
-          Grid rawFlag = UI.countryFlagMap.TryGetValue(attackCountry,out Grid? flag) ? flag : CreateFlag(game,attackCountry).MyApplyA(createdFlag => UI.countryFlagMap = UI.countryFlagMap.MyAdd(attackCountry,createdFlag));
-          return rawFlag.MyApplyF(v => AttachFlag(game,v,attackCountry));
+          return CreateFlag(game,attackCountry).MyApplyF(v => AttachFlag(game,v,attackCountry));
           static Grid CreateFlag(GameState game,ECountry attackCountry) {
             string flagText = attackCountry.ToString();
             TextBlock flagTextBlock = new() { Text = flagText,RenderTransform = new ScaleTransform { ScaleX = Math.Min(1,(double)2 / flagText.Length) * 2,ScaleY = 2 },Width = Math.Min(2,flagText.Length) * BasicStyle.fontsize * 2,Height = BasicStyle.fontsize * 2 };
@@ -255,7 +254,7 @@ internal sealed partial class Game:Page {
         static List<Point> CalcFlagMovePos(GameState game,KeyValuePair<ECountry,EArea?> attackInfo) {
           EArea[] route = attackInfo.Value?.MyApplyF(target => Route.SolveAtackArmyRoute(game,attackInfo.Key,target)) ?? [];
           List<(Point from, Point to)> routeAreaPoints = [.. route.Select(v => AreaToPoint(game,v)).MyNonNull().MyAdjacentCombinations()];
-          List<Point> posList = [.. routeAreaPoints.SelectMany(v => Enumerable.Range(0,60).Select(index => new Point(double.Lerp(v.from.X,v.to.X,index / 60d),double.Lerp(v.from.Y,v.to.Y,index / 60d)))).MyApplyF(v=>v.Chunk(v.Count()/60).Select(v=>v.LastOrDefault()).Append(routeAreaPoints.LastOrDefault().to).MyNonNull())];
+          List<Point> posList = [.. routeAreaPoints.SelectMany(v => Enumerable.Range(0,60).Select(index => new Point(double.Lerp(v.from.X,v.to.X,index / 60d),double.Lerp(v.from.Y,v.to.Y,index / 60d)))).MyApplyF(v => v.Chunk(v.Count() / 60).Select(v => v.LastOrDefault()).Append(routeAreaPoints.LastOrDefault().to).MyNonNull())];
           return posList;
           static Point? AreaToPoint(GameState game,EArea area) => Area.GetAreaPoint(game,area,UIUtil.mapSize,UIUtil.areaSize,UIUtil.mapGridCount,UIUtil.infoFrameWidth.Value);
         }
@@ -274,9 +273,9 @@ internal sealed partial class Game:Page {
                   return;
                 }
                 dispatcher.TryEnqueue(() => {
-                    Canvas.SetLeft(v.Key,pos.X - v.Key.Width / 2);
-                    Canvas.SetTop(v.Key,pos.Y - v.Key.Height / 2);
-                  });
+                  Canvas.SetLeft(v.Key,pos.X - v.Key.Width / 2);
+                  Canvas.SetTop(v.Key,pos.Y - v.Key.Height / 2);
+                });
               });
             });
             dispatcher.TryEnqueue(() => UpdateAreaPanels(page,GameData.game));
@@ -287,9 +286,9 @@ internal sealed partial class Game:Page {
         return game.CountryMap.Keys.OrderBy(country => Country.GetTotalAffair(game,country)).Aggregate(game,(game,country) => {
           return game.ArmyTargetMap.GetValueOrDefault(country) is EArea target ? TryAttack(game,country,target) : game.ArmyTargetMap.ContainsKey(country) ? ExeDefense(game,country) : ExeRest(game,country);
           static GameState TryAttack(GameState game,ECountry country,EArea targetArea) {
-            return Country.SuccessAttack(game,country) ? ExeAttack(game,country,targetArea) : FailAttack(game,country);
+            return Country.SuccessAttack(game,country) ? ExeAttack(game,country,targetArea) : FailAttack(game,country,targetArea);
             static GameState ExeAttack(GameState game,ECountry country,EArea targetArea) => targetArea.MyApplyF(game.AreaMap.GetValueOrDefault)?.Country.MyApplyF(defeseSide => UpdateGame.Attack(game,country,targetArea,defeseSide,Country.IsFocusDefense(game,defeseSide))) ?? game;
-            static GameState FailAttack(GameState game,ECountry country) => game.MyApplyF(game => UpdateGame.Defense(game,country,true)).MyApplyF(game => game with { ArmyTargetMap = game.ArmyTargetMap.MyRemove(country) });
+            static GameState FailAttack(GameState game,ECountry country,EArea targetArea) => game.MyApplyF(game => UpdateGame.Defense(game,country,true)).MyApplyF(game => country == game.PlayCountry ? UpdateGame.AppendStartExecutionRemark(game,[$"{targetArea}への侵攻は\n資金不足のため中止されました"]) : game);
           }
           static GameState ExeDefense(GameState game,ECountry country) => game.MyApplyF(game => UpdateGame.Defense(game,country,false));
           static GameState ExeRest(GameState game,ECountry country) => game.MyApplyF(game => UpdateGame.Rest(game,country));
@@ -298,8 +297,10 @@ internal sealed partial class Game:Page {
     }
     static GameState EndExecutionPhase(Game page,GameState game) {
       page.MapAnimationElementsCanvas.MySetChildren([]);
-      return game.MyApplyF(UpdateGame.GameEndJudge).MyApplyF(game => game.Phase is Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd ? game : game.MyApplyF(game => NextTurn(page,game)).MyApplyA(game => UI.UpdateLogMessageUI(page,game)).MyApplyF(UpdateGame.GameEndJudge)).MyApplyA(game => CharacterRemark.SetElems(page.CharacterRemarkPanel,game.PlayCountry,Text.CharacterRemarkTexts(game,Lang.ja),page.ContentGrid,game.PlayTurn<=2));
-      static GameState NextTurn(Game page,GameState game) => game.MyApplyF(UpdateGame.NextTurn).MyApplyA(game => UpdateCountryPosts(page,game)).MyApplyF(v => v with { Phase = Phase.Planning,ArmyTargetMap = [] }).MyApplyA(game => UpdateAreaPanels(page,game)).MyApplyA(game => UI.UpdateTurnLogUI(page,game)).MyApplyA(game => UI.UpdateTurnWinCondUI(page,game,true));
+      return game.MyApplyA(_ => ResetTurnUI(page)).MyApplyF(UpdateGame.GameEndJudge).MyApplyF(game => game.Phase is Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd ? game : game.MyApplyF(game => NextTurn(page,game)));
+      static void ResetTurnUI(Game page) => page.MyApplyA(page => page.TurnWinCondPanel.MySetChildren([])).MyApplyA(page => page.CharacterRemarkPanel.Visibility = Visibility.Collapsed);
+      static GameState NextTurn(Game page,GameState game) => game.MyApplyF(UpdateGame.NextTurn).MyApplyA(game => UpdateCountryPosts(page,game)).MyApplyF(v => v with { Phase = Phase.Planning }).MyApplyA(game => UpdateAreaPanels(page,game)).MyApplyA(game => UI.UpdateTurnLogUI(page,game)).MyApplyA(game => UI.UpdateTurnWinCondUI(page,game,true)).MyApplyA(game => UI.UpdateLogMessageUI(page,game)).MyApplyF(UpdateGame.GameEndJudge).MyApplyA(game => CharacterRemark.SetElems(page.CharacterRemarkPanel,game.PlayCountry,Text.CharacterRemarkTexts(game,Lang.ja),page.ContentGrid,game.PlayTurn <= 2)).MyApplyF(ResetParam);
+      static GameState ResetParam(GameState game) => game with { ArmyTargetMap = [],StartPlanningCharacterRemark = [],StartExecutionCharacterRemark = [] };
     }
   }
   private static Grid CreatePersonPutPanel(GameState game,Post post,string backText,StackPanel personPutInnerPanel) {
@@ -362,7 +363,6 @@ internal sealed partial class Game:Page {
     internal static (Panel panel, Post post)? pointerover = null;
     internal static (Panel panel, PersonId person)? pick = null;
     internal static Dictionary<ERole,StackPanel> countryPostPanelMap = [];
-    internal static Dictionary<ECountry,Grid> countryFlagMap = [];
     internal static StackPanel CreateCountryPostPanel(Game page,ERole role,Color backColor) {
       return new StackPanel() { Padding = new(1.5,0),Background = backColor.ToBrush() }.MySetChildren([
         new StackPanel() { Orientation = Orientation.Horizontal,HorizontalAlignment = HorizontalAlignment.Center }.MySetChildren([

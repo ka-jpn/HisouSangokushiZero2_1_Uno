@@ -1351,7 +1351,7 @@ internal static class Scenario {
             { $"― ※軽減前条件65%",null },
             { "― 蜀漢を滅亡させた(10%軽減適用)", Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏 },
             { "― 呉を滅亡させた(5%軽減適用)", Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏 },
-            { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.魏,v)/v.Length*100):0}%領有",null }
+            { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> (double)Country.HasAreaCount(game,ECountry.魏,v)/v.Length):P0}領有",null }
           })
         },
         {ECountry.呉,new(
@@ -1367,7 +1367,7 @@ internal static class Scenario {
             { $"― ※軽減前条件50%",null },
             { "― 魏を滅亡させた(10%軽減適用)", Country.GetPerishFrom(game,ECountry.魏)==ECountry.呉 },
             { "― 蜀漢を滅亡させた(8%軽減適用)", Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.呉 },
-            { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.呉,v)/v.Length*100):0}%領有",null }
+            { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> (double)Country.HasAreaCount(game,ECountry.呉,v)/v.Length):P0}領有",null }
           })
         },
         {ECountry.蜀漢,new(
@@ -1382,7 +1382,7 @@ internal static class Scenario {
             { "― ※軽減前条件65%",null },
             { "― 魏を滅亡させた(25%軽減適用)", Country.GetPerishFrom(game,ECountry.魏)==ECountry.蜀漢 },
             { "― 呉を滅亡させた(5%軽減適用)", Country.GetPerishFrom(game,ECountry.呉)==ECountry.蜀漢 },
-            { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> Country.HasAreaCount(game,ECountry.蜀漢,v)/v.Length*100):0}%領有",null }
+            { $"― ※現在 中華領域の{Area.GetChinaAreas(1).MyApplyF(v=> (double)Country.HasAreaCount(game,ECountry.蜀漢,v)/v.Length):P0}領有",null }
           })
         },
         {ECountry.燕,new(

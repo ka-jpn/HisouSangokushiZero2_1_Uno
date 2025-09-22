@@ -9,7 +9,7 @@
     <EmbeddedResource Include="Platforms\WebAssembly\WasmCSS\myStyle.css" />
     <EmbeddedResource Include="Platforms\WebAssembly\WasmScripts\myScript.js" />
     <LinkerDescriptor Include="LinkerConfig.xml" />
-    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="soft-heap-limit=800m,nursery-size=128m,evacuation-threshold=66,major=marksweep" />
+    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="nursery-size=32m,major=marksweep,soft-heap-limit=128m" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="MessagePack" Version="3.1.4" />
@@ -22,10 +22,8 @@
     <UnoDragDropExternalSupport>false</UnoDragDropExternalSupport>
     <UnoXamlResourcesTrimming>true</UnoXamlResourcesTrimming>
     <WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
-    <!--<WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>-->
+    <WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>
     <PublishTrimmed>true</PublishTrimmed>
-    <!--<WasmShellEnableIDBFS>true</WasmShellEnableIDBFS>-->
     <WasmShellEnableSkia>true</WasmShellEnableSkia>
-    <SvgSkiaVersion>3.0.3</SvgSkiaVersion>
   </PropertyGroup>
 </Project>

@@ -14,7 +14,7 @@
         </Grid>
         <StackPanel VerticalAlignment="Center">
           <StackPanel Height="30"/>
-          <Grid x:Name="PersonImagePanel"/>
+          <Image x:Name="PersonImage" Source="ms-appx:///Assets/Svg/Person/武官.svg" Width="150" Height="150"/>
           <TextBlock x:Name="PersonName" HorizontalAlignment="Center" Height="30"/>
         </StackPanel>
       </StackPanel>
@@ -23,7 +23,7 @@
       </StackPanel>
     </StackPanel>
     <Button x:Name="CloseButton" Width="40" Height="30" Background="#2F00" HorizontalAlignment="Right" VerticalAlignment="Top">
-      <Image Source="/Assets/Svg/close.svg"/>
+      <Image Source="ms-appx:///Assets/Svg/close.svg"/>
     </Button>
   </Grid>
 </UserControl>

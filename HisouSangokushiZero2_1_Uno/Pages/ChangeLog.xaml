@@ -35,6 +35,12 @@
           <TextBlock Text="・行軍旗の表示経路を直線的から自領土を経由しながらに改善"/>
         </StackPanel>
         <TextBlock Text="2025/09/01 ver1.9 キャラによる導入説明追加＆旗表示の不具合修正"/>
+        <TextBlock Text="2025/09/23 ver1.10 不具合修正＆細かい改善"/>
+        <StackPanel Padding="20,0,0,0">
+          <TextBlock Text="・地域内政担当が地域陥落時に確定で死去していたのを25%に修正"/>
+          <TextBlock Text="・プレイヤーが国力回復の場合、他国領をクリックできないようにした"/>
+          <TextBlock Text="・侵攻中止・首都陥落・遷都・将官の戦死の際にキャラが言及するようにした"/>
+        </StackPanel>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>
