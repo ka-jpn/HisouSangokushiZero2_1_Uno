@@ -11,6 +11,7 @@
         <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
       </StackPanel>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
+      <StackPanel x:Name="SortButtonPanel1" Orientation="Horizontal" HorizontalAlignment="Center"/>
       <VariableSizedWrapGrid x:Name="PersonDataListPanel1" VerticalChildrenAlignment="Center" Orientation="Horizontal"/>
       <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="CountryDataListPanel1" HorizontalAlignment="Center"/>
@@ -19,6 +20,7 @@
         <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
       </StackPanel>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
+      <StackPanel x:Name="SortButtonPanel2" Orientation="Horizontal" HorizontalAlignment="Center"/>
       <VariableSizedWrapGrid x:Name="PersonDataListPanel2" VerticalChildrenAlignment="Center" Orientation="Horizontal"/>
       <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="CountryDataListPanel2" HorizontalAlignment="Center"/>

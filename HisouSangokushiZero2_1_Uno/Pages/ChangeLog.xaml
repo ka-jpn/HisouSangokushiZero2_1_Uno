@@ -41,6 +41,7 @@
           <TextBlock Text="・プレイヤーが国力回復の場合、他国領をクリックできないようにした"/>
           <TextBlock Text="・侵攻中止・首都陥落・遷都・将官の戦死の際にキャラが言及するようにした"/>
         </StackPanel>
+        <TextBlock Text="2025/09/26 ver1.11 人物リストのソートボタン導入"/>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>

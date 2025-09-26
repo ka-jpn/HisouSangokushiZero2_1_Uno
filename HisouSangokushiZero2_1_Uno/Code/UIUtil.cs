@@ -11,6 +11,7 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Code; 
 	internal static class UIUtil {
   internal enum ViewMode { fit, fix };
+  internal enum PersonViewSortMode { Country_Role_BirthYear, Rank_BirthYear, BirthYear, DeathYear };
   internal static ViewMode viewMode = ViewMode.fix;
   internal static List<Action> SwitchViewModeActions = [];
   internal static List<Action> SaveGameActions = [];
@@ -42,9 +43,9 @@ namespace HisouSangokushiZero2_1_Uno.Code;
   internal static readonly string[] yearItems = ["春","夏","秋","冬"];
   internal static double CalcFullWidthTextLength(string str) => str.Length - str.Count("0123456789-.()".Contains) * 0.4 - str.Count(" ".Contains) * 0.8;
   internal static double CalcDataListElemWidth(double textlength) => BasicStyle.fontsize * textlength + dataListFrameThickness.Left + dataListFrameThickness.Right;
-  internal static StackPanel[] CreatePersonDataList(int scenarioNo,int chunkBlockNum) {
+  internal static StackPanel[] CreatePersonDataList(int scenarioNo,int chunkBlockNum,Func<Dictionary<PersonId,PersonData>,Dictionary<PersonId,PersonData>> sortFunc) {
     KeyValuePair<ScenarioId,ScenarioData>? maybeScenarioInfo = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo);
-    Dictionary<PersonId,PersonData>[] chunkedPersonInfoMaps = maybeScenarioInfo?.Value.PersonMap.MyApplyF(elems => elems.OrderBy(v => v.Value.Country).ThenBy(v => v.Value.Role).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
+    Dictionary<PersonId,PersonData>[] chunkedPersonInfoMaps = maybeScenarioInfo?.Value.PersonMap.MyApplyF(elems => sortFunc(elems.ToDictionary()).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
     StackPanel[] personDataBlock = maybeScenarioInfo?.MyApplyF(scenarioInfo => chunkedPersonInfoMaps.Select(chunkedPersonInfoMap => CreatePersonDataPanel(scenarioInfo,chunkedPersonInfoMap)).ToArray()) ?? [];
     return personDataBlock;
     static StackPanel CreatePersonDataPanel(KeyValuePair<ScenarioId,ScenarioData> scenarioInfo,Dictionary<PersonId,PersonData> includePersonInfoMap) {

@@ -13,8 +13,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="MessagePack" Version="3.1.4" />
-    <PackageVersion Include="SkiaSharp" Version="3.119.0" />
-    <PackageVersion Include="SkiaSharp.NativeAssets.WebAssembly" Version="3.119.0" />
+    <PackageVersion Include="SkiaSharp" Version="3.119.1" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.WebAssembly" Version="3.119.1" />
   </ItemGroup>
   <PropertyGroup>
     <UnoSplashScreenFile>Assets\Splash\splash_screen.svg</UnoSplashScreenFile>
