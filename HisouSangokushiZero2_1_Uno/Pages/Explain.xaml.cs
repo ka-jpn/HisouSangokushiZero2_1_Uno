@@ -26,10 +26,11 @@ internal sealed partial class Explain:UserControl {
   private static Dictionary<double,Rectangle> judgeMaxPointRects = [];
   private static Dictionary<AttackJudge,Dictionary<double,TextBlock>> judgeThresholdPointTexts = [];
   private static Dictionary<double,TextBlock> rankDiffTexts = [];
-  internal Explain() {
+  internal Explain(Grid contentGrid) {
     InitializeComponent();
-    MyInit(this);
-    static void MyInit(Explain page) {
+    MyInit(this,contentGrid);
+    static void MyInit(Explain page,Grid contentGrid) {
+      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
       SetAttackJudgeExplain(page);
       static void SetAttackJudgeExplain(Explain page) {
         page.AttackCrushFillColor.Background = ThresholdFillColor(AttackJudge.crush).ToBrush();

@@ -1,5 +1,6 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using HisouSangokushiZero2_1_Uno.Pages;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -12,6 +13,7 @@ namespace HisouSangokushiZero2_1_Uno.Code;
 	internal static class UIUtil {
   internal enum ViewMode { fit, fix };
   internal enum PersonViewSortMode { Country_Role_BirthYear, Rank_BirthYear, BirthYear, DeathYear };
+  internal static readonly DispatcherQueue dispatcher = DispatcherQueue.GetForCurrentThread();
   internal static ViewMode viewMode = ViewMode.fix;
   internal static List<Action> SwitchViewModeActions = [];
   internal static List<Action> SaveGameActions = [];
@@ -23,6 +25,7 @@ namespace HisouSangokushiZero2_1_Uno.Code;
   internal static readonly GridLength infoButtonHeight = new(60);
   internal static readonly Thickness dataListFrameThickness = new(1);
   internal static readonly double fixModeMaxWidth = 1000;
+  internal static readonly double scaleSliderHeight = 20;
   internal static readonly Size areaSize = new(204,155);
   internal static readonly CornerRadius areaCornerRadius = new(30);
   internal static readonly double postFrameWidth = 1;
@@ -117,7 +120,7 @@ namespace HisouSangokushiZero2_1_Uno.Code;
     Uno.Foundation.WebAssemblyRuntime.InvokeJS($"window.parent.{viewMode}();");
 #endif
   }
-  internal static double GetScaleFactor(Windows.Foundation.Size size) => Math.Max(Math.Max(fixModeMaxWidth,size.Width) / mapSize.Width,Math.Max(fixModeMaxWidth,size.Height) / mapSize.Height);
+  internal static double GetScaleFactor(Windows.Foundation.Size size,double scaleLevel) => Math.Max(size.Width / mapSize.Width,(size.Height - scaleSliderHeight) / mapSize.Height) * Math.Pow(1.08,scaleLevel);
   internal static void SaveGame() => SaveGameActions.ForEach(v => v());
   internal static void LoadGame() => LoadGameActions.ForEach(v => v());
   internal static void InitGame() => InitGameActions.ForEach(v => v());

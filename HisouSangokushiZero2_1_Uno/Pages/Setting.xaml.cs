@@ -5,10 +5,11 @@ using Microsoft.UI.Xaml.Media;
 using System.Linq;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class Setting:UserControl {
-  internal Setting() {
+  internal Setting(Grid contentGrid) {
     InitializeComponent();
-    MyInit(this);
-    static void MyInit(Setting page) {
+    MyInit(this,contentGrid);
+    static void MyInit(Setting page,Grid contentGrid) {
+      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
       RefreshUIElements(page);
       AttachEvents(page);
       UIUtil.SwitchViewModeActions.Add(() => RefreshUIElements(page));
@@ -19,7 +20,7 @@ internal sealed partial class Setting:UserControl {
         page.SaveGameButton.Click += (_,_) => UIUtil.SaveGame();
         page.LoadGameButton.Click += (_,_) => UIUtil.LoadGame();
         page.InitGameButton.Click += (_,_) => UIUtil.InitGame();
-        page.InnerSwitchViewModeButton.Click += (_,_) => { UIUtil.SwitchViewMode(); RefreshUIElements(page); };
+        page.InnerSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
         page.BackTitleButton.Click += (_,_) => (Window.Current?.Content as Frame)?.Navigate(typeof(Title));
       }
     }

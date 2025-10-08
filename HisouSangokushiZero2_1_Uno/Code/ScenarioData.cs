@@ -230,7 +230,7 @@ internal static class Scenario {
         }.AsReadOnly(),
         new Dictionary<ECountry,CountryWinCondition>(){
           {ECountry.漢,new(
-            null,
+            [["勝利条件なし(選べません)"]],
             (game)=>false,
             (game)=>[])
           },
@@ -1648,7 +1648,6 @@ internal static class Scenario {
         {new("鍾会"),new(ERole.central,3,225,264,ECountry.魏)},
         {new("董昭"),new(ERole.affair,3,156,236,ECountry.魏,194)},
         {new("劉先"),new(ERole.affair,1,160,227,ECountry.魏,190)},
-        {new("杜畿"),new(ERole.affair,3,164,225,ECountry.魏,194)},
         {new("閻柔"),new(ERole.affair,1,168,227,ECountry.魏,195)},
         {new("満寵"),new(ERole.affair,3,170,242,ECountry.魏,193)},
         {new("辛毗"),new(ERole.affair,1,171,240,ECountry.魏)},
@@ -1737,7 +1736,6 @@ internal static class Scenario {
         {new("歩闡"),new(ERole.defense,1,222,272,ECountry.呉)},
         {new("沈瑩"),new(ERole.defense,1,235,280,ECountry.呉)},
         {new("吾彦"),new(ERole.defense,3,235,297,ECountry.呉)},
-        {new("韓当"),new(ERole.attack,2,156,225,ECountry.呉)},
         {new("朱然"),new(ERole.attack,2,182,249,ECountry.呉,205)},
         {new("留賛"),new(ERole.attack,1,183,255,ECountry.呉,203)},
         {new("凌統"),new(ERole.attack,2,189,237,ECountry.呉)},
@@ -1761,7 +1759,6 @@ internal static class Scenario {
         {new("董厥"),new(ERole.central,1,204,271,ECountry.蜀漢)},
         {new("樊建"),new(ERole.central,1,205,270,ECountry.蜀漢)},
         {new("陳祗"),new(ERole.central,1,216,258,ECountry.蜀漢)},
-        {new("簡雍"),new(ERole.affair,2,164,225,ECountry.蜀漢)},
         {new("向朗"),new(ERole.affair,2,167,247,ECountry.蜀漢,194)},
         {new("孟光"),new(ERole.affair,1,168,263,ECountry.蜀漢)},
         {new("陳震"),new(ERole.affair,2,170,235,ECountry.蜀漢)},

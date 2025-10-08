@@ -11,10 +11,19 @@
 	x:Name="Page" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="False" Background="#EEFE">
   <Grid	x:Name="ContentGrid">
     <Grid.RowDefinitions>
+      <RowDefinition Height="{x:Bind code:UIUtil.scaleSliderHeight}"/>
       <RowDefinition/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <ScrollViewer Grid.Row="0">
+    <Grid Grid.Row="0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Text="拡大・縮小" FontSize="16" LineHeight="16" VerticalAlignment="Center"/>
+      <Slider x:Name="ScaleSlider" Grid.Column="1" Minimum="0" Maximum="10" Value="{x:Bind local:Game.scaleLevel}" Margin="6,-6"/>
+    </Grid>
+    <ScrollViewer x:Name="MapScroll" Grid.Row="1">
       <Grid x:Name="MapPanel">
         <Grid x:Name="MapInnerPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{x:Bind code:UIUtil.mapSize.Width}" Height="{x:Bind code:UIUtil.mapSize.Height}">
           <Image Source="ms-appx:///Assets/Svg/map.svg" Stretch="Fill"></Image>
@@ -22,12 +31,12 @@
           <Canvas x:Name="MapAnimationElementsCanvas"/>
         </Grid>
       </Grid>
-      </ScrollViewer>
-      <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="450"/>
-      <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-    <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
-    <local:StateInfo x:Name="StateInfoPanel" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-    <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
+    </ScrollViewer>
+    <StackPanel x:Name="TurnLogPanel" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="450"/>
+    <StackPanel x:Name="TurnWinCondPanel" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+    <Canvas x:Name="CountryPostsPanel" Grid.Row="2" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
+    <local:StateInfo x:Name="StateInfoPanel" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    <Grid x:Name="InfoLayoutPanel" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition/>
@@ -77,18 +86,14 @@
             <TextBlock Text="設定"/>
           </Button>
         </Grid>
-        <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5">          ,
-          <local:Explain x:Name="ExplainPanel" Visibility="Collapsed"/>
-          <local:WinCond x:Name="WinCondPanel" Visibility="Collapsed"/>
-          <local:ParamList x:Name="ParamListPanel" Visibility="Collapsed"/>
-          <local:ChangeLog x:Name="ChangeLogPanel" Visibility="Collapsed"/>
-          <local:Setting x:Name="SettingPanel" Visibility="Collapsed"/>
-        </Grid>
+        <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5"/>
       </Grid>
     </Grid>
-    <local:Ask x:Name="AskPanel" Grid.RowSpan="2"/>
-    <local:CharacterRemark x:Name="CharacterRemarkPanel" Grid.RowSpan="2"/>
-    <Canvas x:Name="MovePersonCanvas" Grid.RowSpan="2"/>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.RowSpan="2">
+      <local:Ask x:Name="AskPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+      <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+      <Canvas x:Name="MovePersonCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    </Grid>
   </Grid>
 </Page>
   

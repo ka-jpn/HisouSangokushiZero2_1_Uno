@@ -12,10 +12,11 @@ internal sealed partial class WinCond:UserControl {
   private static readonly double countryNameElemWidth = UIUtil.CalcDataListElemWidth(3);
   private static readonly double winCondElemsWidth = UIUtil.CalcDataListElemWidth(45);
   private static readonly List<Border> winCondBorders = [];
-  internal WinCond() {
+  internal WinCond(Grid contentGrid) {
     InitializeComponent();
-    MyInit(this);
-    static void MyInit(WinCond page) {
+    MyInit(this,contentGrid);
+    static void MyInit(WinCond page,Grid contentGrid) {
+      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
       SetUIElements(page);
       static void SetUIElements(WinCond page) {
         page.WinCondScenarioName1.Text = BaseData.scenarios.ElementAtOrDefault(0)?.Value;

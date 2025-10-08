@@ -1,10 +1,15 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using HisouSangokushiZero2_1_Uno.Code;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Linq;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class ChangeLog:UserControl {
-  internal ChangeLog() {
+  internal ChangeLog(Grid contentGrid) {
     InitializeComponent();
+    MyInit(this,contentGrid);
+    static void MyInit(ChangeLog page,Grid contentGrid) {
+      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
+    }
   }
   internal static void ResizeElem(ChangeLog page,double scaleFactor) {
     double pageWidth = page.RenderSize.Width;

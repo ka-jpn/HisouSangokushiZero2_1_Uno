@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Linq;
+using System.Net.NetworkInformation;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using Size = Windows.Foundation.Size;
 using Text = HisouSangokushiZero2_1_Uno.Code.Text;
@@ -29,8 +30,8 @@ internal sealed partial class CharacterRemark:UserControl {
     string newPersonImageName = Text.GetRemarkPersonName(country,isAliveCharacter,Lang.ja);
     page.PersonName.Text = newPersonImageName;
     page.RemarkText.Text = contents.FirstOrDefault() ?? string.Empty;
-    page.buttonPanel.MySetChildren([CreateButton(page,country,[.. contents.Skip(1)],parent,isAliveCharacter)]);
-    ResizeElem(page,parent.RenderSize,UIUtil.GetScaleFactor(parent.RenderSize));
+    page.buttonPanel.MySetChildren([CreateButton(page,country,[.. contents.Skip(1)],parent,isAliveCharacter,Game.scaleLevel)]);
+    ResizeElem(page,parent.RenderSize,UIUtil.GetScaleFactor(parent.RenderSize,Game.scaleLevel));
     if(nowPersonImageName == newPersonImageName) {
       page.Visibility = Visibility.Visible;
     } else {
@@ -38,14 +39,14 @@ internal sealed partial class CharacterRemark:UserControl {
       resetPersonImageSource = true;
     }
     nowPersonImageName = newPersonImageName;
-    static Button CreateButton(CharacterRemark page,ECountry? country,string[] remainContents,UIElement parent,bool isAliveCharacter) {
+    static Button CreateButton(CharacterRemark page,ECountry? country,string[] remainContents,UIElement parent,bool isAliveCharacter,double scaleLevel) {
       return new Button { Width = 200,Height = 50,Background = Colors.FromARGB(34,0,0,0) }.MySetChild(new TextBlock { Text = remainContents.MyIsEmpty() ? "閉じる" : "次へ" }).MyApplyA(button =>
         button.Click += (_,_) => { if(remainContents.MyIsEmpty()) { page.Visibility = Visibility.Collapsed; } else { SetElems(page,country,remainContents,parent,isAliveCharacter); } }
       );
     }
   }
   internal static void ResizeElem(CharacterRemark page,Size parentSize,double scaleFactor) {
-    page.Margin = new(parentSize.Width * (scaleFactor * 1.2 - 1),parentSize.Height * (scaleFactor * 1.2 - 1));
+    page.Margin = new(parentSize.Width * (scaleFactor / 1.2 - 1),parentSize.Height * (scaleFactor / 1.2 - 1));
     page.Width = parentSize.Width / (scaleFactor * 1.2);
     page.Height = parentSize.Height / (scaleFactor * 1.2);
     page.RenderTransform = new ScaleTransform { ScaleX = scaleFactor * 1.2,ScaleY = scaleFactor * 1.2,CenterX = page.Width / 2,CenterY = page.Height / 2 };

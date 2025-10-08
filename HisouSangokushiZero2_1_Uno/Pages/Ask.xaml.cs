@@ -26,7 +26,7 @@ internal sealed partial class Ask:UserControl {
     page.OkButtonText.Text = okButtonText;
     page.OkButton.IsEnabled = okButtonAction!=null;
     page.Visibility = Visibility.Visible;
-    ResizeElem(page,parentSize,UIUtil.GetScaleFactor(parentSize));
+    ResizeElem(page,parentSize,UIUtil.GetScaleFactor(parentSize,Game.scaleLevel));
   }
   internal static void ResizeElem(Ask page,Size parentSize,double scaleFactor) {
     page.Margin = new(UIUtil.infoFrameWidth.Value * scaleFactor);

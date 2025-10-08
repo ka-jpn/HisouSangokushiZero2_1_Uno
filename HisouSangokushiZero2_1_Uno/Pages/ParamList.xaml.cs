@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
+using static System.Net.Mime.MediaTypeNames;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class ParamList:UserControl {
   private static readonly Func<Dictionary<PersonId,PersonData>,Dictionary<PersonId,PersonData>> Country_Role_BirthYear_SortFunc = v => v.OrderBy(v => v.Value.Country).ThenBy(v => v.Value.Role).ThenBy(v => v.Value.BirthYear).ToDictionary();
@@ -16,18 +17,20 @@ internal sealed partial class ParamList:UserControl {
   private static readonly Func<Dictionary<PersonId,PersonData>,Dictionary<PersonId,PersonData>> DeathYear_SortFunc = v => v.OrderBy(v => v.Value.DeathYear).ToDictionary();
   private static readonly Dictionary<string,Func<Dictionary<PersonId,PersonData>,Dictionary<PersonId,PersonData>>> buttonInfoList = new([new("国役割別",Country_Role_BirthYear_SortFunc),new("ランク順",Rank_BirthYear_SortFunc),new("生年順",BirthYear_SortFunc),new("没年順",DeathYear_SortFunc)]);
   private static readonly Func<Dictionary<PersonId,PersonData>,Dictionary<PersonId,PersonData>> InitSortFunc = Country_Role_BirthYear_SortFunc;
-  internal ParamList() {
+  internal ParamList(Grid contentGrid) {
     InitializeComponent();
-    MyInit(this);
-    static void MyInit(ParamList page) {
+    MyInit(this,contentGrid);
+    static void MyInit(ParamList page,Grid contentGrid) {
+      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
       SetUIElements(page);
       static void SetUIElements(ParamList page) {
+        page.Loaded += (_,_) => LoadedPage(page);
         page.PersonDataScenarioName1.Text = BaseData.scenarios.ElementAtOrDefault(0)?.Value;
-        page.PersonDataListPanel1.MySetChildren([.. UIUtil.CreatePersonDataList(0,12,InitSortFunc)]);
-        page.CountryDataListPanel1.MySetChildren([.. UIUtil.CreateCountryDataList(0,2)]);
+        page.PersonDataListPanel1.MySetChildren([LoadingText()]);
+        page.CountryDataListPanel1.MySetChildren([LoadingText()]);
         page.PersonDataScenarioName2.Text = BaseData.scenarios.ElementAtOrDefault(1)?.Value;
-        page.PersonDataListPanel2.MySetChildren([.. UIUtil.CreatePersonDataList(1,12,InitSortFunc)]);
-        page.CountryDataListPanel2.MySetChildren([.. UIUtil.CreateCountryDataList(1,1)]);
+        page.PersonDataListPanel2.MySetChildren([LoadingText()]);
+        page.CountryDataListPanel2.MySetChildren([LoadingText()]);
         page.SortButtonPanel1.MySetChildren([.. CreateSortButtons(page,0)]);
         page.SortButtonPanel2.MySetChildren([.. CreateSortButtons(page,1)]);
         RefreshSortButtonPanelColor(page.SortButtonPanel1,InitSortFunc);
@@ -37,7 +40,7 @@ internal sealed partial class ParamList:UserControl {
           static Button CreateSortButton(ParamList page,int scenarioNo,string text,Func<Dictionary<PersonId,PersonData>,Dictionary<PersonId,PersonData>> sortFunc) {
             return new Button { MaxWidth = 300,Height = 50,Margin=new Thickness(5,0) }.MySetChild(new TextBlock { Text = text }).MyApplyA(v => v.Click += (_,_) => {
               (scenarioNo switch { 0 => page.SortButtonPanel1, _ => page.SortButtonPanel2 }).MyApplyA(panel => RefreshSortButtonPanelColor(panel,sortFunc));
-              (scenarioNo switch { 0 => page.PersonDataListPanel1, _ => page.PersonDataListPanel2 }).MySetChildren([.. UIUtil.CreatePersonDataList(scenarioNo,12,sortFunc)]);
+              (scenarioNo switch { 0 => page.PersonDataListPanel1, _ => page.PersonDataListPanel2 }).MySetChildren([LoadingText()]).MyApplyA(v=>v.UpdateLayout()).MySetChildren([.. UIUtil.CreatePersonDataList(scenarioNo,12,sortFunc)]);
             });
           }
         }
@@ -45,6 +48,14 @@ internal sealed partial class ParamList:UserControl {
           buttonInfoList.MyGetIndex(v => v.Value == sortFunc)?.MyApplyA(index => RefreshColor([.. buttonPanel.Children.OfType<Button>()],index));
           static void RefreshColor(List<Button> elems,int index) => elems.Select((button,index) => (button, index)).ToList().ForEach(v => { v.button.Background = v.index == index ? Colors.LightGray : Colors.WhiteSmoke; });
         }
+        static void LoadedPage(ParamList page) {
+          page.UpdateLayout();
+          page.PersonDataListPanel1.MySetChildren([.. UIUtil.CreatePersonDataList(0,12,InitSortFunc)]);
+          page.CountryDataListPanel1.MySetChildren([.. UIUtil.CreateCountryDataList(0,2)]);
+          page.PersonDataListPanel2.MySetChildren([.. UIUtil.CreatePersonDataList(1,12,InitSortFunc)]);
+          page.CountryDataListPanel2.MySetChildren([.. UIUtil.CreateCountryDataList(1,1)]);
+        }
+        static StackPanel LoadingText() => new StackPanel { Height=40 }.MySetChildren([new TextBlock { Text = "読み込み中.." }]);
       }
     }
   }
