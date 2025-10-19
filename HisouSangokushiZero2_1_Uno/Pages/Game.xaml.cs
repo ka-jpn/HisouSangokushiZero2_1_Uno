@@ -278,6 +278,7 @@ internal sealed partial class Game:Page {
                 });
               });
             });
+            await Task.Yield();
             UIUtil.dispatcher.TryEnqueue(() => UpdateAreaPanels(page,GameData.game));
           });
         }
@@ -427,7 +428,7 @@ internal sealed partial class Game:Page {
         elem.Opacity = 1;
         await Task.Delay(6000);
         await Enumerable.Range(0,60 + 1).Select(v => (double)v / 60).MyAsyncForEachSequential(async v => {
-          UIUtil.dispatcher.TryEnqueue(() => { elem.Opacity = 1 - v; });
+          UIUtil.dispatcher.TryEnqueue(() => elem.Opacity = 1 - v);
           await Task.Delay(15);
         });
         page.TurnLogPanel.Children.Remove(elem);
@@ -452,7 +453,7 @@ internal sealed partial class Game:Page {
         elem.Opacity = 1;
         await Task.Delay(6000);
         await Enumerable.Range(0,60 + 1).Select(v => (double)v / 60).MyAsyncForEachSequential(async v => {
-          UIUtil.dispatcher.TryEnqueue(() => { elem.Opacity = 1 - v; });
+          UIUtil.dispatcher.TryEnqueue(() => elem.Opacity = 1 - v);
           await Task.Delay(15);
         });
         page.TurnWinCondPanel.Children.Remove(elem);

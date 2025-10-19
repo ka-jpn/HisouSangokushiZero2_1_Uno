@@ -45,7 +45,7 @@
         <ColumnDefinition Width="Auto"/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <Button x:Name="TopSwitchViewModeButton" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" Background="#AFFF" Padding="0">
+      <Button x:Name="TopSwitchViewModeButton" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" Background="#AFFF" Padding="0">
         <TextBlock x:Name="SwitchViewModeButtonText"/>
       </Button>
       <Button x:Name="OpenLogButton" Grid.Column="1" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" HorizontalAlignment="Stretch"  Background="#AEFE" Padding="0">

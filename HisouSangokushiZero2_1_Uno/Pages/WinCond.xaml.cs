@@ -1,64 +1,47 @@
 ﻿using HisouSangokushiZero2_1_Uno.Code;
 using HisouSangokushiZero2_1_Uno.MyUtil;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Pages;
+internal record WinCondData(Brush Brush,ECountry Country,string? WinCondText1,string? WinCondText2);
 internal sealed partial class WinCond:UserControl {
-  private static readonly double countryNameElemWidth = UIUtil.CalcDataListElemWidth(3);
-  private static readonly double winCondElemsWidth = UIUtil.CalcDataListElemWidth(45);
-  private static readonly List<Border> winCondBorders = [];
+  internal ObservableCollection<WinCondData> winCondDataList1 = [];
+  internal ObservableCollection<WinCondData> winCondDataList2 = [];
   internal WinCond(Grid contentGrid) {
     InitializeComponent();
     MyInit(this,contentGrid);
-    static void MyInit(WinCond page,Grid contentGrid) {
+    void MyInit(WinCond page,Grid contentGrid) {
       page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
       SetUIElements(page);
-      static void SetUIElements(WinCond page) {
+      void SetUIElements(WinCond page) {
         page.WinCondScenarioName1.Text = BaseData.scenarios.ElementAtOrDefault(0)?.Value;
-        page.WinCondListPanel1.MySetChildren([.. CreateWinCondList(0,2)]).MyApplyA(v => { v.BorderThickness = UIUtil.dataListFrameThickness; v.BorderBrush = UIUtil.dataListFrameColor.ToBrush(); });
         page.WinCondScenarioName2.Text = BaseData.scenarios.ElementAtOrDefault(1)?.Value;
-        page.WinCondListPanel2.MySetChildren([.. CreateWinCondList(1,2)]).MyApplyA(v => { v.BorderThickness = UIUtil.dataListFrameThickness; v.BorderBrush = UIUtil.dataListFrameColor.ToBrush(); });
-        static StackPanel[] CreateWinCondList(int scenarioNo,int chunkBlockNum) {
-          ScenarioData? maybeScenarioData = Scenario.scenarios.MyNullable().ElementAtOrDefault(scenarioNo)?.Value;
-          Dictionary<ECountry,CountryData>[] chunkedCountryDataMaps = maybeScenarioData?.CountryMap.MyApplyF(elems => elems.OrderBy(v => v.Key).Chunk((int)Math.Ceiling((double)elems.Count / chunkBlockNum))).Select(v => v.ToDictionary()).ToArray() ?? [];
-          return maybeScenarioData?.MyApplyF(scenarioInfo => chunkedCountryDataMaps.Select(chunkedCountryInfoMap => CreateWinCondPanel(scenarioInfo,chunkedCountryInfoMap)).ToArray()) ?? [];
-          static StackPanel CreateWinCondPanel(ScenarioData scenarioInfo,Dictionary<ECountry,CountryData> includeCountryInfoMap) {
-            return new StackPanel { Background = UIUtil.dataListFrameColor.ToBrush() }.MySetChildren([
-              CreateCountryDataLine(new Color(255,240,240,240),new TextBlock { Text="陣営名",HorizontalAlignment=HorizontalAlignment.Center },[new TextBlock { Text="勝利条件",HorizontalAlignment=HorizontalAlignment.Center }]),
-              .. includeCountryInfoMap.Select(countryInfo => CreateCountryDataLine(
-                scenarioInfo.CountryMap.GetValueOrDefault(countryInfo.Key)?.ViewColor??new(0,0,0,0),
-                new TextBlock { Text=countryInfo.Key.ToString(),HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Center },
-                scenarioInfo.WinConditionMap.GetValueOrDefault(countryInfo.Key)?.Messages?.MyApplyF(messages=>new List<UIElement?>{
-                  messages.ElementAtOrDefault(0)?.MyApplyF(v=>string.Join('＆',v)).MyApplyF(v=>new TextBlock { Text=v,HorizontalAlignment=HorizontalAlignment.Left }),
-                  messages.ElementAtOrDefault(1)?.MyApplyF(v=>string.Join(' ',v)).MyApplyF(v=>new TextBlock { Text=v,HorizontalAlignment=HorizontalAlignment.Left })
-                }).MyNonNull() ?? []
-              ))
-            ]);
-            static StackPanel CreateCountryDataLine(Color backColor,UIElement countryNameElem,List<UIElement> winCondElems) {
-              Border winCond = new Border { Width = winCondElemsWidth,BorderThickness = UIUtil.dataListFrameThickness,BorderBrush = UIUtil.dataListFrameColor.ToBrush() }.MySetChild(new StackPanel().MySetChildren(winCondElems));
-              winCondBorders.Add(winCond); 
-              return new StackPanel { Orientation = Orientation.Horizontal,Background = backColor.ToBrush() }.MySetChildren([
-                new Border{ Width=countryNameElemWidth,BorderThickness=UIUtil.dataListFrameThickness,BorderBrush=UIUtil.dataListFrameColor.ToBrush(),VerticalAlignment=VerticalAlignment.Stretch }.MySetChild(countryNameElem),
-                winCond
-              ]);
-            }
+        (Scenario.scenarios.Values.ElementAtOrDefault(0)?.MyApplyF(v => GetWinCondListData(v)) ?? []).ForEach(winCondDataList1.Add);
+        (Scenario.scenarios.Values.ElementAtOrDefault(1)?.MyApplyF(v => GetWinCondListData(v)) ?? []).ForEach(winCondDataList2.Add);
+        List<WinCondData> GetWinCondListData(ScenarioData scenario) {
+          return [.. scenario.CountryMap.Select(ToCountryListItem)];
+          WinCondData ToCountryListItem(KeyValuePair<ECountry,CountryData> countryInfo) {
+            return new WinCondData(
+              countryInfo.Value.ViewColor.ToBrush(),
+              countryInfo.Key,
+              scenario.WinConditionMap.GetValueOrDefault(countryInfo.Key)?.Messages.ElementAtOrDefault(0)?.MyApplyF(v => string.Join('＆',v)),
+              scenario.WinConditionMap.GetValueOrDefault(countryInfo.Key)?.Messages.ElementAtOrDefault(1)?.MyApplyF(v => string.Join(' ',v))
+            );
           }
         }
       }
+      static void ResizeElem(WinCond page,double scaleFactor) {
+        double pageWidth = page.RenderSize.Width;
+        double contentWidth = pageWidth / scaleFactor - 5;
+        page.Scroll.Width = pageWidth;
+        page.ContentPanel.Width = contentWidth;
+        page.ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
+        page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+      }
     }
-  }
-  internal static void ResizeElem(WinCond page,double scaleFactor) {
-    double pageWidth = page.RenderSize.Width;
-    double contentWidth = pageWidth / scaleFactor - 5;
-    page.Scroll.Width = pageWidth;
-    page.ContentPanel.Width = contentWidth;
-    page.ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
-    winCondBorders.ForEach(v => v.MaxWidth = contentWidth - countryNameElemWidth);
-    page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
   }
 }
