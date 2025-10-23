@@ -4,6 +4,9 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using SkiaSharp;
+using SkiaSharp.Views.Windows;
+using Svg.Skia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +15,7 @@ namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class UIUtil {
   internal enum ViewMode { fit, fix };
   internal enum PersonViewSortMode { Country_Role_BirthYear, Rank_BirthYear, BirthYear, DeathYear };
-  internal static readonly DispatcherQueue dispatcher = DispatcherQueue.GetForCurrentThread();
+  internal static SKSvg? mapSvg = null;
   internal static ViewMode viewMode = ViewMode.fix;
   internal static List<Action> SwitchViewModeActions = [];
   internal static List<Action> SaveGameActions = [];
@@ -42,6 +45,18 @@ internal static class UIUtil {
   internal static readonly int capitalPieceColumnNum = 5;
   internal static readonly int capitalPieceCellNum = capitalPieceRowNum * capitalPieceColumnNum;
   internal static readonly string[] yearItems = ["春","夏","秋","冬"];
+  internal static void MapCanvas_PaintSurface(SKPaintSurfaceEventArgs e) {
+    if(mapSvg?.Picture is SKPicture picture && picture.CullRect.Width > 0 && picture.CullRect.Height > 0) {
+      float scale = Math.Max(e.Info.Width / picture.CullRect.Width,e.Info.Height / picture.CullRect.Height);
+      float offsetX = (e.Info.Width - picture.CullRect.Width * scale) / 2;
+      float offsetY = (e.Info.Height - picture.CullRect.Height * scale) / 2;
+      e.Surface.Canvas.Save();
+      e.Surface.Canvas.Translate(offsetX,offsetY);
+      e.Surface.Canvas.Scale(scale);
+      e.Surface.Canvas.DrawPicture(picture);
+      e.Surface.Canvas.Restore();
+    }
+  }
   internal static double CalcFullWidthTextLength(string str) => str.Length - str.Count("0123456789-.()".Contains) * 0.4 - str.Count(" ".Contains) * 0.8;
   internal static double CalcDataListElemWidth(double textlength) => BasicStyle.fontsize * textlength + dataMargin.Left + dataMargin.Right;
   internal static void SwitchViewMode() {

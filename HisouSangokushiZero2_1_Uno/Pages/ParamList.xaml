@@ -20,10 +20,11 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" Text="{x:Bind Country}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <StackPanel Grid.Column="2" Margin="1" Orientation="Horizontal">
+        <!--<StackPanel Grid.Column="2" Margin="1" Orientation="Horizontal">
           <TextBlock Text="{x:Bind Role}" VerticalAlignment="Center"/>
-          <Image Source="{x:Bind RoleImage}" Height="25" VerticalAlignment="Center"/>                
-        </StackPanel>
+          <Image Source="{x:Bind RoleImage}" Height="25" VerticalAlignment="Center"/>              
+        </StackPanel>-->
+        <TextBlock Grid.Column="2" Text="{x:Bind Role}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/><!--test swap-->
         <TextBlock Grid.Column="3" Text="{x:Bind Rank}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Grid.Column="4" Text="{x:Bind BirthYear}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Grid.Column="5" Text="{x:Bind AppearYear}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
@@ -47,8 +48,8 @@
   <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ１："/>
-        <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
+        <TextBlock FontFamily="{StaticResource SourceHanSansJP-Bold}" Text="シナリオ１："/>
+        <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource SourceHanSansJP-Bold}"/>
       </StackPanel>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="SortButtonPanel1" Orientation="Horizontal" HorizontalAlignment="Center"/>
@@ -71,8 +72,8 @@
       </StackPanel>
       <ListView x:Name="CountryListView1" MaxWidth="1500" Height="500" ItemsSource="{x:Bind countryDataList1,Mode=OneWay}" ItemTemplate="{StaticResource CountryListView}" Background="#CCC"/>
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource Source Han Sans JP Bold}" Text="シナリオ２："/>
-        <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource Source Han Sans JP Bold}"/>
+        <TextBlock FontFamily="{StaticResource SourceHanSansJP-Bold}" Text="シナリオ２："/>
+        <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource SourceHanSansJP-Bold}"/>
       </StackPanel>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="SortButtonPanel2" Orientation="Horizontal" HorizontalAlignment="Center"/>

@@ -12,8 +12,9 @@ public partial class App:Application {
 	/// executed, and as such is the logical equivalent of main() or WinMain().
 	/// </summary>
 	public App() {
+    SkiaSharp.SKGraphics.SetResourceCacheTotalByteLimit(16 * 1024 * 1024);//add code:16MB
     InitializeComponent();
-    FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/SourceHanSansJP-Medium.otf";
+    FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/SourceHanSansJP-Medium.woff2";//add code:set defaultFont
   }
 	protected Window? MainWindow { get; private set; }
 	protected override void OnLaunched(LaunchActivatedEventArgs args) {

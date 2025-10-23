@@ -5,11 +5,12 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:skia="using:SkiaSharp.Views.Windows"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
 	mc:Ignorable="d"
 	x:Name="Page" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="False" Background="#EEFE">
-  <Grid	x:Name="ContentGrid">
+  <Grid	x:Name="ContentGrid" MaxWidth="{x:Bind code:UIUtil.fixModeMaxWidth}">
     <Grid.RowDefinitions>
       <RowDefinition Height="{x:Bind code:UIUtil.scaleSliderHeight}"/>
       <RowDefinition/>
@@ -26,7 +27,7 @@
     <ScrollViewer x:Name="MapScroll" Grid.Row="1">
       <Grid x:Name="MapPanel">
         <Grid x:Name="MapInnerPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{x:Bind code:UIUtil.mapSize.Width}" Height="{x:Bind code:UIUtil.mapSize.Height}">
-          <Image Source="ms-appx:///Assets/Svg/map.svg" Stretch="Fill"></Image>
+          <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="100" Height="100"/>
           <Canvas x:Name="MapElementsCanvas"/>
           <Canvas x:Name="MapAnimationElementsCanvas"/>
         </Grid>
@@ -36,7 +37,7 @@
     <StackPanel x:Name="TurnWinCondPanel" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
     <Canvas x:Name="CountryPostsPanel" Grid.Row="2" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
     <local:StateInfo x:Name="StateInfoPanel" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-    <Grid x:Name="InfoLayoutPanel" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
+    <Grid x:Name="InfoLayoutPanel" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition/>
@@ -89,10 +90,13 @@
         <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5"/>
       </Grid>
     </Grid>
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.RowSpan="2">
-      <local:Ask x:Name="AskPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-      <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-      <Canvas x:Name="MovePersonCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      <local:Ask x:Name="AskPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+      <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+      <Canvas x:Name="MovePersonCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Grid>
+    <Grid x:Name="LoadingImagePanel" Grid.Row="0" Grid.RowSpan="3" Background="#EEF" MaxWidth="{x:Bind code:UIUtil.fixModeMaxWidth}">
+      <TextBlock Text="UI構築中.." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" LineHeight="40"/>
     </Grid>
   </Grid>
 </Page>

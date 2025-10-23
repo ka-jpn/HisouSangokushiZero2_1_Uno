@@ -7,7 +7,6 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Linq;
-using System.Net.NetworkInformation;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using Size = Windows.Foundation.Size;
 using Text = HisouSangokushiZero2_1_Uno.Code.Text;

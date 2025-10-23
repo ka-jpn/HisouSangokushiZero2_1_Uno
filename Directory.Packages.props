@@ -22,8 +22,10 @@
     <UnoDragDropExternalSupport>false</UnoDragDropExternalSupport>
     <UnoXamlResourcesTrimming>true</UnoXamlResourcesTrimming>
     <WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
+    <!--<RunAOTCompilation>true</RunAOTCompilation>-->
     <WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>
     <PublishTrimmed>true</PublishTrimmed>
+    <!--<InvariantGlobalization>true</InvariantGlobalization>-->
     <WasmShellEnableSkia>true</WasmShellEnableSkia>
   </PropertyGroup>
 </Project>
