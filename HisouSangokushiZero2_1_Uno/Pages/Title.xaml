@@ -8,7 +8,7 @@
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#EEFE">
   <Grid x:Name="Content">
     <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Viewbox x:Name="TitleContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Height="50"/>
         <TextBlock Text="悲愴三国志" HorizontalAlignment="Center" FontSize="66" LineHeight="70"/>

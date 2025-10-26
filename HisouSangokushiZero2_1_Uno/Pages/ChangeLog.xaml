@@ -44,7 +44,7 @@
         <TextBlock Text="2025/09/26 ver1.11 人物リストのソートボタン導入"/>
         <TextBlock Text="2025/10/06 ver1.12 拡大・縮小表示スライダー導入"/>
         <TextBlock Text="2025/10/17 ver1.13 細かいUIの改善"/>
-        <TextBlock Text="2025/10/23 ver1.14 スマホでの動作安定化対応"/>
+        <TextBlock Text="2025/10/24 ver1.14 スマホでの動作安定化対応"/>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>

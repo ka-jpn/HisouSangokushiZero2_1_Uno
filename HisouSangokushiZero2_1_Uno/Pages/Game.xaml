@@ -95,7 +95,7 @@
       <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
       <Canvas x:Name="MovePersonCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
-    <Grid x:Name="LoadingImagePanel" Grid.Row="0" Grid.RowSpan="3" Background="#EEF" MaxWidth="{x:Bind code:UIUtil.fixModeMaxWidth}">
+    <Grid x:Name="LoadingImagePanel" Grid.Row="0" Grid.RowSpan="3" Background="#EEF">
       <TextBlock Text="UI構築中.." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" LineHeight="40"/>
     </Grid>
   </Grid>

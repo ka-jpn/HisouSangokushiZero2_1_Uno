@@ -1,6 +1,5 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using HisouSangokushiZero2_1_Uno.Pages;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -45,14 +44,17 @@ internal static class UIUtil {
   internal static readonly int capitalPieceColumnNum = 5;
   internal static readonly int capitalPieceCellNum = capitalPieceRowNum * capitalPieceColumnNum;
   internal static readonly string[] yearItems = ["春","夏","秋","冬"];
+  internal static Task loadFontTask = new(() => { });
+  internal static Task loadMapTask = new(() => { });
   internal static void MapCanvas_PaintSurface(SKPaintSurfaceEventArgs e) {
     if(mapSvg?.Picture is SKPicture picture && picture.CullRect.Width > 0 && picture.CullRect.Height > 0) {
-      float scale = Math.Max(e.Info.Width / picture.CullRect.Width,e.Info.Height / picture.CullRect.Height);
+      float ratio = (float)(mapSize.Width / mapSize.Height);
+      float scale = Math.Max(e.Info.Width / picture.CullRect.Width,e.Info.Height / picture.CullRect.Height * ratio);
       float offsetX = (e.Info.Width - picture.CullRect.Width * scale) / 2;
-      float offsetY = (e.Info.Height - picture.CullRect.Height * scale) / 2;
+      float offsetY = (e.Info.Height - picture.CullRect.Height * scale / ratio) / 2;
       e.Surface.Canvas.Save();
       e.Surface.Canvas.Translate(offsetX,offsetY);
-      e.Surface.Canvas.Scale(scale);
+      e.Surface.Canvas.Scale(scale,scale / ratio);
       e.Surface.Canvas.DrawPicture(picture);
       e.Surface.Canvas.Restore();
     }

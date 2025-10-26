@@ -27,5 +27,6 @@
     <PublishTrimmed>true</PublishTrimmed>
     <!--<InvariantGlobalization>true</InvariantGlobalization>-->
     <WasmShellEnableSkia>true</WasmShellEnableSkia>
+    <UnoDefaultFont>None</UnoDefaultFont>
   </PropertyGroup>
 </Project>

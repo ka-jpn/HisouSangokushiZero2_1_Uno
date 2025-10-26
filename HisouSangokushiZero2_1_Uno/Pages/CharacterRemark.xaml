@@ -10,7 +10,7 @@
       <StackPanel Orientation="Horizontal">
         <Grid VerticalAlignment="Center">
           <Path x:Name="RemarkFrame" StrokeThickness="1" Stroke="Black" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-          <TextBlock x:Name="RemarkText" MaxWidth="550" />
+          <TextBlock x:Name="RemarkText" MaxWidth="550"/>
         </Grid>
         <StackPanel VerticalAlignment="Center">
           <StackPanel Height="30"/>

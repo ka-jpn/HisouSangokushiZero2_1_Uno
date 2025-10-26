@@ -48,8 +48,8 @@
   <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource SourceHanSansJP-Bold}" Text="シナリオ１："/>
-        <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource SourceHanSansJP-Bold}"/>
+        <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ１："/>
+        <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource SourceHanSansJPBold}"/>
       </StackPanel>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="SortButtonPanel1" Orientation="Horizontal" HorizontalAlignment="Center"/>
@@ -72,8 +72,8 @@
       </StackPanel>
       <ListView x:Name="CountryListView1" MaxWidth="1500" Height="500" ItemsSource="{x:Bind countryDataList1,Mode=OneWay}" ItemTemplate="{StaticResource CountryListView}" Background="#CCC"/>
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource SourceHanSansJP-Bold}" Text="シナリオ２："/>
-        <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource SourceHanSansJP-Bold}"/>
+        <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ２："/>
+        <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource SourceHanSansJPBold}"/>
       </StackPanel>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="SortButtonPanel2" Orientation="Horizontal" HorizontalAlignment="Center"/>

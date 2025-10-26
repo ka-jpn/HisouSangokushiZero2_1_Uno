@@ -1,35 +1,30 @@
 ﻿using HisouSangokushiZero2_1_Uno.Code;
-using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Svg.Skia;
 using System;
-using System.IO;
 using System.Linq;
-using Windows.Storage;
-using Windows.Storage.Streams;
+using Windows.UI.Core;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class Title:Page {
   public Title() {
     InitializeComponent();
     MyInit(this);
-    async void MyInit(Title page) {
+    void MyInit(Title page) {
+      Task.Run(async () => await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,async () => {
+        await BeforeNavigate.WaitForFonts();
+        RefreshViewMode(page);
+        page.TitleContent.Visibility = Visibility.Visible;
+      }));
       page.MapCanvas.PaintSurface += (_,e) => UIUtil.MapCanvas_PaintSurface(e);
+      page.MapCanvas.Invalidate();
       page.StartButton.Click += (_,_) => { GameData.game = GetInitGameData(); NavigateToGamePage(); };
       page.LoadButton.Click += async (_,_) => { GameData.game = (await Storage.ReadStorageData(1)).Item2 ?? GetInitGameData(); NavigateToGamePage(); };
       page.TopSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
       page.Content.SizeChanged += (_,_) => ScalingElements(page,GameData.game,UIUtil.GetScaleFactor(page.Content.RenderSize,1));
       UIUtil.SwitchViewModeActions.Add(() => { RefreshViewMode(page); ScalingElements(page,GameData.game,UIUtil.GetScaleFactor(page.Content.RenderSize,1)); });
-      RefreshViewMode(page);
-      await ReadMapSvg();
-      page.MapCanvas.Invalidate();
-      async Task ReadMapSvg() {
-        using IRandomAccessStreamWithContentType stream = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Svg/map.svg")).AsTask().ContinueWith(f => f.Result.OpenReadAsync().AsTask()).Unwrap();
-        using Stream netStream = stream.AsStreamForRead();        
-        UIUtil.mapSvg = new SKSvg().MyApplyA(svg=> svg.Load(netStream));
-      }
+      
       GameState GetInitGameData() => GetGame.GetInitGameScenario(BaseData.scenarios.FirstOrDefault());
       void NavigateToGamePage() => (Window.Current?.Content as Frame)?.Navigate(typeof(Game));
       void RefreshViewMode(Title page) {

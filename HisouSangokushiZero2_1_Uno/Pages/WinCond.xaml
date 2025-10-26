@@ -23,13 +23,13 @@
   <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource SourceHanSansJP-Bold}" Text="シナリオ１："/>
-        <TextBlock x:Name="WinCondScenarioName1" FontFamily="{StaticResource SourceHanSansJP-Bold}"/>
+        <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ１："/>
+        <TextBlock x:Name="WinCondScenarioName1" FontFamily="{StaticResource SourceHanSansJPBold}"/>
       </StackPanel>
       <ListView x:Name="WinCondListView1" MaxWidth="1500" Height="500" ItemsSource="{x:Bind winCondDataList1,Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource SourceHanSansJP-Bold}" Text="シナリオ２："/>
-        <TextBlock x:Name="WinCondScenarioName2" FontFamily="{StaticResource SourceHanSansJP-Bold}"/>
+        <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ２："/>
+        <TextBlock x:Name="WinCondScenarioName2" FontFamily="{StaticResource SourceHanSansJPBold}"/>
       </StackPanel>
       <ListView x:Name="WinCondListView2" MaxWidth="1500" Height="500" ItemsSource="{x:Bind winCondDataList2,Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
     </StackPanel>

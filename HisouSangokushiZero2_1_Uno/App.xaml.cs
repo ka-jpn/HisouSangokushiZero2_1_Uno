@@ -1,3 +1,4 @@
+using HisouSangokushiZero2_1_Uno.Code;
 using HisouSangokushiZero2_1_Uno.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -12,15 +13,16 @@ public partial class App:Application {
 	/// executed, and as such is the logical equivalent of main() or WinMain().
 	/// </summary>
 	public App() {
-    SkiaSharp.SKGraphics.SetResourceCacheTotalByteLimit(16 * 1024 * 1024);//add code:16MB
+    //SkiaSharp.SKGraphics.SetResourceCacheTotalByteLimit(16 * 1024 * 1024);//16MB
     InitializeComponent();
-    FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/SourceHanSansJP-Medium.woff2";//add code:set defaultFont
+    FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/SourceHanSansJP-Medium.woff2";//set defaultFont
   }
 	protected Window? MainWindow { get; private set; }
-	protected override void OnLaunched(LaunchActivatedEventArgs args) {
-    MainWindow =new Window();
+	protected override async void OnLaunched(LaunchActivatedEventArgs args) {
+    await BeforeNavigate.ReadMapSvg();//add code
+    MainWindow = new Window();
 #if DEBUG
-		MainWindow.UseStudio();
+    MainWindow.UseStudio();
 #endif
 		// Do not repeat app initialization when the Window already has content,
 		// just ensure that the window is active
@@ -31,11 +33,11 @@ public partial class App:Application {
 			MainWindow.Content=rootFrame;
 			rootFrame.NavigationFailed+=OnNavigationFailed;
 		}
-		if(rootFrame.Content==null) {
-			// When the navigation stack isn't restored navigate to the first page,
-			// configuring the new page by passing required information as a navigation
-			// parameter
-			rootFrame.Navigate(typeof(Title),args.Arguments);
+    if(rootFrame.Content==null) {
+      // When the navigation stack isn't restored navigate to the first page,
+      // configuring the new page by passing required information as a navigation
+      // parameter
+      rootFrame.Navigate(typeof(Title),args.Arguments);
 		}
 		MainWindow.SetWindowIcon();
 		// Ensure the current window is active

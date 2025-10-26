@@ -37,8 +37,8 @@
 	<rect  x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#BBD' transform='rotate(330 50 50) translate(0 -30)'>
 		<animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.9166666666666666s' repeatCount='indefinite'/>
 	</rect>
-	<text x="21" y="40" font-size="11" font-family="Yu Gothic UI" fill="#669" font-weight="bold">読み込み中..</text>
-	<text x="24" y="50" font-size="8" font-family="Yu Gothic UI" fill="#669" font-weight="bold">Now Loading..</text>
-	<text x="21" y="70" font-size="5" font-family="Yu Gothic UI" fill="#669" font-weight="bold">＜この画面のままの場合は＞</text>
-	<text x="6" y="77" font-size="5" font-family="Yu Gothic UI" fill="#669" font-weight="bold">不具合をサイト掲示板まで報告お願いします</text>
+  <text x="21" y="40" font-size="11" font-family="Yu Gothic UI" fill="#669" font-weight="bold">読み込み中..</text>
+  <text x="24" y="50" font-size="8" font-family="Yu Gothic UI" fill="#669" font-weight="bold">Now Loading..</text>
+  <text x="21" y="70" font-size="5" font-family="Yu Gothic UI" fill="#669" font-weight="bold">＜この画面のままの場合は＞</text>
+  <text x="6" y="77" font-size="5" font-family="Yu Gothic UI" fill="#669" font-weight="bold">不具合をサイト掲示板まで報告お願いします</text>
 </svg>
