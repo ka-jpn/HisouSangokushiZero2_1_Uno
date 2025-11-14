@@ -17,7 +17,7 @@ internal static class Text {
   internal static string GetAttackJudgeText(AttackJudge attackJudge,Lang lang) => Ja.GetAttackJudgeText(attackJudge);
   internal static string BattleDeathCommanderPersonText(ERole role,List<PersonId> deathPersons,ECountry? battleCountry,Lang lang) => Ja.BattleDeathCommanderPersonText(role,deathPersons,battleCountry);
   internal static string RoleToText(ERole? role,Lang lang) => Ja.RoleToText(role);
-  internal static string EndPhaseButtonText(Phase phase,Lang lang) => Ja.EndPhaseButtonText(phase);
+  internal static string? EndPhaseButtonText(Phase phase,Lang lang) => Ja.EndPhaseButtonText(phase);
   internal static string? AppearPersonText(ECountry country,List<PersonId> appearPersons) => Ja.AppearPersonText(country,appearPersons);
   internal static string? FindPersonText(ECountry country,List<PersonId> findPersons) => Ja.FindPersonText(country,findPersons);
   internal static string? NaturalDeathPersonText(ECountry country,List<PersonId> deathPersons,Lang lang) => Ja.NaturalDeathPersonText(country,deathPersons);
@@ -46,7 +46,7 @@ internal static class Text {
     internal static string GetAttackJudgeText(AttackJudge attackJudge) => attackJudge switch { AttackJudge.crush => "大勝", AttackJudge.win => "辛勝", AttackJudge.lose => "惜敗", AttackJudge.rout => "大敗" };
     internal static string BattleDeathCommanderPersonText(ERole role,List<PersonId> deathPersons,ECountry? battleCountry) => $"{(role == ERole.attack ? $"{CountryText(battleCountry)}領に侵攻" : $"{CountryText(battleCountry)}軍の侵攻を守備")}した{string.Join("と",deathPersons.Select(v => v.Value))}が退却できず戦死";
     internal static string RoleToText(ERole? role) => role switch { ERole.central => "中枢", ERole.affair => "内政", ERole.defense => "防衛", ERole.attack => "攻撃", _ => string.Empty };
-    internal static string EndPhaseButtonText(Phase phase) => phase switch { Phase.Starting => string.Empty, Phase.Planning => "軍議終了", Phase.Execution => "確認", Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd => "ゲームログを表示" };
+    internal static string? EndPhaseButtonText(Phase phase) => phase switch { Phase.Starting => null, Phase.Planning => "軍議終了", Phase.Execution => "確認", Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd => "ゲームログを表示" };
     internal static string? AppearPersonText(ECountry country,List<PersonId> appearPersons) => appearPersons.Count != 0 ? $"{country}に{string.Join("と",appearPersons.Select(v => v.Value))}が登場" : null;
     internal static string? FindPersonText(ECountry country,List<PersonId> findPersons) => findPersons.Count != 0 ? $"{country}が{string.Join("と",findPersons.Select(v => v.Value))}を登用" : null;
     internal static string? NaturalDeathPersonText(ECountry country,List<PersonId> deathPersons) => deathPersons.Count != 0 ? $"{country}の{string.Join("と",deathPersons.Select(v => v.Value))}が死去" : null;

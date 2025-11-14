@@ -10,21 +10,13 @@
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
 	mc:Ignorable="d"
 	x:Name="Page" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="False" Background="#EEFE">
-  <Grid	x:Name="ContentGrid" MaxWidth="{x:Bind code:UIUtil.fixModeMaxWidth}">
+  <Grid	x:Name="ContentGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid.RowDefinitions>
-      <RowDefinition Height="{x:Bind code:UIUtil.scaleSliderHeight}"/>
       <RowDefinition/>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <Grid Grid.Row="0">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto"/>
-        <ColumnDefinition/>
-      </Grid.ColumnDefinitions>
-      <TextBlock Text="拡大・縮小" FontSize="16" LineHeight="16" VerticalAlignment="Center"/>
-      <Slider x:Name="ScaleSlider" Grid.Column="1" Minimum="0" Maximum="10" Value="{x:Bind local:Game.scaleLevel}" Margin="6,-6"/>
-    </Grid>
-    <ScrollViewer x:Name="MapScroll" Grid.Row="1">
+    <ScrollViewer x:Name="MapScroll" Grid.Row="0">
       <Grid x:Name="MapPanel">
         <Grid x:Name="MapInnerPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{x:Bind code:UIUtil.mapSize.Width}" Height="{x:Bind code:UIUtil.mapSize.Height}">
           <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="100" Height="100"/>
@@ -33,11 +25,15 @@
         </Grid>
       </Grid>
     </ScrollViewer>
-    <StackPanel x:Name="TurnLogPanel" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="450"/>
-    <StackPanel x:Name="TurnWinCondPanel" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-    <Canvas x:Name="CountryPostsPanel" Grid.Row="2" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
-    <local:StateInfo x:Name="StateInfoPanel" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-    <Grid x:Name="InfoLayoutPanel" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="220"/>
+    <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>    
+    <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
+    <Grid Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      <local:Ask x:Name="AskPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+      <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+      <Canvas x:Name="MovePersonCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Grid>
+    <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition/>
@@ -47,13 +43,13 @@
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <Button x:Name="TopSwitchViewModeButton" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" Background="#AFFF" Padding="0">
-        <TextBlock x:Name="SwitchViewModeButtonText"/>
+        <TextBlock FontSize="20" LineHeight="20" x:Name="SwitchViewModeButtonText"/>
       </Button>
       <Button x:Name="OpenLogButton" Grid.Column="1" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" HorizontalAlignment="Stretch"  Background="#AEFE" Padding="0">
-        <TextBlock Text="ログ"/>
+        <TextBlock FontSize="20" LineHeight="20" Text="ログ"/>
       </Button>
       <Button x:Name="OpenInfoButton" Grid.Row="1" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" VerticalAlignment="Stretch" Background="#AEEF" Padding="0">
-        <TextBlock Text="情&#xa;報" LineHeight="{x:Bind local:BasicStyle.fontsize}" Height="Auto"/>
+        <TextBlock FontSize="20" LineHeight="20" Text="情&#xa;報"/>
       </Button>
       <ScrollViewer x:Name="LogScrollPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AEFE" Visibility="Collapsed">
         <StackPanel x:Name="LogContentPanel" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -90,11 +86,7 @@
         <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5"/>
       </Grid>
     </Grid>
-    <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-      <local:Ask x:Name="AskPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-      <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-      <Canvas x:Name="MovePersonCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-    </Grid>
+    <local:StateInfo x:Name="StateInfoPanel" Grid.Row="2" HorizontalAlignment="Stretch"/>
     <Grid x:Name="LoadingImagePanel" Grid.Row="0" Grid.RowSpan="3" Background="#EEF">
       <TextBlock Text="UI構築中.." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" LineHeight="40"/>
     </Grid>

@@ -45,6 +45,7 @@
         <TextBlock Text="2025/10/06 ver1.12 拡大・縮小表示スライダー導入"/>
         <TextBlock Text="2025/10/17 ver1.13 細かいUIの改善"/>
         <TextBlock Text="2025/10/24 ver1.14 スマホでの動作安定化対応"/>
+        <TextBlock Text="2025/11/14 ver1.15 レイアウトの変更＆列伝導入開始"/>        
       </StackPanel>
     </StackPanel>
   </ScrollViewer>

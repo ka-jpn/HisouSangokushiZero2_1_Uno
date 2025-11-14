@@ -8,15 +8,14 @@ internal sealed partial class ChangeLog:UserControl {
     InitializeComponent();
     MyInit(this,contentGrid);
     static void MyInit(ChangeLog page,Grid contentGrid) {
-      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
+      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize));
     }
   }
   internal static void ResizeElem(ChangeLog page,double scaleFactor) {
-    double pageWidth = page.RenderSize.Width;
-    double contentWidth = pageWidth / scaleFactor - 5;
-    page.Scroll.Width = pageWidth;
+    double contentWidth = page.RenderSize.Width / scaleFactor - 5;
     page.ContentPanel.Width = contentWidth;
     page.ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
     page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+    page.Scroll.Width = page.RenderSize.Width;
   }
 }

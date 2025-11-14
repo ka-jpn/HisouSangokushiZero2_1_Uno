@@ -5,37 +5,48 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Center" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
+      <StackPanel Height="10"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <TextBlock x:Name="MapZoomCaption" Text="マップ" VerticalAlignment="Center" Width="50"/>
+        <Button x:Name="ZoomInButton" Width="150" Height="50" Margin="5,0" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
+          <TextBlock Text="拡大"/>
+        </Button>
+        <Button x:Name="ZoomOutButton" Width="150" Height="50" Margin="5,0" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
+          <TextBlock Text="縮小"/>
+        </Button>
+      </StackPanel>
       <StackPanel Height="20"/>
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
         <TextBlock x:Name="ViewModeCaption" Text="現在のビュー：" VerticalAlignment="Center"/>
-        <TextBlock x:Name="ViewModeText" VerticalAlignment="Center" Width="100"/>
-        <Button x:Name="InnerSwitchViewModeButton" Width="500" Height="60" Background="#AFFF" BorderBrush="Black">
+        <TextBlock x:Name="ViewModeText" VerticalAlignment="Center" Width="65"/>
+        <Button x:Name="InnerSwitchViewModeButton" Width="250" Height="40" Background="#AFFF" BorderBrush="Black">
           <TextBlock Text="モードを切り替える"/>
         </Button>
       </StackPanel>
-      <StackPanel Height="40"/>
-      <Button x:Name="SaveGameButton" Width="700" Height="100" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
+      <StackPanel Height="20"/>
+      <Button x:Name="SaveGameButton" Width="350" Height="50" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
         <TextBlock Text="セーブ"/>
       </Button>
-      <StackPanel Height="40"/>
-      <Button x:Name="LoadGameButton" Width="700" Height="100" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
+      <StackPanel Height="20"/>
+      <Button x:Name="LoadGameButton" Width="350" Height="50" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
         <TextBlock Text="ロード"/>
       </Button>
-      <StackPanel Height="40"/>
-      <Button x:Name="InitGameButton" Width="700" Height="100" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
+      <StackPanel Height="20"/>
+      <Button x:Name="InitGameButton" Width="350" Height="50" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
         <TextBlock Text="ゲームを初期化"/>
       </Button>
-      <StackPanel Height="40"/>
-      <Button x:Name="BackTitleButton" Width="700" Height="100" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
+      <StackPanel Height="20"/>
+      <Button x:Name="BackTitleButton" Width="350" Height="50" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
         <TextBlock Text="タイトルに戻る"/>
       </Button>
-      <StackPanel Height="40"/>
+      <StackPanel Height="20"/>
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
         <TextBlock Text="ver."/>
         <TextBlock Text="{x:Bind code:BaseData.version.Value}"/>
       </StackPanel>
+      <StackPanel Height="10"/>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

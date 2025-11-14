@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Uno.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
+		<TargetFrameworks>net10.0-browserwasm;net10.0-desktop</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<UnoSingleProject>true</UnoSingleProject>		
 		<!-- Display name -->
@@ -8,8 +8,8 @@
 		<!-- App Identifier -->
 		<ApplicationId>karintougames.HisouSangokushiZero2_1_Uno</ApplicationId>
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.14</ApplicationDisplayVersion>
-		<ApplicationVersion>1.14</ApplicationVersion>
+		<ApplicationDisplayVersion>1.15</ApplicationDisplayVersion>
+		<ApplicationVersion>1.15</ApplicationVersion>
 		<!-- Package Publisher -->
 		<ApplicationPublisher>かりんとう</ApplicationPublisher>
 		<!-- Package Description -->

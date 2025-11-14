@@ -12,11 +12,11 @@
     </ScrollViewer>
     <StackPanel Height="5"/>
     <StackPanel Orientation="Horizontal">
-      <Button x:Name="OkButton" Height="80" Background="#FEEE">
+      <Button x:Name="OkButton" Height="45" Background="#FEEE">
         <TextBlock x:Name="OkButtonText"/>
       </Button>
-      <StackPanel Width="10"/>
-      <Button x:Name="CloseButton" Height="80" Background="#FEEE">
+      <StackPanel Width="5"/>
+      <Button x:Name="CloseButton" Height="45" Background="#FEEE">
         <TextBlock Text="閉じる"/>
       </Button>
     </StackPanel>

@@ -22,9 +22,8 @@ internal sealed partial class Title:Page {
       page.StartButton.Click += (_,_) => { GameData.game = GetInitGameData(); NavigateToGamePage(); };
       page.LoadButton.Click += async (_,_) => { GameData.game = (await Storage.ReadStorageData(1)).Item2 ?? GetInitGameData(); NavigateToGamePage(); };
       page.TopSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
-      page.Content.SizeChanged += (_,_) => ScalingElements(page,GameData.game,UIUtil.GetScaleFactor(page.Content.RenderSize,1));
-      UIUtil.SwitchViewModeActions.Add(() => { RefreshViewMode(page); ScalingElements(page,GameData.game,UIUtil.GetScaleFactor(page.Content.RenderSize,1)); });
-      
+      page.Content.SizeChanged += (_,_) => ScalingElements(page,GameData.game,UIUtil.GetScaleFactor(page.Content.RenderSize));
+      UIUtil.SwitchViewModeActions.Add(() => { RefreshViewMode(page); ScalingElements(page,GameData.game,UIUtil.GetScaleFactor(page.Content.RenderSize)); });      
       GameState GetInitGameData() => GetGame.GetInitGameScenario(BaseData.scenarios.FirstOrDefault());
       void NavigateToGamePage() => (Window.Current?.Content as Frame)?.Navigate(typeof(Game));
       void RefreshViewMode(Title page) {

@@ -7,31 +7,40 @@
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
   <UserControl.Resources>
     <DataTemplate x:Key="WinCondListView" x:DataType="local:WinCondData">
-      <Grid MinHeight="0" Background="{x:Bind Brush}" HorizontalAlignment="Stretch">
+      <Grid Background="{x:Bind Brush}" HorizontalAlignment="Stretch" MinHeight="25" Padding="0,0,0,1">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="100"/>
+          <ColumnDefinition Width="50"/>
           <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" Text="{x:Bind Country}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
         <StackPanel Grid.Column="1" Margin="1"  VerticalAlignment="Center">
-          <TextBlock Text="{x:Bind WinCondText1}" TextAlignment="Start"/>
-          <TextBlock Text="{x:Bind WinCondText2}" TextAlignment="Start"/>
+          <TextBlock Text="{x:Bind WinCondText}" TextAlignment="Start" Padding="5,0,0,0"/>
         </StackPanel>
       </Grid>
     </DataTemplate>
   </UserControl.Resources>
-  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Center" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
         <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ１："/>
         <TextBlock x:Name="WinCondScenarioName1" FontFamily="{StaticResource SourceHanSansJPBold}"/>
       </StackPanel>
-      <ListView x:Name="WinCondListView1" MaxWidth="1500" Height="500" ItemsSource="{x:Bind winCondDataList1,Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
+      <StackPanel Orientation="Horizontal" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Background="#EEE">
+        <TextBlock Text="陣営" TextAlignment="Center" Width="50"/>
+        <TextBlock Text="勝利条件" MaxWidth="700" Padding="5,0,0,0" />
+      </StackPanel>
+      <ListView x:Name="WinCondListView1" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Height="{x:Bind local:WinCond.listviewHeight}" ItemsSource="{x:Bind winCondDataList1,Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
+      <StackPanel Height="2"></StackPanel>
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
         <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ２："/>
         <TextBlock x:Name="WinCondScenarioName2" FontFamily="{StaticResource SourceHanSansJPBold}"/>
       </StackPanel>
-      <ListView x:Name="WinCondListView2" MaxWidth="1500" Height="500" ItemsSource="{x:Bind winCondDataList2,Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
+      <StackPanel Orientation="Horizontal" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Background="#EEE">
+        <TextBlock Text="陣営名" TextAlignment="Center" Width="50"/>
+        <TextBlock Text="勝利条件" MaxWidth="700" Padding="5,0,0,0" />
+      </StackPanel>
+      <ListView x:Name="WinCondListView2" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Height="{x:Bind local:WinCond.listviewHeight}" ItemsSource="{x:Bind winCondDataList2,Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
+      <StackPanel Height="2"></StackPanel>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

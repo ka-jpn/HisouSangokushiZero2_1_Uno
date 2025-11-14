@@ -12,10 +12,10 @@ using Size = Windows.Foundation.Size;
 using Text = HisouSangokushiZero2_1_Uno.Code.Text;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class CharacterRemark:UserControl {
-  static readonly double RemarkFrameCornerRadius = 10;
-  static readonly double PersonImageSize = 150;
-  static string nowPersonImageName = Text.GetRemarkPersonName(null,true,Lang.ja);
-  static bool resetPersonImageSource = false;
+  private static readonly double remarkFrameCornerRadius = 5;
+  internal static readonly double personImageSize = 75;
+  private static string nowPersonImageName = Text.GetRemarkPersonName(null,true,Lang.ja);
+  private static bool resetPersonImageSource = false;
   internal CharacterRemark() {
     InitializeComponent();
     MyInit(this);
@@ -29,8 +29,8 @@ internal sealed partial class CharacterRemark:UserControl {
     string newPersonImageName = Text.GetRemarkPersonName(country,isAliveCharacter,Lang.ja);
     page.PersonName.Text = newPersonImageName;
     page.RemarkText.Text = contents.FirstOrDefault() ?? string.Empty;
-    page.buttonPanel.MySetChildren([CreateButton(page,country,[.. contents.Skip(1)],parent,isAliveCharacter,Game.scaleLevel)]);
-    ResizeElem(page,parent.RenderSize,UIUtil.GetScaleFactor(parent.RenderSize,Game.scaleLevel));
+    page.buttonPanel.MySetChildren([CreateButton(page,country,[.. contents.Skip(1)],parent,isAliveCharacter,UIUtil.zoomLevel)]);
+    ResizeElem(page,parent.RenderSize,UIUtil.GetScaleFactor(parent.RenderSize));
     if(nowPersonImageName == newPersonImageName) {
       page.Visibility = Visibility.Visible;
     } else {
@@ -39,23 +39,23 @@ internal sealed partial class CharacterRemark:UserControl {
     }
     nowPersonImageName = newPersonImageName;
     static Button CreateButton(CharacterRemark page,ECountry? country,string[] remainContents,UIElement parent,bool isAliveCharacter,double scaleLevel) {
-      return new Button { Width = 200,Height = 50,Background = Colors.FromARGB(34,0,0,0) }.MySetChild(new TextBlock { Text = remainContents.MyIsEmpty() ? "閉じる" : "次へ" }).MyApplyA(button =>
+      return new Button { Width = 100,Height = 25,Background = Colors.FromARGB(34,0,0,0) }.MySetChild(new TextBlock { Text = remainContents.MyIsEmpty() ? "閉じる" : "次へ" }).MyApplyA(button =>
         button.Click += (_,_) => { if(remainContents.MyIsEmpty()) { page.Visibility = Visibility.Collapsed; } else { SetElems(page,country,remainContents,parent,isAliveCharacter); } }
       );
     }
   }
   internal static void ResizeElem(CharacterRemark page,Size parentSize,double scaleFactor) {
-    page.Margin = new(parentSize.Width * (scaleFactor / 1.2 - 1),parentSize.Height * (scaleFactor / 1.2 - 1));
+    page.Margin = new(parentSize.Width / (scaleFactor * 1.2) * (scaleFactor / 1.2 - 1),parentSize.Height / (scaleFactor * 1.2) * (scaleFactor / 1.2 - 1));
     page.Width = parentSize.Width / (scaleFactor * 1.2);
     page.Height = parentSize.Height / (scaleFactor * 1.2);
     page.RenderTransform = new ScaleTransform { ScaleX = scaleFactor * 1.2,ScaleY = scaleFactor * 1.2,CenterX = page.Width / 2,CenterY = page.Height / 2 };
     page.RemarkText.Width = double.NaN;
     page.RemarkText.Height = double.NaN;
     page.RemarkText.Margin = new Thickness(0);
-    page.RemarkText.Measure(parentSize with { Width = parentSize.Width / (scaleFactor * 1.2) - PersonImageSize - RemarkFrameCornerRadius * 3 - 20 });
+    page.RemarkText.Measure(parentSize with { Width = parentSize.Width / (scaleFactor * 1.2) - personImageSize - remarkFrameCornerRadius * 3 - 20 });
     page.RemarkText.Width = page.RemarkText.DesiredSize.Width;
     page.RemarkText.Height = page.RemarkText.DesiredSize.Height;
-    page.RemarkFrame.Data = RemarkFrameCornerRadius.MyApplyF(v => (page.RemarkText.Width + RemarkFrameCornerRadius * 3).MyApplyF(width => (page.RemarkText.Height + RemarkFrameCornerRadius * 2).MyApplyF(height =>
+    page.RemarkFrame.Data = remarkFrameCornerRadius.MyApplyF(v => (page.RemarkText.Width + remarkFrameCornerRadius * 3).MyApplyF(width => (page.RemarkText.Height + remarkFrameCornerRadius * 2).MyApplyF(height =>
       new PathGeometry {
         Figures = [ new PathFigure {
           StartPoint=new(width-v,height-v),
@@ -75,6 +75,6 @@ internal sealed partial class CharacterRemark:UserControl {
         } ]
       }
     )));
-    page.RemarkText.Margin = new Thickness(RemarkFrameCornerRadius,RemarkFrameCornerRadius,RemarkFrameCornerRadius * 2,RemarkFrameCornerRadius);
+    page.RemarkText.Margin = new Thickness(remarkFrameCornerRadius,remarkFrameCornerRadius,remarkFrameCornerRadius * 2,remarkFrameCornerRadius);
   }
 }

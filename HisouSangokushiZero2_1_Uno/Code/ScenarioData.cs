@@ -605,10 +605,10 @@ internal static class Scenario {
           },
           {ECountry.士燮,new(
             [
-              ["西暦210年以降","8都市以上領有","龍編を領有"],
+              ["西暦210年以降","8都市以上領有","龍編を領有","資金1000以上所持"],
               ["※西暦210年以降4年毎1都市緩和"],
             ],
-            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.士燮)>=8-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.士燮,[EArea.龍編]),
+            (game)=>Turn.GetYear(game)>=210&&Country.GetAreaNum(game,ECountry.士燮)>=8-Math.Max(0,Turn.GetYear(game)-210)/4&&Country.HasAreas(game,ECountry.士燮,[EArea.龍編])&&Country.GetFund(game,ECountry.士燮)>=1000,
             (game)=>new() {
               { "西暦210年以降",Turn.GetYear(game)>=210 },
               { $"{8-Math.Max(0,Turn.GetYear(game)-210)/4}都市以上領有",Country.GetAreaNum(game,ECountry.士燮)>=8-Math.Max(0,Turn.GetYear(game)-210)/4 },
@@ -616,7 +616,8 @@ internal static class Scenario {
               { "― ※西暦210年以降4年毎1都市緩和",null},
               { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)/4}都市緩和適用)",null },
               { $"― ※現在 中華領域{Country.GetAreaNum(game,ECountry.士燮)}都市",null },
-              { "龍編を領有",Country.HasAreas(game,ECountry.士燮,[EArea.龍編]) }
+              { "龍編を領有",Country.HasAreas(game,ECountry.士燮,[EArea.龍編]) },
+              { "資金1000以上所持",Country.GetFund(game,ECountry.士燮)>=1000 }
             })
           },
           {ECountry.南蛮,new(
@@ -1402,17 +1403,18 @@ internal static class Scenario {
         },
         {ECountry.士燮,new(
           [
-            ["西暦255年以降","9都市以上領有"],
+            ["西暦255年以降","9都市以上領有","資金1000以上所持"],
             ["※西暦255年以降4年毎1都市緩和"],
           ],
-          (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.士燮)>=9-(Turn.GetYear(game)-255)/4,
+          (game)=>Turn.GetYear(game)>=255&&Country.GetAreaNum(game,ECountry.士燮)>=9-(Turn.GetYear(game)-255)/4&&Country.GetFund(game,ECountry.士燮)>=1000,
           (game)=>new(){
             { "西暦255年以降",Turn.GetYear(game)>=255 },
             { $"{9-Math.Max(0,Turn.GetYear(game)-255)/4}都市以上領有",Country.GetAreaNum(game,ECountry.士燮)>=9-Math.Max(0,Turn.GetYear(game)-255)/4 },
             { "― ※緩和前条件9都市",null},
             { "― ※西暦255年以降4年毎1都市緩和",null},
             { $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)/4}都市緩和適用)",null },
-            { $"― ※現在 {Country.GetAreaNum(game,ECountry.士燮)}都市",null }
+            { $"― ※現在 {Country.GetAreaNum(game,ECountry.士燮)}都市",null },
+            { "資金1000以上所持",Country.GetFund(game,ECountry.士燮)>=1000 }
           })
         },
         {ECountry.南蛮,new(

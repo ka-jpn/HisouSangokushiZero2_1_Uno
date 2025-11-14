@@ -30,7 +30,7 @@ internal sealed partial class Explain:UserControl {
     InitializeComponent();
     MyInit(this,contentGrid);
     static void MyInit(Explain page,Grid contentGrid) {
-      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize,Game.scaleLevel));
+      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize));
       SetAttackJudgeExplain(page);
       static void SetAttackJudgeExplain(Explain page) {
         page.AttackCrushFillColor.Background = ThresholdFillColor(AttackJudge.crush).ToBrush();
@@ -64,12 +64,12 @@ internal sealed partial class Explain:UserControl {
     static Point GetJudgePoint(AttackJudge? attackJudge,double rankDiff) => new(rankDiff * 0.09 + 0.5,Battle.GetThreshold(attackJudge,rankDiff));
   }
   internal static void ResizeElem(Explain page,double scaleFactor) {
-    double pageWidth = page.RenderSize.Width;
-    double contentWidth = pageWidth / scaleFactor - 5;
-    Size judgeViewSize = new(Math.Min(page.AttackJudgeExplainPanel.Width,contentWidth - page.BattleExplainCaption.DesiredSize.Width),page.AttackJudgeExplainPanel.Height);
-    page.ContentPanel.Width = contentWidth;
+    double contentWidth = page.RenderSize.Width / scaleFactor - 5;
+    Size judgeViewSize = new(Math.Min(page.AttackJudgeExplainPanel.MaxWidth,contentWidth - page.BattleExplainCaption.DesiredSize.Width),page.AttackJudgeExplainPanel.Height);
+    page.ContentPanel.Width = contentWidth; 
     page.ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
-    page.AttackJudgeExplainPanel.MaxWidth = judgeViewSize.Width;
+    page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+    page.AttackJudgeExplainPanel.Width = judgeViewSize.Width;
     judgePointMap.GetValueOrDefault(AttackJudge.crush)?.Values.Concat(judgePointMap.GetValueOrDefault(AttackJudge.win)?.Values.Reverse() ?? [])?.Select(crd => CookPoint(judgeViewSize,crd)).MyApplyA(crds => page.AttackCrushShape.Points = [.. crds.Select(v => new Windows.Foundation.Point(v.X,v.Y))]);
     judgePointMap.GetValueOrDefault(AttackJudge.win)?.Values.Concat(judgePointMap.GetValueOrDefault(AttackJudge.lose)?.Values.Reverse() ?? [])?.Select(crd => CookPoint(judgeViewSize,crd)).MyApplyA(crds => page.AttackWinShape.Points = [.. crds.Select(v => new Windows.Foundation.Point(v.X,v.Y))]);
     judgePointMap.GetValueOrDefault(AttackJudge.lose)?.Values.Concat(judgePointMap.GetValueOrDefault(AttackJudge.rout)?.Values.Reverse() ?? [])?.Select(crd => CookPoint(judgeViewSize,crd)).MyApplyA(crds => page.AttackLoseShape.Points = [.. crds.Select(v => new Windows.Foundation.Point(v.X,v.Y))]);
@@ -78,7 +78,6 @@ internal sealed partial class Explain:UserControl {
     judgeMaxPointRects.ToList().ForEach(elemMap => UpdateJudgePointCrds(judgeViewSize,elemMap.Value,judgeMaxPoints.GetValueOrDefault(elemMap.Key) ?? new(0,0)));
     judgeThresholdPointTexts.ToList().ForEach(judge => judge.Value.ToList().ForEach(elemMap => UpdateJudgePointCrds(judgeViewSize,elemMap.Value,judgePointMap.GetValueOrDefault(judge.Key)?.GetValueOrDefault(elemMap.Key) ?? new(0,0))));
     rankDiffTexts.ToList().ForEach(rankDiff => UpdateJudgePointCrds(judgeViewSize,rankDiff.Value,judgePointMap.GetValueOrDefault(AttackJudge.crush)?.GetValueOrDefault(rankDiff.Key) ?? new(0,0)));
-    page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
     static void UpdateJudgePointCrds(Size size,FrameworkElement elem,Point crd) => CookPoint(size,crd).MyApplyA(cookedCrd => {
       Canvas.SetLeft(elem,cookedCrd.X - elem.DesiredSize.Width / 2); Canvas.SetTop(elem,cookedCrd.Y - elem.DesiredSize.Height / 2);
     });
