@@ -14,48 +14,57 @@ namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class UIUtil {
   internal enum ViewMode { fit, fix };
   internal enum PersonViewSortMode { Country_Role_BirthYear, Rank_BirthYear, BirthYear, DeathYear };
-  internal static double zoomLevel = 0;
-  internal static SKSvg? mapSvg = null;
-  internal static ViewMode viewMode = ViewMode.fix;
-  internal static List<Action> ChangeScaleActions = [];
-  internal static List<Action> SwitchViewModeActions = [];
-  internal static List<Action> SaveGameActions = [];
-  internal static List<Action> LoadGameActions = [];
-  internal static List<Action> InitGameActions = [];
+  internal const double infoFrameWidth = 40;
+  internal const double infoButtonHeight = 40;
+  internal const double fixModeMaxWidth = 1000;
+  internal const double postFrameWidth = 1;
+  internal const double personRankFontScale = 1.25;
+  internal const double personNameFontScale = 1.3;
+  internal const double personPutFontScale = 1.6;
+  internal const int capitalPieceRowNum = 3;
+  internal const int capitalPieceColumnNum = 5;
+  internal const int capitalPieceCellNum = capitalPieceRowNum * capitalPieceColumnNum;
   internal static readonly Size mapSize = new(1000,875);
   internal static readonly Point mapGridCount = new(9,10);
-  internal static readonly GridLength infoFrameWidth = new(40);
-  internal static readonly GridLength infoButtonHeight = new(40);
-  internal const double fixModeMaxWidth = 1000;
-  internal static readonly Size areaSize = new(102,77.5);
+  internal static readonly Size areaSize = new(102,77);
   internal static readonly CornerRadius areaCornerRadius = new(15);
-  internal static readonly double postFrameWidth = 1;
-  internal static readonly Size personPutSize = new(49.5,35);
+  internal static readonly Size personPutSize = new(50,35);
   internal static readonly double countryPersonPutPanelHeight = personPutSize.Height * 4 + postFrameWidth * 2 * 2 + BasicStyle.textHeight;
-  internal static readonly double personRankFontScale = 1.25;
-  internal static readonly double personNameFontScale = 1.3;
-  internal static readonly double personPutFontScale = 1.6;
   internal static readonly Color landRoadColor = new(150,120,120,50);
   internal static readonly Color waterRoadColor = new(150,50,50,150);
   internal static readonly Color grayoutColor = new(100,100,100,100);
   internal static readonly Color transparentColor = new(0,0,0,0);
   internal static readonly Color dataBackColor = new(255,150,150,150);
   internal static readonly Thickness dataMargin = new(1);
-  internal static readonly int capitalPieceRowNum = 3;
-  internal static readonly int capitalPieceColumnNum = 5;
-  internal static readonly int capitalPieceCellNum = capitalPieceRowNum * capitalPieceColumnNum;
   internal static readonly string[] yearItems = ["春","夏","秋","冬"];
+  internal static double zoomLevel = 0;
+  internal static SKSvg? mapSvg = null;
+  internal static SKSvg? armySvg = null;
+  internal static ViewMode viewMode = ViewMode.fix;
+  internal static List<Action> ChangeScaleActions = [];
+  internal static List<Action> SwitchViewModeActions = [];
+  internal static List<Action> SaveGameActions = [];
+  internal static List<Action> LoadGameActions = [];
+  internal static List<Action> InitGameActions = [];
   internal static Task loadFontTask = new(() => { });
   internal static Task loadMapTask = new(() => { });
   internal static void MapCanvas_PaintSurface(SKPaintSurfaceEventArgs e) {
     if(mapSvg?.Picture is SKPicture picture && picture.CullRect.Width > 0 && picture.CullRect.Height > 0) {
       float ratio = (float)(mapSize.Width / mapSize.Height);
-      float scale = Math.Max(e.Info.Width / picture.CullRect.Width,e.Info.Height / picture.CullRect.Height * ratio);
-      float offsetX = (e.Info.Width - picture.CullRect.Width * scale) / 2;
-      float offsetY = (e.Info.Height - picture.CullRect.Height * scale / ratio) / 2;
+      float scale = Math.Max(e.Info.Width / picture.CullRect.Width / ratio,e.Info.Height / picture.CullRect.Height);
+      float offsetX = (e.Info.Width - picture.CullRect.Width * scale * ratio) / 2;
+      float offsetY = (e.Info.Height - picture.CullRect.Height * scale) / 2;
       e.Surface.Canvas.Save();
       e.Surface.Canvas.Translate(offsetX,offsetY);
-      e.Surface.Canvas.Scale(scale,scale / ratio);
+      e.Surface.Canvas.Scale(scale * ratio,scale);
+      e.Surface.Canvas.DrawPicture(picture);
+      e.Surface.Canvas.Restore();
+    }
+  }
+  internal static void ArmyCanvas_PaintSurface(SKPaintSurfaceEventArgs e) {
+    if(armySvg?.Picture is SKPicture picture && picture.CullRect.Width > 0 && picture.CullRect.Height > 0) {
+      e.Surface.Canvas.Save();
+      e.Surface.Canvas.Scale(e.Info.Width / picture.CullRect.Width,e.Info.Height / picture.CullRect.Height);
       e.Surface.Canvas.DrawPicture(picture);
       e.Surface.Canvas.Restore();
     }

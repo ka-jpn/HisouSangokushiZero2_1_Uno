@@ -8,10 +8,10 @@ namespace HisouSangokushiZero2_1_Uno.Pages;
 
 internal sealed partial class StateInfo:UserControl {
   private Action nextButtonAction = () => { };
-  private readonly static double minheightScale = 0.04;
+  private readonly static double minheightScale = 0.03;
   private const double minWidth = 750;
   private const double maxWidth = 1000;
-  internal static readonly double defaultHeight = UIUtil.fixModeMaxWidth * minheightScale;
+  internal static readonly double defaultHeight = UIUtil.fixModeMaxWidth * minheightScale * maxWidth / minWidth;
   internal static double contentHeight = defaultHeight;
   internal StateInfo() {
     InitializeComponent();
@@ -41,10 +41,11 @@ internal sealed partial class StateInfo:UserControl {
   }
   private static double CalcContentHeight(StateInfo page) => Math.Max(defaultHeight,page.RenderSize.Width * minheightScale);
   private static double CalcScaleX(StateInfo page) => page.RenderSize.Width switch { <= minWidth => page.RenderSize.Width / minWidth, >= maxWidth => page.RenderSize.Width / maxWidth, _ => 1 };
+  private static double CalcScaleY(StateInfo page) => page.RenderSize.Width switch { >= maxWidth => page.RenderSize.Width / maxWidth, _ => 1 };
   internal static void ResizeElem(StateInfo page) {
     contentHeight = CalcContentHeight(page);
-    page.Content.RenderTransform = new ScaleTransform() { ScaleX = CalcScaleX(page),ScaleY = Math.Max(page.RenderSize.Width / maxWidth,1) };
-    page.Content.Margin = new(0,0,page.RenderSize.Width*(1-1/ CalcScaleX(page)),page.Content.Height * (Math.Max(page.RenderSize.Width / maxWidth,1) - 1));
+    page.Content.RenderTransform = new ScaleTransform() { ScaleX = CalcScaleX(page),ScaleY = CalcScaleY(page) };
+    page.Content.Margin = new(0,0,page.RenderSize.Width * (1 - 1 / CalcScaleX(page)),page.RenderSize.Height * (1 - 1 / CalcScaleY(page)));
     RefreshNextButton(page);
   }
 }

@@ -8,7 +8,6 @@
   xmlns:skia="using:SkiaSharp.Views.Windows"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
-	mc:Ignorable="d"
 	x:Name="Page" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="False" Background="#EEFE">
   <Grid	x:Name="ContentGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid.RowDefinitions>
@@ -42,13 +41,13 @@
         <ColumnDefinition Width="Auto"/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <Button x:Name="TopSwitchViewModeButton" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" Background="#AFFF" Padding="0">
+      <Button x:Name="TopSwitchViewModeButton" Width="{x:Bind code:UIUtil.infoFrameWidth}" Height="{x:Bind code:UIUtil.infoFrameWidth}" Background="#AFFF" Padding="0">
         <TextBlock FontSize="20" LineHeight="20" x:Name="SwitchViewModeButtonText"/>
       </Button>
-      <Button x:Name="OpenLogButton" Grid.Column="1" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" HorizontalAlignment="Stretch"  Background="#AEFE" Padding="0">
+      <Button x:Name="OpenLogButton" Grid.Column="1" Height="{x:Bind code:UIUtil.infoFrameWidth}" HorizontalAlignment="Stretch"  Background="#AEFE" Padding="0">
         <TextBlock FontSize="20" LineHeight="20" Text="ログ"/>
       </Button>
-      <Button x:Name="OpenInfoButton" Grid.Row="1" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" VerticalAlignment="Stretch" Background="#AEEF" Padding="0">
+      <Button x:Name="OpenInfoButton" Grid.Row="1" Width="{x:Bind code:UIUtil.infoFrameWidth}" VerticalAlignment="Stretch" Background="#AEEF" Padding="0">
         <TextBlock FontSize="20" LineHeight="20" Text="情&#xa;報"/>
       </Button>
       <ScrollViewer x:Name="LogScrollPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AEFE" Visibility="Collapsed">
@@ -59,7 +58,7 @@
           <RowDefinition Height="Auto"/>
           <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid x:Name="InfoButtonsPanel" Height="{x:Bind code:UIUtil.infoButtonHeight.Value}">
+        <Grid x:Name="InfoButtonsPanel" Height="{x:Bind code:UIUtil.infoButtonHeight}">
           <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -87,6 +86,7 @@
       </Grid>
     </Grid>
     <local:StateInfo x:Name="StateInfoPanel" Grid.Row="2" HorizontalAlignment="Stretch"/>
+    <local:SaveAndLoad x:Name="SaveDataPanel" Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
     <Grid x:Name="LoadingImagePanel" Grid.Row="0" Grid.RowSpan="3" Background="#EEF">
       <TextBlock Text="UI構築中.." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" LineHeight="40"/>
     </Grid>

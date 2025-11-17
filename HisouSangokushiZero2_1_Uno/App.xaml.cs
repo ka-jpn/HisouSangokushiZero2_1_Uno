@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using Uno.Resizetizer;
 using Uno.UI;
 namespace HisouSangokushiZero2_1_Uno;
 public partial class App:Application {
@@ -19,7 +18,7 @@ public partial class App:Application {
   }
 	protected Window? MainWindow { get; private set; }
 	protected override async void OnLaunched(LaunchActivatedEventArgs args) {
-    await BeforeNavigate.ReadMapSvg();//add code
+    await BeforeNavigate.ReadSvgs();//add code
     MainWindow = new Window();
 #if DEBUG
     MainWindow.UseStudio();

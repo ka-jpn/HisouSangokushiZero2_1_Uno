@@ -6,22 +6,22 @@
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   xmlns:skia="using:SkiaSharp.Views.Windows"
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
-  <Grid Background="#FDDD" HorizontalAlignment="Center" VerticalAlignment="Center">
-    <StackPanel Padding="2.5,0,2.5,2.5">
-      <StackPanel Orientation="Horizontal">
+  <Grid x:Name="Content" Background="#FDDD" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <StackPanel x:Name="RemarkContent" Padding="5,0,5,2.5">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
         <Grid VerticalAlignment="Center">
           <Path x:Name="RemarkFrame" StrokeThickness="0.8" Stroke="Black" Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-          <TextBlock x:Name="RemarkText" MaxWidth="300"/>
+          <TextBlock x:Name="RemarkText"/>
         </Grid>
         <StackPanel VerticalAlignment="Center">
-          <StackPanel Height="15"/>
+          <StackPanel Height="17"/>
           <Image x:Name="PersonImage" Source="ms-appx:///Assets/Svg/Person/武官.svg" Width="{x:Bind local:CharacterRemark.personImageSize}" Height="{x:Bind local:CharacterRemark.personImageSize}"/>
-          <TextBlock x:Name="PersonName" HorizontalAlignment="Center" Height="15"/>
+          <TextBlock x:Name="PersonName" HorizontalAlignment="Center" Height="17"/>
         </StackPanel>
       </StackPanel>
       <StackPanel Height="2.5"/>
-      <StackPanel x:Name="buttonPanel" Orientation="Horizontal" HorizontalAlignment="Center">
-      </StackPanel>
+      <Grid x:Name="ButtonPanel" Width="100" Height="25" HorizontalAlignment="Center">
+      </Grid>
     </StackPanel>
     <Button x:Name="CloseButton" Width="20" Height="15" Background="#2F00" HorizontalAlignment="Right" VerticalAlignment="Top">
       <Image Source="ms-appx:///Assets/Svg/close.svg"/>

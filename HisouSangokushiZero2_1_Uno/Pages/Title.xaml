@@ -5,6 +5,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:skia="using:SkiaSharp.Views.Windows"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
+  xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#EEFE">
   <Grid x:Name="Content">
     <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
@@ -30,8 +31,9 @@
         <StackPanel Height="5"/>
       </StackPanel>
     </Viewbox>
-    <Button x:Name="TopSwitchViewModeButton" Height="{x:Bind code:UIUtil.infoFrameWidth.Value}" Width="{x:Bind code:UIUtil.infoFrameWidth.Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#AFFF" Padding="0">
+    <Button x:Name="TopSwitchViewModeButton" Height="{x:Bind code:UIUtil.infoFrameWidth}" Width="{x:Bind code:UIUtil.infoFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#AFFF" Padding="0">
       <TextBlock FontSize="20" LineHeight="20" x:Name="SwitchViewModeButtonText"/>
     </Button>
+    <local:SaveAndLoad x:Name="SaveDataPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
   </Grid>
 </Page>
