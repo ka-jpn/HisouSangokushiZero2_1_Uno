@@ -5,47 +5,41 @@ using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 namespace HisouSangokushiZero2_1_Uno.Pages;
-
 internal sealed partial class StateInfo:UserControl {
   private Action nextButtonAction = () => { };
-  private readonly static double minheightScale = 0.03;
-  private const double minWidth = 750;
-  private const double maxWidth = 1000;
-  internal static readonly double defaultHeight = UIUtil.fixModeMaxWidth * minheightScale * maxWidth / minWidth;
-  internal static double contentHeight = defaultHeight;
+  private const double baseContentHeight = 45;
+  internal static double contentHeight = baseContentHeight;
   internal StateInfo() {
     InitializeComponent();
     MyInit(this);
     static void MyInit(StateInfo page) {
-      page.Content.Height = defaultHeight;
+      page.Content.Height = baseContentHeight;
       page.NextButton.Click += (_,_) => page.nextButtonAction();
     }
   }
   internal static void Show(StateInfo page,List<UIElement> InfoContents,string? buttonText,Action buttonAction) {
     page.InfoContentsPanel.MySetChildren([.. InfoContents]);
-    if(buttonText is not null) {
-      page.NextButton.Visibility = Visibility.Visible;
+    if(buttonText is {}) {
       page.NextButtonText.Text = buttonText;
       page.nextButtonAction = buttonAction;
-    } else {
-      page.NextButton.Visibility = Visibility.Collapsed;
-    }
-    RefreshNextButton(page);
-  }
-  private static void RefreshNextButton(StateInfo page) {
-    if(page.NextButton.Visibility == Visibility.Visible) {
-      page.NextButton.Width = page.RenderSize.Width / CalcScaleX(page) * 0.2;
+      page.NextButton.Width = CalcNextButtonWidth(page);
+      UIUtil.SetVisibility(page.NextButton,true);
     } else {
       page.NextButton.Width = 0;
+      UIUtil.SetVisibility(page.NextButton,false);
     }
   }
-  private static double CalcContentHeight(StateInfo page) => Math.Max(defaultHeight,page.RenderSize.Width * minheightScale);
-  private static double CalcScaleX(StateInfo page) => page.RenderSize.Width switch { <= minWidth => page.RenderSize.Width / minWidth, >= maxWidth => page.RenderSize.Width / maxWidth, _ => 1 };
-  private static double CalcScaleY(StateInfo page) => page.RenderSize.Width switch { >= maxWidth => page.RenderSize.Width / maxWidth, _ => 1 };
-  internal static void ResizeElem(StateInfo page) {
-    contentHeight = CalcContentHeight(page);
-    page.Content.RenderTransform = new ScaleTransform() { ScaleX = CalcScaleX(page),ScaleY = CalcScaleY(page) };
-    page.Content.Margin = new(0,0,page.RenderSize.Width * (1 - 1 / CalcScaleX(page)),page.RenderSize.Height * (1 - 1 / CalcScaleY(page)));
-    RefreshNextButton(page);
+  private static double CalcNextButtonWidth(StateInfo page) => page.RenderSize.Width * 0.2;
+  internal static void ResizeElem(StateInfo page,double scaleFactor) {
+    double scaleX = CookScaleX(Math.Min(scaleFactor,UIUtil.GetScaleFactor(page.RenderSize with { Height = 0 })));
+    double scaleY = CookScaleY(Math.Min(scaleFactor,UIUtil.GetScaleFactor(page.RenderSize with { Height = 0 })));
+    double height = baseContentHeight * scaleY;
+    contentHeight = height;
+    page.Content.Height = height;
+    page.Content.RenderTransform = new ScaleTransform() { ScaleX = scaleX,ScaleY = scaleY };
+    page.Content.Margin = new(0,0,page.RenderSize.Width * (1 - 1 / scaleX),height * (1 - 1 / scaleY));
+    page.NextButton.Width = CalcNextButtonWidth(page);
+    double CookScaleX(double rawScale)=> rawScale switch { < 0.8 => rawScale / 0.8, > 1 => double.Lerp(rawScale,1,0.5), _ => 1 };
+    double CookScaleY(double rawScale) => rawScale switch { < 0.8 => double.Lerp(rawScale/0.8,1,0.8), > 1 => double.Lerp(rawScale,1,0.5), _ => 1 };
   }
 }

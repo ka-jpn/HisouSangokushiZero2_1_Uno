@@ -1,11 +1,12 @@
+using HisouSangokushiZero2_1_Uno.Data;
+using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using System.Collections.Generic;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using static HisouSangokushiZero2_1_Uno.Code.Scenario;
 namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class GetGame {
-  private static ScenarioData? GetScenario(ScenarioId? newScenario) => newScenario?.MyApplyF(scenarios.GetValueOrDefault);
+  private static ScenarioData? GetScenario(ScenarioId? newScenario) => newScenario?.MyApplyF(ScenarioBase.GetScenarioData);
   private static GameState InitGame(ScenarioId? scenario,ScenarioData? scenarioInfo) => new(scenario,scenarioInfo?.AreaMap.ToDictionary() ?? [],scenarioInfo?.CountryMap.ToDictionary() ?? [],scenarioInfo?.PersonMap.ToDictionary() ?? [],null,null,0,Phase.Starting,[],false,[],[],[],[],[],[]);
   private static GameState InitState(GameState game) => game.MyApplyF(UpdateGame.UpdateCapitalArea).MyApplyF(UpdateGame.InitAlivePersonPost).MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[])).MyApplyF(ClearAllLog);
   private static GameState ClearAllLog(GameState game) => game with { GameLog = [],NewLog = [],TrunNewLog = [],StartPlanningCharacterRemark = [],StartExecutionCharacterRemark = [] };

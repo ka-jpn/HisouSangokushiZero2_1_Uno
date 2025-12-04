@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.5 -0.5 16 16" preserveAspectRatio="none" role="img">
-	<polyline fill="transparent" stroke="#E00" points="2,2 13,13" stroke-width="2" stroke-linecap="round" />
-	<polyline fill="transparent" stroke="#E00" points="2,13 13,2" stroke-width="2" stroke-linecap="round" />
-</svg>

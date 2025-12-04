@@ -1,3 +1,4 @@
+using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ internal static class Route {
   internal record Edge(EArea To,double Cost);
   internal record Connect(double? TotalCost,EArea From);
   internal static EArea[] SolveAtackArmyRoute(GameState game,ECountry country,EArea target) {
-    Road[] roadConnections = game.NowScenario?.MyApplyF(Scenario.scenarios.GetValueOrDefault)?.RoadConnections ?? [];
+    Road[] roadConnections = game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.RoadConnections ?? [];
     List<EArea> connectCapitalCountryAreas = Area.GetConnectCapitalCountryAreas(game,country);
     EArea[] targetFrontAreas = [.. roadConnections.Select(v => v.From == target ? v.To : v.To == target ? v.From : (EArea?)null).MyNonNull().Where(connectCapitalCountryAreas.Contains)];
     Road[] countryAreaRoad = [.. roadConnections.Where(v => new EArea[] { v.From,v.To }.All(connectCapitalCountryAreas.Contains)) ?? []];

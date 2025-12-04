@@ -1,3 +1,4 @@
+using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class Country {
     private static readonly Color nonCountryColor = new(255,240,240,240);
-    internal static Color GetCountryColor(GameState game,ECountry? country) => country?.MyApplyF(v=>game.NowScenario?.MyApplyF(Scenario.scenarios.GetValueOrDefault)?.CountryMap.GetValueOrDefault(v))?.ViewColor ?? nonCountryColor;
+    internal static Color GetCountryColor(GameState game,ECountry? country) => country?.MyApplyF(v=>game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.CountryMap.GetValueOrDefault(v))?.ViewColor ?? nonCountryColor;
     internal static decimal GetTotalAffair(GameState game,ECountry? country) => country == null ? 0 : game.AreaMap.Where(v => v.Value.Country == country).Sum(v => v.Value.AffairParam.AffairNow * (v.Key == country?.MyApplyF(game.CountryMap.GetValueOrDefault)?.CapitalArea ? 1.5m : 1m));
 		internal static decimal GetAffairPower(GameState game,ECountry? country) => Commander.GetAffairsCommander(game,country).MyApplyF(v => Commander.CommanderRank(game,v,ERole.affair)).MyApplyF(affairsRank => affairsRank/5m+1);
     internal static decimal GetAffairDifficult(GameState game,ECountry? country) => country == null ? 1 : Math.Round((decimal)Math.Pow(GetAreaNum(game,country),0.5),4);

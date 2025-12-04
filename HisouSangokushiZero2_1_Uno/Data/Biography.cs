@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-namespace HisouSangokushiZero2_1_Uno.Code;
-internal static class BaseData {
-  internal static readonly DefType.Text name = new("悲愴三国志Zero2 バージョン1");
-  internal static readonly DefType.Text version = new("1.16");
-  internal static readonly ScenarioId[] scenarios = [new("反董連合"),new("蜀之南征")];
-  internal static readonly Dictionary<PersonId,string> BiographyMap=new([
+namespace HisouSangokushiZero2_1_Uno.Data;
+internal static class Biography {
+  internal static readonly Dictionary<PersonId,string> biographyMap=new([
     new(new("陳温"),"漢末の揚州刺史、揚州への野望を持つ袁術に殺された"),
     new(new("華歆"),"漢末の豫章太守、のち孫策、曹魏に仕え、高官に昇る"),
     new(new("盛憲"),"漢末の呉郡太守、孫策の江東進出の際孫権に殺された"),

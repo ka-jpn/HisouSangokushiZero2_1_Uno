@@ -14,6 +14,8 @@ namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class UIUtil {
   internal enum ViewMode { fit, fix };
   internal enum PersonViewSortMode { Country_Role_BirthYear, Rank_BirthYear, BirthYear, DeathYear };
+  internal const double frameRefreshRate = 60;
+  internal const double nextStepDelaySeconds = 1 / frameRefreshRate;
   internal const double infoFrameWidth = 40;
   internal const double infoButtonHeight = 40;
   internal const double fixModeMaxWidth = 1000;
@@ -37,7 +39,6 @@ internal static class UIUtil {
   internal static readonly Color dataBackColor = new(255,150,150,150);
   internal static readonly Thickness dataMargin = new(1);
   internal static readonly string[] yearItems = ["春","夏","秋","冬"];
-  internal static double zoomLevel = 0;
   internal static SKSvg? mapSvg = null;
   internal static SKSvg? armySvg = null;
   internal static ViewMode viewMode = ViewMode.fix;
@@ -48,8 +49,13 @@ internal static class UIUtil {
   internal static List<Action> InitGameActions = [];
   internal static Task loadFontTask = new(() => { });
   internal static Task loadMapTask = new(() => { });
+  internal static List<Thickness> CreateMargin(double shadowWidth) {
+    List<Thickness> marginParts = [.. shadowWidth.MyApplyF(v => new List<Point>([new(0,-v),new(v,-v),new(v,0),new(v,v)]).Select(v => new Thickness(v.X,v.Y,-v.X,-v.Y)))];
+    List<Thickness> margins = [.. marginParts.MyApplyF(v => v.Concat(v.Select(v => new Thickness(-v.Left,-v.Top,-v.Right,-v.Bottom))))];
+    return margins;
+  }
   internal static void MapCanvas_PaintSurface(SKPaintSurfaceEventArgs e) {
-    if(mapSvg?.Picture is SKPicture picture && picture.CullRect.Width > 0 && picture.CullRect.Height > 0) {
+    if(mapSvg?.Picture is SKPicture picture && picture.CullRect.Width > 0 && picture.CullRect.Height > 0 && e.Surface is { }) {
       float ratio = (float)(mapSize.Width / mapSize.Height);
       float scale = Math.Max(e.Info.Width / picture.CullRect.Width / ratio,e.Info.Height / picture.CullRect.Height);
       float offsetX = (e.Info.Width - picture.CullRect.Width * scale * ratio) / 2;
@@ -78,8 +84,10 @@ internal static class UIUtil {
     Uno.Foundation.WebAssemblyRuntime.InvokeJS($"window.parent.{viewMode}();");
 #endif
   }
-  internal static double GetScaleFactor(Windows.Foundation.Size size) => Math.Max(size.Width / mapSize.Width,(size.Height - StateInfo.contentHeight) / mapSize.Height) * GetZoomFactor();
-  internal static double GetZoomFactor() => Math.Pow(1.1,zoomLevel);
+  internal static double GetScaleFactor(Windows.Foundation.Size size) => Math.Max(size.Width / mapSize.Width,(size.Height - StateInfo.contentHeight) / mapSize.Height);
+  internal static void ReverseVisibility(UIElement elem) => elem.Visibility = ToVisibility(elem.Visibility.IsHidden());
+  internal static void SetVisibility(UIElement elem,bool isShow) => ToVisibility(isShow).MyApplyA(v=>elem.Visibility = v,v=>elem.Visibility != v);
+  internal static Visibility ToVisibility(bool isShow) => isShow ? Visibility.Visible : Visibility.Collapsed;
   internal static void SaveGame() => SaveGameActions.ForEach(v => v());
   internal static void LoadGame() => LoadGameActions.ForEach(v => v());
   internal static void InitGame() => InitGameActions.ForEach(v => v());

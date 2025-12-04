@@ -4,18 +4,19 @@ using Microsoft.UI.Xaml.Media;
 using System.Linq;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class ChangeLog:UserControl {
-  internal ChangeLog(Grid contentGrid) {
+  internal ChangeLog() {
     InitializeComponent();
-    MyInit(this,contentGrid);
-    static void MyInit(ChangeLog page,Grid contentGrid) {
-      page.SizeChanged += (_,_) => ResizeElem(page,UIUtil.GetScaleFactor(contentGrid.RenderSize));
+    MyInit();
+    void MyInit() {
+      SizeChanged += (_,_) => ResizeElem();
+      void ResizeElem() {
+        double scaleFactor = UIUtil.GetScaleFactor(RenderSize with { Height = 0 });
+        double contentWidth = RenderSize.Width / scaleFactor - 5;
+        ContentPanel.Width = contentWidth;
+        ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
+        ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+        Scroll.Width = RenderSize.Width;
+      }
     }
-  }
-  internal static void ResizeElem(ChangeLog page,double scaleFactor) {
-    double contentWidth = page.RenderSize.Width / scaleFactor - 5;
-    page.ContentPanel.Width = contentWidth;
-    page.ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
-    page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
-    page.Scroll.Width = page.RenderSize.Width;
   }
 }

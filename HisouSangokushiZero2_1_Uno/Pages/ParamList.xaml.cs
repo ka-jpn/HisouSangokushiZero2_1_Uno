@@ -1,4 +1,6 @@
 ﻿using HisouSangokushiZero2_1_Uno.Code;
+using HisouSangokushiZero2_1_Uno.Data;
+using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -15,16 +17,16 @@ internal record PersonListData(Brush Brush,ECountry? Country,string Name,string 
 internal record CountryListData(Brush Brush,ECountry Country,decimal Fund,string AreasText);
 internal sealed partial class ParamList:UserControl {
   private enum SortButtonKind { 国役割別, ランク順, 生年順, 没年順 };
-  internal static readonly double listviewWidth = 750;
-  internal static readonly double listviewHeight = 350;
-  internal ObservableCollection<PersonListData> personDataList1 = [];
-  internal ObservableCollection<PersonListData> personDataList2 = [];
-  internal ObservableCollection<CountryListData> countryDataList1 = [];
-  internal ObservableCollection<CountryListData> countryDataList2 = [];
-  internal ParamList(Grid contentGrid) {
+  private const double listviewWidth = 750;
+  private const double listviewHeight = 350;
+  private readonly List<ObservableCollection<PersonListData>> personDataList = [[],[]];
+  private readonly List<ObservableCollection<CountryListData>> countryDataList = [[],[]];
+  internal ParamList() {
     InitializeComponent();
-    MyInit(this,contentGrid);
-    void MyInit(ParamList page,Grid contentGrid) {
+    MyInit();
+    void MyInit() {
+      List<TextBlock> scenarioNames = [PersonDataScenarioName1, PersonDataScenarioName2];
+      List<StackPanel> sortButtonPanels = [SortButtonPanel1, SortButtonPanel2];
       SortButtonKind initSortKind = SortButtonKind.国役割別;
       Dictionary<SortButtonKind,Func<Dictionary<PersonId,PersonData>,Dictionary<PersonId,PersonData>>> buttonActionMap = new([
         new(SortButtonKind.国役割別,v =>v.OrderBy(v => v.Value.Country).ThenBy(v => v.Value.Role).ThenBy(v => v.Value.BirthYear).ToDictionary()),
@@ -32,36 +34,31 @@ internal sealed partial class ParamList:UserControl {
         new(SortButtonKind.生年順,v =>v.OrderBy(v => v.Value.BirthYear).ToDictionary()),
         new(SortButtonKind.没年順,v =>v.OrderBy(v => v.Value.DeathYear).ToDictionary())
       ]);
-      page.SizeChanged += (_,_) => Game.contentPanel?.RenderSize.MyApplyA(v => ResizeElem(page,UIUtil.GetScaleFactor(v)));
-      SetUIElements(page);
-      void SetUIElements(ParamList page) {
-        page.PersonDataScenarioName1.Text = BaseData.scenarios.ElementAtOrDefault(0)?.Value;
-        page.PersonDataScenarioName2.Text = BaseData.scenarios.ElementAtOrDefault(1)?.Value;
-        page.SortButtonPanel1.MySetChildren([.. CreateSortButtons(page,0)]);
-        page.SortButtonPanel2.MySetChildren([.. CreateSortButtons(page,1)]);
-        RefreshSortButtonPanelColor(page.SortButtonPanel1,initSortKind);
-        RefreshSortButtonPanelColor(page.SortButtonPanel2,initSortKind);
-        (Scenario.scenarios.Values.ElementAtOrDefault(0)?.MyApplyF(v=>GetPersonListData(v,initSortKind)) ?? []).ForEach(personDataList1.Add);
-        (Scenario.scenarios.Values.ElementAtOrDefault(1)?.MyApplyF(v=>GetPersonListData(v,initSortKind)) ?? []).ForEach(personDataList2.Add);
-        (Scenario.scenarios.Values.ElementAtOrDefault(0)?.MyApplyF(v=>GetCountryListData(v)) ?? []).ForEach(countryDataList1.Add);
-        (Scenario.scenarios.Values.ElementAtOrDefault(1)?.MyApplyF(v=>GetCountryListData(v)) ?? []).ForEach(countryDataList2.Add);
-        List<Button> CreateSortButtons(ParamList page,int scenarioNo) {
-          return [.. buttonActionMap.Keys.Select(v => CreateSortButton(page,scenarioNo,v))];
-          Button CreateSortButton(ParamList page,int scenarioNo,SortButtonKind buttonKind) {
+      SizeChanged += (_,_) => ResizeElem();
+      SetUIElements();
+      void SetUIElements() {
+        scenarioNames.ForEachWithIndex((v,i) => v.Text = ScenarioBase.GetScenarioId(i)?.Value);
+        sortButtonPanels.ForEachWithIndex((v,i) => v.MySetChildren([.. CreateSortButtons(i)]));
+        sortButtonPanels.ForEach(v => RefreshSortButtonPanelColor(v,initSortKind));
+        personDataList.ForEachWithIndex((v,i) => ScenarioBase.GetScenarioId(i)?.MyApplyF(ScenarioBase.GetScenarioData)?.MyApplyF(scenario => GetPersonListData(scenario,initSortKind)).ForEach(v.Add));
+        countryDataList.ForEachWithIndex((v,i) => ScenarioBase.GetScenarioId(i)?.MyApplyF(ScenarioBase.GetScenarioData)?.MyApplyF(scenario => GetCountryListData(scenario)).ForEach(v.Add));
+        List <Button> CreateSortButtons(int scenarioNo) {
+          return [.. buttonActionMap.Keys.Select(v => CreateSortButton(scenarioNo,v))];
+          Button CreateSortButton(int scenarioNo,SortButtonKind buttonKind) {
             return new Button { MaxWidth = 150,Height = 25,Margin = new Thickness(2.5,0) }.MySetChild(new TextBlock { Text = buttonKind.ToString() }).MyApplyA(v => v.Click += (_,_) => {
-              (scenarioNo switch { 0 => page.SortButtonPanel1, _ => page.SortButtonPanel2 }).MyApplyA(panel => RefreshSortButtonPanelColor(panel,buttonKind));
-              (scenarioNo switch { 0 => personDataList1, _ => personDataList2 }).MyApplyA(v=>v.Clear()).MyApplyA(v=>(Scenario.scenarios.Values.ElementAtOrDefault(scenarioNo)?.MyApplyF(v => GetPersonListData(v,buttonKind)) ?? []).ForEach(v.Add));
+              sortButtonPanels.ElementAtOrDefault(scenarioNo)?.MyApplyA(panel => RefreshSortButtonPanelColor(panel,buttonKind));
+              personDataList.ElementAtOrDefault(scenarioNo)?.MyApplyA(v=>v.Clear()).MyApplyA(v=>(ScenarioBase.GetScenarioId(scenarioNo)?.MyApplyF(ScenarioBase.GetScenarioData)?.MyApplyF(v => GetPersonListData(v,buttonKind)) ?? []).ForEach(v.Add));
             });
           }
         }
         void RefreshSortButtonPanelColor(StackPanel buttonPanel,SortButtonKind buttonKind) {
           buttonActionMap.Keys.MyGetIndex(v => v == buttonKind)?.MyApplyA(index => RefreshColor([.. buttonPanel.Children.OfType<Button>()],index));
-          static void RefreshColor(List<Button> elems,int index) => elems.Select((button,index) => (button, index)).ToList().ForEach(v => { v.button.Background = v.index == index ? Colors.LightGray : Colors.WhiteSmoke; });
+          static void RefreshColor(List<Button> elems,int index) => elems.ForEachWithIndex((v,i) => v.Background = i == index ? Colors.LightGray : Colors.WhiteSmoke);
         }
          List<PersonListData> GetPersonListData(ScenarioData scenario,SortButtonKind buttonKind) {
           return [.. buttonActionMap.GetValueOrDefault(buttonKind)?.Invoke(scenario.PersonMap.ToDictionary()).Select(ToPersonListItem) ?? []];
           PersonListData ToPersonListItem(KeyValuePair<PersonId,PersonData> personInfo) {
-            return new PersonListData((scenario.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewColor ?? UIUtil.transparentColor).ToBrush(),personInfo.Value.Country,personInfo.Key.Value,Code.Text.RoleToText(personInfo.Value.Role,Lang.ja),new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")),personInfo.Value.Rank,personInfo.Value.BirthYear,Person.GetAppearYear(personInfo.Value).MyApplyF(appearYear => appearYear >= scenario.StartYear ? appearYear.ToString() : "登場"),personInfo.Value.DeathYear,BaseData.BiographyMap.GetValueOrDefault(personInfo.Key)??string.Empty);
+            return new PersonListData((scenario.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewColor ?? UIUtil.transparentColor).ToBrush(),personInfo.Value.Country,personInfo.Key.Value,Code.Text.RoleToText(personInfo.Value.Role,Lang.ja),new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")),personInfo.Value.Rank,personInfo.Value.BirthYear,Person.GetAppearYear(personInfo.Value).MyApplyF(appearYear => appearYear >= scenario.StartYear ? appearYear.ToString() : "登場"),personInfo.Value.DeathYear,Biography.biographyMap.GetValueOrDefault(personInfo.Key)??string.Empty);
           }
         }
         List<CountryListData> GetCountryListData(ScenarioData scenario) {
@@ -71,15 +68,16 @@ internal sealed partial class ParamList:UserControl {
           }
         }
       }
-      static void ResizeElem(ParamList page,double scaleFactor) {
-        double pageWidth = page.RenderSize.Width;
-        double contentWidth = page.RenderSize.Width / scaleFactor - 5;
-        page.ContentPanel.Width = contentWidth;
-        page.ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
-        page.ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),page.ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
-        page.SortButtonPanel1.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
-        page.SortButtonPanel2.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
-        page.Scroll.Width = page.RenderSize.Width;
+      void ResizeElem() {
+        double scaleFactor = UIUtil.GetScaleFactor(RenderSize with { Height = 0 });
+        double pageWidth = RenderSize.Width;
+        double contentWidth = RenderSize.Width / scaleFactor - 5;
+        ContentPanel.Width = contentWidth;
+        ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
+        ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+        SortButtonPanel1.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
+        SortButtonPanel2.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
+        Scroll.Width = RenderSize.Width;
       }
     }
   }

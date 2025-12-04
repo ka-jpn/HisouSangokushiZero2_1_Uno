@@ -1,11 +1,11 @@
+using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using System.Collections.Generic;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using static HisouSangokushiZero2_1_Uno.Code.Scenario;
 namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class Area {
-  private static Road[]? GetRoads(GameState game) => game.NowScenario?.MyApplyF(scenarios.GetValueOrDefault)?.RoadConnections;
+  private static Road[]? GetRoads(GameState game) => game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.RoadConnections;
   private static Point ConvertPointFromAreaPosition(Point areaPosition,Size mapSize,Size areaSize,Point mapGridCount,double infoFrameWidth) => new(areaPosition.X * (mapSize.Width - areaSize.Width - infoFrameWidth) / (mapGridCount.X - 1) + infoFrameWidth + areaSize.Width / 2,areaPosition.Y * (mapSize.Height - areaSize.Height - infoFrameWidth) / (mapGridCount.Y - 1) + infoFrameWidth + areaSize.Height / 2);
   internal static Point? GetAreaPoint(GameState game,EArea areaName,Size mapSize,Size areaSize,Point mapGridCount,double infoFrameWidth) => game.AreaMap.GetValueOrDefault(areaName)?.Position.MyApplyF(areaPos => ConvertPointFromAreaPosition(areaPos,mapSize,areaSize,mapGridCount,infoFrameWidth));
   internal static List<EArea> GetCountryAreas(GameState game,ECountry country) => [.. game.AreaMap.Where(v => v.Value.Country == country).Select(v => v.Key)];
@@ -30,5 +30,4 @@ internal static class Area {
     return [.. GetConnectCapitalCountryAreas(game,country).OrderByDescending(v => ComputeAreaRemAffairs(game,v))];
     static decimal ComputeAreaRemAffairs(GameState game,EArea area) => game.AreaMap.GetValueOrDefault(area)?.AffairParam.MyApplyF(v => v.AffairsMax - v.AffairNow)??0;
   }
-  internal static EArea[] GetChinaAreas(int scenarioNo)=>BaseData.scenarios.ElementAtOrDefault(scenarioNo)?.MyApplyF(scenarios.GetValueOrDefault)?.ChinaAreas??[];
 }

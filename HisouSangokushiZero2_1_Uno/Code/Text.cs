@@ -1,3 +1,4 @@
+using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,7 +72,7 @@ internal static class Text {
         .. game.StartPlanningCharacterRemark ?? [],
         .. game.PlayTurn == 0 ? [
           "ゲームの説明を聞きますか？\n勝利条件・敗北条件と\n戦闘のルールの説明があります",
-          $"勝利条件は2種類あります\n陣営毎の勝利条件を一番乗り達成で達成勝利\nまたは{game.NowScenario?.MyApplyF(Scenario.scenarios.GetValueOrDefault)?.EndYear}年春まで存続で存続勝利\nとなります、どちらも勝利ではありますが\n区別があることに留意してください",
+          $"勝利条件は2種類あります\n陣営毎の勝利条件を一番乗り達成で達成勝利\nまたは{game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.EndYear}年春まで存続で存続勝利\nとなります、どちらも勝利ではありますが\n区別があることに留意してください",
           "敗北条件は2種類で\n陣営毎の勝利条件を他陣営に先に達成される\nおよび全領土失陥となります\nまた、我々の命運も共にありますので\nどうかできるだけ多くの生存者を\n後まで導いて頂きますよう",
           "戦闘のうち攻撃は首都から行軍可能な範囲ででき\n中央所属のうち攻撃の筆頭と次席のポスト\nの者が指揮し、能力差が勝敗率に影響します\n侵攻先が防衛に専念していると分が悪くなります\n無暗に攻撃することばかりが手段ではありません",
           "戦闘のうち防衛は地域毎に行われ\n侵攻された所を担当している者が防衛にあたり\n首都が侵攻され首都地域の防衛が破られると\n中央所属の防衛の筆頭と次席のポストの者が\n首都中央で応戦します\n我らが防衛に専念していると分が良くなります",

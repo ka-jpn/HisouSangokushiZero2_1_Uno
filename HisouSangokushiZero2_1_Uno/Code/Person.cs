@@ -1,10 +1,10 @@
-using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using static HisouSangokushiZero2_1_Uno.Code.Scenario;
-using PostType = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
+using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static HisouSangokushiZero2_1_Uno.Code.DefType;
+using PostType = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
 namespace HisouSangokushiZero2_1_Uno.Code {
   internal static class Person {
     private static readonly int majorityAge = 16;
@@ -23,7 +23,7 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static Dictionary<PersonId,PersonData> GetNaturalDeathPostPersonMap(GameState game,ECountry country,ERole role,int year,int inYear) => GetRolePersonMap(game,country,role).Where(v => IsNaturalDeathPerson(game,v.Key,year,inYear)).ToDictionary();
     internal static KeyValuePair<PersonId,PersonData>? GetPostPerson(GameState game,ECountry country,PostType post) => game.PersonMap.MyNullable().FirstOrDefault(v => GetPersonData(game,v?.Key??new(string.Empty))?.Country == country && v?.Value.Post == post);
     internal static int CalcRoleRank(GameState game,PersonId person,ERole? role) => GetPersonData(game,person)?.MyApplyF(v => v.Rank + (v.Role == role ? 0 : -1)) ?? 0;
-    internal static int GetAppearYear(ScenarioId? scenario,PersonId person) => scenario?.MyApplyF(scenarios.GetValueOrDefault)?.PersonMap.GetValueOrDefault(person)?.MyApplyF(v => v.GameAppearYear ?? (v.BirthYear + majorityAge)) ?? 0;
+    internal static int GetAppearYear(ScenarioId? scenario,PersonId person) => scenario?.MyApplyF(ScenarioBase.GetScenarioData)?.PersonMap.GetValueOrDefault(person)?.MyApplyF(v => v.GameAppearYear ?? (v.BirthYear + majorityAge)) ?? 0;
     internal static int GetAppearYear(PersonData person) => person.GameAppearYear ?? (person.BirthYear + majorityAge);
     internal static Dictionary<PersonId,PersonData> FindPerson(GameState game,ECountry country) {
       return Country.SearchPersonRank(game,country) is int findPersonRank ? GeneratPerson(game,country,findPersonRank) : [];

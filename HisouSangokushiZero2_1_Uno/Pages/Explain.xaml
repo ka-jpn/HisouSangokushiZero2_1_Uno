@@ -2,8 +2,7 @@
 <UserControl
   x:Class="HisouSangokushiZero2_1_Uno.Pages.Explain"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <ScrollViewer HorizontalAlignment="Center" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
       <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="勝利・敗北について" HorizontalAlignment="Center"/>

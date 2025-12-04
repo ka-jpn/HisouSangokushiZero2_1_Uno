@@ -5,11 +5,12 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:skia="using:SkiaSharp.Views.Windows"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
+  xmlns:data="using:HisouSangokushiZero2_1_Uno.Data"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#EEFE">
   <Grid x:Name="Content">
-    <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-    <Viewbox x:Name="TitleContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed">
+    <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    <Viewbox x:Name="TitleContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <StackPanel Height="30"/>
         <TextBlock Text="悲愴三国志" HorizontalAlignment="Center" FontSize="33" LineHeight="35"/>
@@ -26,14 +27,14 @@
         <StackPanel Height="5"/>
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Height="22">
           <TextBlock Text="ver." FontSize="15"/>
-          <TextBlock Text="{x:Bind code:BaseData.version.Value}" FontSize="15"/>
+          <TextBlock Text="{x:Bind data:BaseData.version.Value}" FontSize="15"/>
         </StackPanel>
         <StackPanel Height="5"/>
       </StackPanel>
     </Viewbox>
+    <local:SaveAndLoad x:Name="SaveDataPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
     <Button x:Name="TopSwitchViewModeButton" Height="{x:Bind code:UIUtil.infoFrameWidth}" Width="{x:Bind code:UIUtil.infoFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#AFFF" Padding="0">
       <TextBlock FontSize="20" LineHeight="20" x:Name="SwitchViewModeButtonText"/>
     </Button>
-    <local:SaveAndLoad x:Name="SaveDataPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
   </Grid>
 </Page>

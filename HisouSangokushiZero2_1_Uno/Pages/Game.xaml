@@ -9,7 +9,7 @@
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
 	x:Name="Page" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="False" Background="#EEFE">
-  <Grid	x:Name="ContentGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  <Grid	x:Name="ContentGrid">
     <Grid.RowDefinitions>
       <RowDefinition/>
       <RowDefinition Height="Auto"/>
@@ -17,22 +17,20 @@
     </Grid.RowDefinitions>
     <ScrollViewer x:Name="MapScroll" Grid.Row="0">
       <Grid x:Name="MapPanel">
-        <Grid x:Name="MapInnerPanel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{x:Bind code:UIUtil.mapSize.Width}" Height="{x:Bind code:UIUtil.mapSize.Height}">
-          <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="100" Height="100"/>
-          <Canvas x:Name="MapElementsCanvas"/>
-          <Canvas x:Name="MapAnimationElementsCanvas"/>
-        </Grid>
+        <skia:SKXamlCanvas x:Name="MapCanvas"/>
+        <Canvas x:Name="MapElementsCanvas"/>
+        <Canvas x:Name="MapAnimationElementsCanvas"/>
       </Grid>
     </ScrollViewer>
     <StackPanel x:Name="TurnLogPanel" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="270"/>
     <StackPanel x:Name="TurnWinCondPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>    
     <Canvas x:Name="CountryPostsPanel" Grid.Row="1" HorizontalAlignment="Stretch" Height="{x:Bind code:UIUtil.countryPersonPutPanelHeight}" Background="Transparent"/>
-    <Grid Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-      <local:Ask x:Name="AskPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-      <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-      <Canvas x:Name="MovePersonCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    <Grid x:Name="MainGrid" Grid.Row="0" Grid.RowSpan="2">
+      <local:Ask x:Name="AskPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+      <local:CharacterRemark x:Name="CharacterRemarkPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+      <Canvas x:Name="MovePersonCanvas"/>
     </Grid>
-    <Grid x:Name="InfoLayoutPanel" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid x:Name="InfoLayoutPanel" Grid.Row="0">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition/>
@@ -44,46 +42,14 @@
       <Button x:Name="TopSwitchViewModeButton" Width="{x:Bind code:UIUtil.infoFrameWidth}" Height="{x:Bind code:UIUtil.infoFrameWidth}" Background="#AFFF" Padding="0">
         <TextBlock FontSize="20" LineHeight="20" x:Name="SwitchViewModeButtonText"/>
       </Button>
-      <Button x:Name="OpenLogButton" Grid.Column="1" Height="{x:Bind code:UIUtil.infoFrameWidth}" HorizontalAlignment="Stretch"  Background="#AEFE" Padding="0">
+      <Button x:Name="OpenLogButton" Grid.Column="1" Height="{x:Bind code:UIUtil.infoFrameWidth}" HorizontalAlignment="Stretch" Background="#AEFE" Padding="0">
         <TextBlock FontSize="20" LineHeight="20" Text="ログ"/>
       </Button>
       <Button x:Name="OpenInfoButton" Grid.Row="1" Width="{x:Bind code:UIUtil.infoFrameWidth}" VerticalAlignment="Stretch" Background="#AEEF" Padding="0">
         <TextBlock FontSize="20" LineHeight="20" Text="情&#xa;報"/>
       </Button>
-      <ScrollViewer x:Name="LogScrollPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AEFE" Visibility="Collapsed">
-        <StackPanel x:Name="LogContentPanel" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-      </ScrollViewer>
-      <Grid x:Name="InfoPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AEEF" Visibility="Collapsed">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid x:Name="InfoButtonsPanel" Height="{x:Bind code:UIUtil.infoButtonHeight}">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-          </Grid.ColumnDefinitions>
-          <Button Grid.Column="0" x:Name="ExplainButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
-            <TextBlock Text="ルール詳細"/>
-          </Button>
-          <Button Grid.Column="1" x:Name="WinCondButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
-            <TextBlock Text="各陣営の勝利条件"/>
-          </Button>
-          <Button Grid.Column="2" x:Name="PersonDataButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
-            <TextBlock Text="人物・陣営データ"/>
-          </Button>
-          <Button Grid.Column="3" x:Name="ChangeLogButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
-            <TextBlock Text="更新履歴"/>
-          </Button>
-          <Button Grid.Column="4" x:Name="SettingButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AFFF" BorderBrush="Black" BorderThickness="2" Padding="0">
-            <TextBlock Text="設定"/>
-          </Button>
-        </Grid>
-        <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5"/>
-      </Grid>
+      <local:LogPanel x:Name="LogPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+      <local:InfoPanel x:Name="InfoPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
     </Grid>
     <local:StateInfo x:Name="StateInfoPanel" Grid.Row="2" HorizontalAlignment="Stretch"/>
     <local:SaveAndLoad x:Name="SaveDataPanel" Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
