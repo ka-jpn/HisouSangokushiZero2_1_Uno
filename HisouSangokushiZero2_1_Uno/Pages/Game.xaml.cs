@@ -22,27 +22,35 @@ using Text = HisouSangokushiZero2_1_Uno.Code.Text;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class Game:Page {
   private record AreaElems(Border Back,TextBlock AreaNameText,StackPanel DefensePersonPanel,StackPanel AffairPersonPanel,Post DefensePost,Post AffairPost,TextBlock AffairText,TextBlock ExText,Grid WrapPanel);
+  private static readonly double countryPostPanelWidth = 255;
   private static readonly Dictionary<Post,StackPanel> playerCountryPostPersonPanel = Enum.GetValues<ERole>().SelectMany(role => new List<(Post, StackPanel)>([
     .. Enum.GetValues<PostHead>().Select(headPost=>(new Post(role,new(headPost)),new StackPanel())),
     .. Enumerable.Range(0,UIUtil.capitalPieceCellNum).Select(cellNo=>(new Post(role,new(cellNo)),new StackPanel()))
   ])).ToDictionary();
+  private static readonly Dictionary<EArea,AreaElems> areaElemsMap = [];
+  private static readonly Dictionary<ERole, Grid> countryPostPanelMap = [];
   private static readonly List<TaskToken> taskTokens = [];
-  private static Dictionary<EArea,AreaElems> areaElemsMap = [];
-  private static double lastScaleFactor = 1;
+  private static ERole activePanelRole = ERole.central;
+  private static (Panel panel, Post post)? pointerover = null;
+  private static (Panel panel, PersonId person)? pick = null;
+  private static double lastScaleFactor = double.NaN;
   internal static double zoomLevel = 0;
+  internal static readonly double initContentGridMaxWidth = UIUtil.GetContentMaxWidth();
   public Game() {
     InitializeComponent();
     MyInit();
     void MyInit() {
       AttachEvent();
+      SetCountryPostsPanel();
       UIUtil.SwitchViewModeActions.Add(RefreshViewMode);
-      UIUtil.ChangeScaleActions.Add(() => RescaleMap(UIUtil.GetScaleFactor(MainGrid.RenderSize) * GetZoomFactor()));
+      UIUtil.ChangeScaleActions.Add(ResizeMap);
       Ask.Init(MainGrid);
       CharacterRemark.Init(MainGrid);
       UIUtil.SaveGameActions.Add(async () => {
         await Task.Run(async () => {
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["セーブ中.."]));
           await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => SaveAndLoad.Show(SaveDataPanel,true,_ => Task.Run(async () => {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["セーブ中.."]));
+            await Task.Yield();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,false));
             await Task.Yield();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["セーブ完了"]));
@@ -52,11 +60,12 @@ internal sealed partial class Game:Page {
       });
       UIUtil.LoadGameActions.Add(async () => {
         await Task.Run(async () => {
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["ロード中.."]));
           await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => SaveAndLoad.Show(SaveDataPanel,false,maybeRead => maybeRead?.MaybeGame is GameState game ? Task.Run(async () => {
-            await InitGame(game);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["ロード中.."]));
             await Task.Yield();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,false));
+            await Task.Yield();
+            await InitGame(game);
             await Task.Yield();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage([maybeRead?.MaybeGame != null ? "ロード完了" : maybeRead?.ReadState == Storage.ReadState.Read ? "ロード失敗：ファイルが破損しています" : "ロード失敗：ファイルが見つかりません"]));
           }) : Task.CompletedTask,() => UIUtil.SetVisibility(SaveDataPanel,false),MainGrid.RenderSize));
@@ -76,70 +85,75 @@ internal sealed partial class Game:Page {
         await Task.Run(async () => {
           await Dispatcher.RunAsync(CoreDispatcherPriority.Low,RefreshViewMode);
           await Task.Yield();
-          await SetUIElements();
-          await Task.Yield();
           await InitGame(startGame);
           await Task.Yield();
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => countryPostPanelMap.ToList().ForEach(v => v.Value.PointerEntered += (_,_) => UpdateCountryPostPanelZIndex(v.Key)));
+          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,ResizeMap);
           await Task.Yield();
           await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(LoadingImagePanel,false));
         });
-        async Task SetUIElements() {
-          Dictionary<ERole,Color> countryRolePanelColorMap = new([
-            new(ERole.central,new Color(255,240,240,210)),new(ERole.affair,new Color(255,240,240,240)),
-            new(ERole.defense,new Color(255,210,210,240)),new(ERole.attack,new Color(255,240,210,210))
-          ]);
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => {
-            countryPostPanelMap.Clear();
-            CountryPostsPanel.Children.Clear();
-          });
-          await countryRolePanelColorMap.Reverse().MyAsyncForEachSequential(async v =>
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => {
-              StackPanel panel = CreateCountryPostPanel(v.Key,v.Value);
-              countryPostPanelMap.Add(v.Key,panel);
-              CountryPostsPanel.Children.Add(panel);
-            })
-          );
-        }
       }
       void AttachEvent() {
-        MapCanvas.PaintSurface += (_,e) => UIUtil.MapCanvas_PaintSurface(e);
+        ContentGrid.SizeChanged += (_,_) => ResizeMap();
         OpenLogButton.Click += (_,_) => { UIUtil.ReverseVisibility(LogPanel); UIUtil.SetVisibility(InfoPanel,false); };
         OpenInfoButton.Click += (_,_) => { UIUtil.ReverseVisibility(InfoPanel); UIUtil.SetVisibility(LogPanel,false); };
-        ContentGrid.SizeChanged += (_,_) => ResizeMap();
-        PointerMoved += (_,e) => (pick != null && MovePersonCanvas.Children.SingleOrDefault() is UIElement personPanel ? () => MovePerson(personPanel,e) : MyUtil.MyUtil.nothing).Invoke();
-        PointerReleased += (_,e) => GameData.game = PutPersonPanel(GameData.game);
+        Page.PointerMoved += (_,e) => (pick is { } && MovePersonCanvas.Children.SingleOrDefault() is UIElement personPanel ? () => MovePerson(personPanel,e) : MyUtil.MyUtil.nothing).Invoke();
+        Page.PointerReleased += (_,e) => (pick is { } ? () => GameData.game = PutPersonPanel(GameData.game) : MyUtil.MyUtil.nothing).Invoke();
         TopSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
-        void ResizeMap() {
-          double scaleFactor = UIUtil.GetScaleFactor(ContentGrid.RenderSize) * GetZoomFactor();
-          StateInfo.ResizeElem(StateInfoPanel,scaleFactor);
-          RescaleMap(scaleFactor);
+        MapCanvas.PaintSurface += (_,e) => UIUtil.MapCanvas_PaintSurface(e);
+      }
+      void ResizeMap() {
+        double scaleFactor = StateInfo.SolveScale(ContentGrid.RenderSize.Height, MainGrid.RenderSize);
+        double mapScale = scaleFactor * GetZoomFactor();
+        ScaleTransform mapScaleTransform = new() { ScaleX = mapScale, ScaleY = mapScale };
+        StateInfo.ResizeElem(StateInfoPanel, scaleFactor);
+        RelayoutCountryPostUI(mapScale);
+        RescaleInfoLayoutPanelUI(mapScale);
+        if (mapScale != lastScaleFactor) {
+          RescaleMap(mapScale);
+          lastScaleFactor = mapScale;
+        }
+        void RescaleMap(double scaleFactor) {
+          CountryPostsPanel.Margin = new(0, 0, ContentGrid.RenderSize.Width * (scaleFactor - 1), CountryPostsPanel.Height * (scaleFactor - 1));
+          CountryPostsPanel.RenderTransform = mapScaleTransform;
+          MapCanvas.Width = UIUtil.mapSize.Width * scaleFactor;
+          MapCanvas.Height = UIUtil.mapSize.Height * scaleFactor;
+          MapElementsCanvas.Margin = new(0, 0, MapPanel.RenderSize.Width / scaleFactor * (scaleFactor - 1), MapPanel.RenderSize.Height / scaleFactor * (scaleFactor - 1));
+          MapElementsCanvas.RenderTransform = mapScaleTransform;
+          MapAnimationElementsCanvas.Margin = new(0, 0, MapPanel.RenderSize.Width / scaleFactor * (scaleFactor - 1), MapPanel.RenderSize.Height / scaleFactor * (scaleFactor - 1));
+          MapAnimationElementsCanvas.RenderTransform = mapScaleTransform;
+          TurnLogPanel.Margin = new(UIUtil.infoFrameWidth * scaleFactor, 0, 0, 0);
+          TurnLogPanel.RenderTransform = mapScaleTransform;
+          TurnWinCondPanel.Margin = new(UIUtil.infoFrameWidth * scaleFactor, UIUtil.infoFrameWidth * scaleFactor, 0, 0);
+          MovePersonCanvas.RenderTransform = mapScaleTransform;
+          RescaleTurnWinCondPanelUI(scaleFactor);
+        }
+        void RelayoutCountryPostUI(double scaleFactor) {
+          double PostPanelLeftUnit = (ContentGrid.RenderSize.Width / scaleFactor - countryPostPanelWidth) / (countryPostPanelMap.Count - 1);
+          countryPostPanelMap.Values.Reverse().Select((elem, index) => (elem, index)).ToList().ForEach(v => Canvas.SetLeft(v.elem, PostPanelLeftUnit * v.index));
+        }
+        void RescaleInfoLayoutPanelUI(double scaleFactor) {
+          double postPanelHeight = CountryPostsPanel.Visibility.IsHidden() ? 0 : (CountryPostsPanel.Height + CountryPostsPanel.Margin.Bottom);
+          double stateInfoPanelHeight = StateInfo.GetHeight(StateInfoPanel);
+          double infoLayoutPanelHeight = ContentGrid.RenderSize.Height - postPanelHeight - stateInfoPanelHeight;
+          InfoLayoutPanel.Margin = new(0, 0, MapScroll.RenderSize.Width / scaleFactor * (scaleFactor - 1), infoLayoutPanelHeight / scaleFactor * (scaleFactor - 1));
+          InfoLayoutPanel.RenderTransform = mapScaleTransform;
         }
       }
-      void RescaleMap(double scaleFactor) {
-        if(scaleFactor == lastScaleFactor) return;
-        ScaleTransform scaleTransform = new() { ScaleX = scaleFactor,ScaleY = scaleFactor };
-        CountryPostsPanel.Margin = new(0,0,CountryPostsPanel.RenderSize.Width * (scaleFactor - 1),CountryPostsPanel.Height * (scaleFactor - 1));
-        CountryPostsPanel.RenderTransform = scaleTransform;
-        MapCanvas.Width = UIUtil.mapSize.Width * scaleFactor;
-        MapCanvas.Height = UIUtil.mapSize.Height* scaleFactor;
-        MapElementsCanvas.Margin = new(0,0,MapPanel.RenderSize.Width * (scaleFactor - 1),MapPanel.RenderSize.Height * (scaleFactor - 1));
-        MapElementsCanvas.RenderTransform = scaleTransform;
-        MapAnimationElementsCanvas.Margin = new(0,0,MapPanel.RenderSize.Width * (scaleFactor - 1),MapPanel.RenderSize.Height * (scaleFactor - 1));
-        MapAnimationElementsCanvas.RenderTransform = scaleTransform;
-        InfoLayoutPanel.Margin = new(0,0,InfoLayoutPanel.RenderSize.Width * (scaleFactor - 1),InfoLayoutPanel.RenderSize.Height * (scaleFactor - 1));
-        InfoLayoutPanel.RenderTransform = scaleTransform;
-        TurnLogPanel.Margin = new(UIUtil.infoFrameWidth * scaleFactor,0,0,0);
-        TurnLogPanel.RenderTransform = scaleTransform;
-        TurnWinCondPanel.Margin = new(UIUtil.infoFrameWidth * scaleFactor,UIUtil.infoFrameWidth * scaleFactor,0,0);
-        MovePersonCanvas.RenderTransform = scaleTransform;
-        RescaleTurnWinCondPanelUI(scaleFactor);
-        RelayoutCountryPostUI(scaleFactor);
-        lastScaleFactor = scaleFactor;
+      void SetCountryPostsPanel() {
+        Dictionary<ERole, Color> countryRolePanelColorMap = new([
+          new(ERole.central,new Color(255,240,240,210)),new(ERole.affair,new Color(255,240,240,240)),
+            new(ERole.defense,new Color(255,210,210,240)),new(ERole.attack,new Color(255,240,210,210))
+        ]);
+        Dictionary<ERole, Grid> rolePanelMap = countryRolePanelColorMap.ToDictionary(v => v.Key, v => CreateCountryPostPanel(v.Key, v.Value));
+        rolePanelMap.ToList().ForEach(v => v.Value.PointerEntered += (_, _) => UpdateCountryPostPanelZIndex(v.Key));
+        countryPostPanelMap.Clear();
+        rolePanelMap.ToList().ForEach(v => countryPostPanelMap.Add(v.Key, v.Value));
+        CountryPostsPanel.Children.Clear();
+        rolePanelMap.Reverse().ToList().ForEach(v => CountryPostsPanel.Children.Add(v.Value));
       }
       void RefreshViewMode() {
         SwitchViewModeButtonText.Text = UIUtil.viewMode == UIUtil.ViewMode.fix ? "▼" : "▲";
-        ContentGrid.MaxWidth = UIUtil.viewMode == UIUtil.ViewMode.fix ? UIUtil.fixModeMaxWidth : double.PositiveInfinity;
+        ContentGrid.MaxWidth = UIUtil.GetContentMaxWidth();
       }
     }
   }
@@ -166,7 +180,8 @@ internal sealed partial class Game:Page {
       MapAnimationElementsCanvas.MySetChildren([]);
     }
     async Task SetInitUI(GameState game) {
-      areaElemsMap = game.AreaMap.ToDictionary(v => v.Key,v => CreateAreaElems(game,v.Key));
+      areaElemsMap.Clear();
+      game.AreaMap.ToDictionary(v => v.Key, v => CreateAreaElems(game, v.Key)).ToList().ForEach(v => areaElemsMap.Add(v.Key, v.Value));
       await Dispatcher.RunAsync(CoreDispatcherPriority.Low,MapElementsCanvas.Children.Clear);
       await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.RoadConnections.ToList().ForEach(road => MapElementsCanvas.Children.Add(MaybeCreateRoadLine(game,road))));
       await Task.Yield();
@@ -261,7 +276,7 @@ internal sealed partial class Game:Page {
           Foreground=Colors.Black, Background=Colors.White, Padding=new(10,0,0,0), Margin=new(0,1),
           ItemContainerStyle = new Style(typeof(ComboBoxItem)).MyApplyA(style=>style.Setters.Add(new Setter(FontSizeProperty,BasicStyle.fontsize*UIUtil.GetScaleFactor(MainGrid.RenderSize)))),
         }.MyApplyA(elem => ScenarioBase.GetScenarioIds().Select(v=>v.Value).ToList().ForEach(elem.Items.Add)).MyApplyA(v=>
-          v.SelectionChanged+=(_,_)=>(v.SelectedItem as string)?.MyApplyA(async text =>await InitGame(GetGame.GetInitGameScenario(new(text))))
+          v.SelectionChanged+=(_,_)=>(v.SelectedItem as string)?.MyApplyA(async text => await InitGame(GetGame.GetInitGameScenario(new(text))))
         ).MyApplyA(v=>Grid.SetColumn(v,3)),
         new StackPanel().MyApplyA(v=>Grid.SetColumn(v,4)),
         new TextBlock{ Text=game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.MyApplyF(v=>$"{v.StartYear}年開始"),VerticalAlignment=VerticalAlignment.Center }.MyApplyA(v=>Grid.SetColumn(v,5)),
@@ -459,7 +474,7 @@ internal sealed partial class Game:Page {
       UIUtil.SetVisibility(CountryPostsPanel,true);
       return game.MyApplyF(UpdateGame.GameEndJudge).MyApplyF(game => game.Phase is Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd ? game : game.MyApplyF(NextTurn));
       GameState NextTurn(GameState game) {
-        GameState newGameState = game.MyApplyF(UpdateGame.NextTurn).MyApplyF(v => v with { Phase = Phase.Planning });
+        GameState newGameState = game.MyApplyF(UpdateGame.NextTurn).MyApplyF(v => v with { Phase = Phase.Planning }).MyApplyF(game => UpdateGame.AppendStartPlanningRemark(game,[.. Text.StartPlanningCharacterRemarkTexts(game,Lang.ja)]));
         newGameState.MyApplyA(UpdateCountryPosts).MyApplyA(UpdateAreaPanels).MyApplyA(UpdateTurnLogUI).MyApplyA(UpdateTurnWinCondUI).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyF(UpdateGame.GameEndJudge).MyApplyA(ShowCharacterRemark).MyApplyF(ResetParam);
         return newGameState;
       }
@@ -523,19 +538,15 @@ internal sealed partial class Game:Page {
     Canvas.SetLeft(personPanel,e.GetCurrentPoint(MovePersonCanvas).Position.X - UIUtil.personPutSize.Width / 2);
     Canvas.SetTop(personPanel,e.GetCurrentPoint(MovePersonCanvas).Position.Y - UIUtil.personPutSize.Height / 2);
   }
-
-
-  private static ERole activePanelRole = ERole.central;
-  private static readonly Dictionary<ERole,StackPanel> countryPostPanelMap = [];
-  private static (Panel panel, Post post)? pointerover = null;
-  private static (Panel panel, PersonId person)? pick = null;
-  private StackPanel CreateCountryPostPanel(ERole role,Color backColor) {
-    return new StackPanel() { Padding = new(1.5,0),Background = backColor.ToBrush() }.MySetChildren([
-      new StackPanel() { Orientation = Orientation.Horizontal,HorizontalAlignment = HorizontalAlignment.Center }.MySetChildren([
+  private Grid CreateCountryPostPanel(ERole role,Color backColor) {
+    return new Grid() { Width = countryPostPanelWidth, Background = backColor.ToBrush() }.MySetChildren([
+      new StackPanel() {HorizontalAlignment = HorizontalAlignment.Center }.MySetChildren([
+        new StackPanel() { Orientation = Orientation.Horizontal,HorizontalAlignment = HorizontalAlignment.Center }.MySetChildren([
           new TextBlock { Text = Text.RoleToText(role,Lang.ja) },
           new Image { Source = new SvgImageSource(new($"ms-appx:///Assets/Svg/{role}.svg")),Width = BasicStyle.textHeight,Height = BasicStyle.textHeight,VerticalAlignment = VerticalAlignment.Center }
         ]),
         CreateCountryPosts(GameData.game,role)
+      ])
     ]);
     StackPanel CreateCountryPosts(GameState game,ERole role) {
       return new StackPanel().MySetChildren([
@@ -566,10 +577,6 @@ internal sealed partial class Game:Page {
     }
   }
   private static Color GetPostFrameColor(GameState game,EArea? area) => area != null && (game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.ChinaAreas ?? []).Contains(area.Value) ? new Color(150,100,100,30) : new Color(120,0,0,0);
-  private void RelayoutCountryPostUI(double scaleFactor) {
-    double PostPanelLeftUnit = (MainGrid.RenderSize.Width / scaleFactor - countryPostPanelMap.Values.FirstOrDefault()?.RenderSize.Width ?? 0) / (countryPostPanelMap.Count - 1);
-    countryPostPanelMap.Values.Reverse().Select((elem,index) => (elem, index)).ToList().ForEach(v => Canvas.SetLeft(v.elem,PostPanelLeftUnit * v.index));
-  }
   private void RescaleTurnWinCondPanelUI(double scaleFactor) {
     TurnWinCondPanel.RenderTransform = new ScaleTransform() { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = TurnWinCondPanel.RenderSize.Width / 2 };
   }
@@ -655,17 +662,17 @@ internal sealed partial class Game:Page {
     } else {
       return game;
     }
-      GameState SwapPerson(GameState game) {
-        KeyValuePair<PersonId,PersonData>? maybeDestPersonInfo = game.PersonMap.MyNullable().FirstOrDefault(v => Person.GetPersonCountry(game,v?.Key ?? new(string.Empty)) == game.PlayCountry && v?.Value.Post == pointerover?.post);
-        return UpdateGame.PutPersonFromUI(game,maybeDestPersonInfo?.Key,pick?.person.MyApplyF(game.PersonMap.GetValueOrDefault)?.Post).MyApplyA(game => game.PersonMap.MyNullable().FirstOrDefault(v => v?.Key == maybeDestPersonInfo?.Key)?.MyApplyF(destPersonInfo => pick?.panel.MySetChildren([CreatePersonPanel(game,destPersonInfo)])));
-      }
+    GameState SwapPerson(GameState game) {
+      KeyValuePair<PersonId,PersonData>? maybeDestPersonInfo = game.PersonMap.MyNullable().FirstOrDefault(v => Person.GetPersonCountry(game,v?.Key ?? new(string.Empty)) == game.PlayCountry && v?.Value.Post == pointerover?.post);
+      return UpdateGame.PutPersonFromUI(game,maybeDestPersonInfo?.Key,pick?.person.MyApplyF(game.PersonMap.GetValueOrDefault)?.Post).MyApplyA(game => game.PersonMap.MyNullable().FirstOrDefault(v => v?.Key == maybeDestPersonInfo?.Key)?.MyApplyF(destPersonInfo => pick?.panel.MySetChildren([CreatePersonPanel(game,destPersonInfo)])));
+    }
     GameState PutPerson(GameState game) {
       return UpdateGame.PutPersonFromUI(game,pick?.person,pointerover?.post ?? pick?.person.MyApplyF(game.PersonMap.GetValueOrDefault)?.Post).MyApplyA(game => game.PersonMap.MyNullable().FirstOrDefault(v => v?.Key == pick?.person)?.MyApplyF(putPersonInfo => (pointerover?.panel ?? pick?.panel)?.MySetChildren([CreatePersonPanel(game,putPersonInfo)])));
     }
   }
   private void UpdateCountryPostPanelZIndex(ERole toActiveRole) {
-    if(activePanelRole == countryPostPanelMap.MyNullable().FirstOrDefault(v => v?.Value == CountryPostsPanel.Children.LastOrDefault() as StackPanel)?.Key) {
-      List<StackPanel> resetZIndexPanels = GetResetZIndexPanels((activePanelRole, toActiveRole) switch {
+    if(activePanelRole == countryPostPanelMap.MyNullable().FirstOrDefault(v => v?.Value == CountryPostsPanel.Children.LastOrDefault() as Grid)?.Key) {
+      List<Grid> resetZIndexPanels = GetResetZIndexPanels((activePanelRole, toActiveRole) switch {
         (ERole.central, ERole.affair) => [ERole.affair],
         (ERole.central, ERole.defense) => [ERole.affair,ERole.defense],
         (ERole.central, ERole.attack) => [ERole.affair,ERole.defense,ERole.attack],
@@ -689,7 +696,7 @@ internal sealed partial class Game:Page {
        
       }
     }
-    static List<StackPanel> GetResetZIndexPanels(ERole[] resetZIndexRoles) => resetZIndexRoles.Select(countryPostPanelMap.GetValueOrDefault).MyNonNull();
+    static List<Grid> GetResetZIndexPanels(ERole[] resetZIndexRoles) => resetZIndexRoles.Select(countryPostPanelMap.GetValueOrDefault).MyNonNull();
   }
   private void ShowCharacterRemark(GameState game) => CharacterRemark.Show(CharacterRemarkPanel,game);
   private static class PushArea {
@@ -717,13 +724,15 @@ internal sealed partial class Game:Page {
             .. (pushCountry is null?[]:Enum.GetValues<ERole>().SelectMany(role=>Person.GetInitPersonMap(game,pushCountry.Value,role).Keys.OrderBy(v=>Person.GetPersonBirthYear(game,v)).Select(v=>PersonInfoText(game,v)))).MyApplyF(v=>v.MyIsEmpty()?["(人物はいません)"]:v).Select(Make),
           ];
         string okButtonText = pushCountry is ECountry.漢 or null ? $"({Text.CountryText(pushCountry,Lang.ja)}陣営は選べません)" : "プレイする";
-        Action? okButtonAction = pushCountry is ECountry.漢 or null ? null : () => ClickOkButtonAction(game,pushCountry.Value);
+        Action? okButtonAction = pushCountry is ECountry.漢 or null ? null : () => GameData.game = ClickOkButtonAction(game,pushCountry.Value);
         Ask.SetElems(page.AskPanel,title,contents,okButtonText,okButtonAction,true);
         return game;
         static TextBlock Make(string text) => new() { Text = text,HorizontalAlignment = HorizontalAlignment.Center };
         static string PersonInfoText(GameState game,PersonId personId) => $"{personId.Value}  {Text.RoleToText(Person.GetPersonRole(game,personId),Lang.ja)} ランク{Person.GetPersonRank(game,personId)} 齢{Turn.GetYear(game) - Person.GetPersonBirthYear(game,personId)}";
-        void ClickOkButtonAction(GameState game,ECountry playCountry) {
-          GameData.game = SelectPlayCountry(game,playCountry).MyApplyF(StartGame).MyApplyF(game => UpdateGame.AppendNewLog(game,[Text.TurnHeadLogText(game,Lang.ja)])).MyApplyA(page.UpdateCountryInfoPanel).MyApplyA(page.ShowCharacterRemark);
+        GameState ClickOkButtonAction(GameState game,ECountry playCountry) {
+          GameState newGameState = SelectPlayCountry(game,playCountry).MyApplyF(StartGame).MyApplyF(game => UpdateGame.AppendNewLog(game,[Text.TurnHeadLogText(game,Lang.ja)])).MyApplyF(game => UpdateGame.AppendStartPlanningRemark(game,[.. Text.StartPlanningCharacterRemarkTexts(game,Lang.ja)]));
+          newGameState.MyApplyA(page.UpdateCountryInfoPanel).MyApplyA(page.ShowCharacterRemark);
+          return newGameState;
         }
         GameState SelectPlayCountry(GameState game,ECountry playCountry) => UpdateGame.AttachGameStartData(game,playCountry).MyApplyA( page.UpdateCountryPosts);
         GameState StartGame(GameState game) {

@@ -29,7 +29,7 @@ internal sealed partial class CharacterRemark:UserControl {
   internal static void Init(UIElement parentElem) => parent = parentElem;
   internal static void Show(CharacterRemark page,GameState game) {
     string newPersonImageName = Text.GetRemarkPersonName(game.PlayCountry,game.PlayTurn < 3,Lang.ja);
-    string[] contents = Text.CharacterRemarkTexts(game,Lang.ja);
+    string[] contents = GetCharacterRemark(game);
     if(!contents.MyIsEmpty()) {
       page.PersonName.Text = newPersonImageName;
       page.RemarkText.Text = contents.FirstOrDefault() ?? string.Empty;
@@ -54,6 +54,11 @@ internal sealed partial class CharacterRemark:UserControl {
           Show(page,newGameState);
         }
       );
+    }
+    string[] GetCharacterRemark(GameState game) {
+      return game.Phase switch { Phase.Planning => Planning(game), Phase.Execution => Execution(game), _ => [] };
+      static string[] Planning(GameState game) => game.StartPlanningCharacterRemark ?? [];
+      static string[] Execution(GameState game) => game.StartExecutionCharacterRemark ?? [];
     }
   }
   internal void ResizeElem(UIElement parent) {

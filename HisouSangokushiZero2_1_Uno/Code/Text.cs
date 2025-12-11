@@ -37,8 +37,9 @@ internal static class Text {
   internal static string? FallPlayerCapitalDeathPersonCharacterRemarkText(List<PersonId> deathPersons,Lang lang) => Ja.FallPlayerCapitalDeathPersonCharacterRemarkText(deathPersons);
   internal static string? ChangeCapitalCharacterRemarkText(EArea prevCapital,EArea newCapial,Lang lang) => Ja.ChangeCapitalCharacterRemarkText(prevCapital,newCapial);
   internal static string? WarDeathBureaucracyPersonCharacterRemarkText(EArea area,List<PersonId> deathPersons,Lang lang) => Ja.WarDeathBureaucracyPersonCharacterRemarkText(area,deathPersons);
-  internal static string[] CharacterRemarkTexts(GameState game,Lang lang) => Ja.CharacterRemarkTexts(game);
+  internal static string[] StartPlanningCharacterRemarkTexts(GameState game,Lang lang) => Ja.StartPlanningCharacterRemarkTexts(game);
   internal static string GetRemarkPersonName(ECountry? country,bool isAliveCharacter,Lang lang) => Ja.GetRemarkPersonName(country,isAliveCharacter);
+  internal static string NoBasicWinCondText(Lang lang) => Ja.NoBasicWinCondText();
   private static class Ja {
     internal static string CountryText(ECountry? country) => country?.ToString() ?? "自治";
     internal static string CommanderToText(CommanderType commander) => commander.MainPerson == null && commander.SubPerson == null ? "無名武官" : $"{commander.MainPerson?.Value ?? "無名武官"}と{commander.SubPerson?.Value ?? "無名武官"}";
@@ -66,11 +67,8 @@ internal static class Text {
     internal static string? FallPlayerCapitalDeathPersonCharacterRemarkText(List<PersonId> deathPersons) => !deathPersons.MyIsEmpty() ? $"首都の陥落により{string.Join("と",deathPersons.Select(v => v.Value))}が死亡しました" : null;
     internal static string? ChangeCapitalCharacterRemarkText(EArea prevCapital,EArea newCapial) => prevCapital != newCapial ? $"首都が{newCapial}に移りました" : null;
     internal static string? WarDeathBureaucracyPersonCharacterRemarkText(EArea area,List<PersonId> deathPersons) => deathPersons.Count != 0 ? $"{area}にいた{string.Join("と",deathPersons.Select(v => v.Value))}が戦死しました" : null;
-    internal static string[] CharacterRemarkTexts(GameState game) {
-      return game.Phase switch { Phase.Planning => Planning(game), Phase.Execution => Execution(game), _ => [] };
-      static string[] Planning(GameState game) => [
-        .. game.StartPlanningCharacterRemark ?? [],
-        .. game.PlayTurn == 0 ? [
+    internal static string[] StartPlanningCharacterRemarkTexts(GameState game) {
+      return game.PlayTurn == 0 ? [
           "ゲームの説明を聞きますか？\n勝利条件・敗北条件と\n戦闘のルールの説明があります",
           $"勝利条件は2種類あります\n陣営毎の勝利条件を一番乗り達成で達成勝利\nまたは{game.NowScenario?.MyApplyF(ScenarioBase.GetScenarioData)?.EndYear}年春まで存続で存続勝利\nとなります、どちらも勝利ではありますが\n区別があることに留意してください",
           "敗北条件は2種類で\n陣営毎の勝利条件を他陣営に先に達成される\nおよび全領土失陥となります\nまた、我々の命運も共にありますので\nどうかできるだけ多くの生存者を\n後まで導いて頂きますよう",
@@ -94,10 +92,9 @@ internal static class Text {
           "詳しいことは\n情報のルール詳細に\n記してあります\nご武運を・・"
         ] : game.PlayTurn == 3 ? [
           $"今まで説明に来ていた{GetRemarkPersonName(game.PlayCountry,true)}が亡くなりました"
-        ] : new List<string>(),
-      ];
-      static string[] Execution(GameState game) => game.StartExecutionCharacterRemark??[];
+        ] : [];
     }
     internal static string GetRemarkPersonName(ECountry? country,bool isAliveCharacter) => isAliveCharacter ? country switch { ECountry.魏 => "杜畿", ECountry.呉 => "韓当", ECountry.蜀漢 => "簡雍", _ => "武官" } : "文官";
+    internal static string NoBasicWinCondText() => "選べません(勝利条件なし)";
   }
 }

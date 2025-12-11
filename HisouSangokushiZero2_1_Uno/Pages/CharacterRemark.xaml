@@ -22,8 +22,8 @@
       <Grid x:Name="ButtonPanel" Width="100" Height="25" HorizontalAlignment="Center">
       </Grid>
     </StackPanel>
-    <Button x:Name="CloseButton" Width="20" Height="15" Background="#2F00" HorizontalAlignment="Right" VerticalAlignment="Top">
-      <TextBlock Text="×" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Button x:Name="CloseButton" Width="25" Height="20" Background="#2F00" HorizontalAlignment="Right" VerticalAlignment="Top">
+      <TextBlock Text="×" FontWeight="Bold" FontSize="27" LineHeight="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Button>
   </Grid>
 </UserControl>

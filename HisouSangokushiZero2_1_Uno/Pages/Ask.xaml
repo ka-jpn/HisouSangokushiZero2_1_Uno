@@ -22,7 +22,7 @@
         <TextBlock x:Name="OkButtonText"/>
       </Button>
       <Button x:Name="CloseButton" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FEEE">
-        <TextBlock Text="閉じる"/>
+        <TextBlock x:Name="CloseButtonText" Text="閉じる"/>
       </Button>
     </Grid>
   </StackPanel>

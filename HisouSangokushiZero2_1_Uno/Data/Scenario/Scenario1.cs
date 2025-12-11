@@ -5,15 +5,17 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Data.Scenario;
 internal class Scenario1:ScenarioBase.IScenario {
   ScenarioId ScenarioBase.IScenario.ScenarioId => new("反董連合");
-  ScenarioData ScenarioBase.IScenario.GetScenario() => new(startYear,endYear,chinaAreas,roads,areaMap,winCondMap,countryDataMap,personDataMap);
-  private static readonly Dictionary<EArea,EArea> areaDiffs = [];
-  private static readonly int startYear = 190,endYear = 230;
-  private static readonly EArea[] removeChinaAreas = [];
-  private static readonly EArea[] addChinaAreas = [];
-  private static readonly Road[] addRoads = [];
-  private static readonly EArea[] chinaAreas = ScenarioBase.CalcChinaAreas(areaDiffs,removeChinaAreas,addChinaAreas);
-  private static readonly Road[] roads = ScenarioBase.CalcRoads(areaDiffs,addRoads);
-  private readonly Dictionary<EArea,AreaData> areaMap = new([
+  ScenarioData ScenarioBase.IScenario.GenerateScenario() {
+    Dictionary<EArea,EArea> areaDiffs = [];
+    int startYear = 190,endYear = 230;
+    EArea[] removeChinaAreas = [];
+    EArea[] addChinaAreas = [];
+    Road[] addRoads = [];
+    EArea[] chinaAreas = ScenarioBase.CalcChinaAreas(areaDiffs,removeChinaAreas,addChinaAreas);
+    Road[] roads = ScenarioBase.CalcRoads(areaDiffs,addRoads);
+    return new(startYear,endYear,chinaAreas,roads,GenerateAreaMap(),GenerateWinCondMap(chinaAreas),GenerateCountryDataMap(),GeneratePersonDataMap());
+  }
+  private static Dictionary<EArea,AreaData> GenerateAreaMap() => new([
     new(EArea.襄平,new(new Point(7,1),new AffairsParam(50,15),ECountry.公孫度)),
     new(EArea.番汗,new(new Point(8,1),new AffairsParam(10,7),ECountry.濊)),
     new(EArea.朝鮮,new(new Point(8,2),new AffairsParam(20,12),ECountry.濊)),
@@ -90,7 +92,7 @@ internal class Scenario1:ScenarioBase.IScenario {
     new(EArea.目支,new(new Point(8,3),new AffairsParam(10,6),ECountry.馬韓)),
     new(EArea.首里,new(new Point(8,7),new AffairsParam(10,2),ECountry.琉球))
   ]);
-  private readonly Dictionary<ECountry,CountryWinCondition> winCondMap = new([
+  private static Dictionary<ECountry,CountryWinCondition> GenerateWinCondMap(EArea[] chinaAreas) => new([
     new(ECountry.漢,new(new(null,null),(game)=>false,(game)=>[])),
     new(ECountry.公孫度,new(
       new(["西暦210年以降","13都市以上領有"],["※西暦210年以降4年毎1都市緩和","※襄平を領有していたら2都市緩和"]),
@@ -578,7 +580,7 @@ internal class Scenario1:ScenarioBase.IScenario {
       ])
     ))
   ]);
-  private readonly Dictionary<ECountry,CountryData> countryDataMap = new([
+  private static Dictionary<ECountry,CountryData> GenerateCountryDataMap() => new([
     new(ECountry.漢,new(5000,1,new Color(255,238,238,136),0,0)),
     new(ECountry.公孫度,new(100,1,new Color(255,136,204,136),0,0)),
     new(ECountry.公孫瓚,new(2000,1,new Color(255,221,170,102),0,0)),
@@ -618,7 +620,7 @@ internal class Scenario1:ScenarioBase.IScenario {
     new(ECountry.南越,new(100,1,new Color(255,204,170,221),0,0)),
     new(ECountry.濊,new(100,1,new Color(255,187,170,153),0,0)),
   ]);
-  private readonly Dictionary<PersonId,PersonData> personDataMap = new([
+  private static Dictionary<PersonId,PersonData> GeneratePersonDataMap() => new([
     new(new("陳温"),new(ERole.affair,1,155,193,ECountry.漢)),
     new(new("華歆"),new(ERole.affair,1,157,231,ECountry.漢)),
     new(new("盛憲"),new(ERole.affair,1,159,192,ECountry.漢)),

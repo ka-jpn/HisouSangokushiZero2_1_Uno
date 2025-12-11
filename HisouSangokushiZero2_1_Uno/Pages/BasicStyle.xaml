@@ -28,20 +28,9 @@
   </Style>
   <Style TargetType="ListViewItem">
     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-    <Setter Property="VerticalContentAlignment" Value="Top"/>
+    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
     <Setter Property="Margin" Value="0"/>
     <Setter Property="Padding" Value="0"/>
     <Setter Property="MinHeight" Value="0"/>
-  </Style>
-  <Style TargetType="GridView">
-    <Setter Property="Margin" Value="0"/>
-    <Setter Property="Padding" Value="0"/>
-  </Style>
-  <Style TargetType="GridViewItem">
-    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-    <Setter Property="VerticalContentAlignment" Value="Top"/>
-    <Setter Property="Margin" Value="0"/>
-    <Setter Property="Padding" Value="0"/>
-    <Setter Property="MinHeight" Value="0"/>    
   </Style>
 </ResourceDictionary>

@@ -1,4 +1,6 @@
-﻿using HisouSangokushiZero2_1_Uno.Code;
+﻿using ExCSS;
+using HisouSangokushiZero2_1_Uno.Code;
+using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -7,6 +9,7 @@ using System.Linq;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal sealed partial class Setting:UserControl {
   private static readonly int minZoomLevel = 0, maxZoomLevel = 5;
+  private static UIElement? parent = null;
   internal Setting() {
     InitializeComponent();
     MyInit();
@@ -16,7 +19,7 @@ internal sealed partial class Setting:UserControl {
       RefreshZoomButtonEnable();
       UIUtil.SwitchViewModeActions.Add(RefreshUIElements);
       void AttachEvents() {
-        SizeChanged += (_,_) => ResizeElem();
+        SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
         ZoomInButton.Click += (_,e) => ChangeZoomLevel(1);
         ZoomOutButton.Click += (_,e) => ChangeZoomLevel(-1);
         InnerSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
@@ -24,8 +27,8 @@ internal sealed partial class Setting:UserControl {
         LoadGameButton.Click += (_,_) => UIUtil.LoadGame();
         InitGameButton.Click += (_,_) => UIUtil.InitGame();
         BackTitleButton.Click += (_,_) => (Window.Current?.Content as Frame)?.Navigate(typeof(Title));
-        void ResizeElem() {
-          double scaleFactor = UIUtil.GetScaleFactor(RenderSize with { Height = 0 });
+        void ResizeElem(UIElement parent) {
+          double scaleFactor = UIUtil.GetScaleFactor(parent.RenderSize);
           double contentWidth = RenderSize.Width / scaleFactor - 5;
           ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
           ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
@@ -36,7 +39,6 @@ internal sealed partial class Setting:UserControl {
           BackTitleButton.MaxWidth = contentWidth - 10;
           ZoomInButton.MaxWidth = (contentWidth - MapZoomCaption.Width - 10) / 2;
           ZoomOutButton.MaxWidth = (contentWidth - MapZoomCaption.Width - 10) / 2;
-          Scroll.Width = RenderSize.Width;
         }
         void ChangeZoomLevel(double zoomLevelDiff) {
           Game.zoomLevel = Math.Clamp(Game.zoomLevel + zoomLevelDiff,minZoomLevel,maxZoomLevel); RefreshZoomButtonEnable(); UIUtil.ChangeScaleActions.ForEach(v => v());
@@ -51,4 +53,5 @@ internal sealed partial class Setting:UserControl {
       }
     }
   }
+  internal static void Init(UIElement parentElem) => parent = parentElem;
 }

@@ -31,7 +31,7 @@ internal sealed partial class Ask:UserControl {
     OkButtonAction = () => { okButtonAction?.Invoke(); UIUtil.SetVisibility(page,!isOkButtonClickClose); };
     page.OkButtonText.Text = okButtonText;
     page.OkButton.IsEnabled = okButtonAction is {};
-    page.Visibility = Visibility.Visible;
+    UIUtil.SetVisibility(page, true);
     parent?.MyApplyA(page.ResizeElem);
   }
   internal void ResizeElem(UIElement parent) {
@@ -49,10 +49,8 @@ internal sealed partial class Ask:UserControl {
     ContentsPanel.Margin = new(ContentsPanel.Width * (scaleFactor - 1) / 2,0,ContentsPanel.Width * (scaleFactor - 1) / 2,ContentsPanel.Height * (scaleFactor - 1));
     ContentsPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = ContentsPanel.Width / 2 };
     ButtonGrid.Height = 45 * scaleFactor;
-    OkButton.Margin = new(OkButton.RenderSize.Width * (scaleFactor - 1) / 2,0,OkButton.RenderSize.Width * (scaleFactor - 1) / 2,ButtonGrid.Height * (scaleFactor - 1));
-    OkButton.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = OkButton.RenderSize.Width / 2 };
-    CloseButton.Margin = new(CloseButton.RenderSize.Width * (scaleFactor - 1) / 2,0,CloseButton.RenderSize.Width * (scaleFactor - 1) / 2,ButtonGrid.Height * (scaleFactor - 1));
-    CloseButton.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = CloseButton.RenderSize.Width / 2 };
+    OkButtonText.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = OkButtonText.RenderSize.Width / 2,CenterY = OkButtonText.RenderSize.Height / 2 };
+    CloseButtonText.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor,CenterX = CloseButtonText.RenderSize.Width / 2,CenterY = CloseButtonText.RenderSize.Height / 2 };
     paddingThickness = new(padding * scaleFactor);
     paddingSize = padding * scaleFactor;
   }

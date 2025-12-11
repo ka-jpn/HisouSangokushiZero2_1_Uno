@@ -8,7 +8,7 @@ using System;
 using Windows.UI.Core;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Pages;
-internal sealed partial class Title:Page {
+public sealed partial class Title:Page {
   public Title() {
     InitializeComponent();
     MyInit();
@@ -28,7 +28,7 @@ internal sealed partial class Title:Page {
       };
       TopSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
       Content.SizeChanged += (_,_) => ScalingElements();
-      UIUtil.SwitchViewModeActions.Add(() => { RefreshViewMode(); ScalingElements(); });
+      UIUtil.SwitchViewModeActions.Add(RefreshViewMode);
       GameState GetInitGameData() => GetGame.GetInitGameScenario(ScenarioBase.GetScenarioId(0));
       void NavigateToGamePage() => (Window.Current?.Content as Frame)?.Navigate(typeof(Game));
       void RefreshViewMode() {

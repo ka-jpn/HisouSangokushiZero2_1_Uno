@@ -7,18 +7,20 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Data.Scenario;
 internal class Scenario2:ScenarioBase.IScenario {
   ScenarioId ScenarioBase.IScenario.ScenarioId => new("蜀之南征");
-  ScenarioData ScenarioBase.IScenario.GetScenario() => new(startYear,endYear,chinaAreas,roads,areaMap,winCondMap,countryDataMap,personDataMap);
-  private static readonly Dictionary<EArea,EArea> areaDiffs = new([
-    new(EArea.土垠,EArea.陽楽),new(EArea.濮陽,EArea.魯),new(EArea.鄴,EArea.晋陽),new(EArea.平陽,EArea.離石),
-    new(EArea.彭城,EArea.陰陵),new(EArea.鄂,EArea.武昌),new(EArea.秣陵,EArea.建業),new(EArea.綿竹,EArea.葭萌)
-  ]);
-  private static readonly int startYear = 225,endYear = 275;
-  private static readonly EArea[] removeChinaAreas = [EArea.平陽];
-  private static readonly EArea[] addChinaAreas = [EArea.南城];
-  private static readonly Road[] addRoads = [new(EArea.成都,EArea.魚復,RoadKind.land,2),new(EArea.臨湘,EArea.南城,RoadKind.land,1),new(EArea.龍編,EArea.南越,RoadKind.land,1)];
-  private static readonly EArea[] chinaAreas = ScenarioBase.CalcChinaAreas(areaDiffs,removeChinaAreas,addChinaAreas);
-  private static readonly Road[] roads = ScenarioBase.CalcRoads(areaDiffs,addRoads);
-  private readonly Dictionary<EArea,AreaData> areaMap = new([
+  ScenarioData ScenarioBase.IScenario.GenerateScenario() {
+    Dictionary<EArea,EArea> areaDiffs = new([
+      new(EArea.土垠,EArea.陽楽),new(EArea.濮陽,EArea.魯),new(EArea.鄴,EArea.晋陽),new(EArea.平陽,EArea.離石),
+      new(EArea.彭城,EArea.陰陵),new(EArea.鄂,EArea.武昌),new(EArea.秣陵,EArea.建業),new(EArea.綿竹,EArea.葭萌)
+    ]);
+    int startYear = 225,endYear = 275;
+    EArea[] removeChinaAreas = [EArea.平陽];
+    EArea[] addChinaAreas = [EArea.南城];
+    Road[] addRoads = [new(EArea.成都,EArea.魚復,RoadKind.land,2),new(EArea.臨湘,EArea.南城,RoadKind.land,1),new(EArea.龍編,EArea.南越,RoadKind.land,1)];
+    EArea[] chinaAreas = ScenarioBase.CalcChinaAreas(areaDiffs,removeChinaAreas,addChinaAreas);
+    Road[] roads = ScenarioBase.CalcRoads(areaDiffs,addRoads);
+    return new(startYear,endYear,chinaAreas,roads,GenerateAreaMap(),GenerateWinCondMap(chinaAreas),GenerateCountryDataMap(),GeneratePersonDataMap());
+  }
+  private static Dictionary<EArea,AreaData> GenerateAreaMap() => new([
     new(EArea.襄平,new(new Point(7,1),new AffairsParam(50,30),ECountry.燕)),
     new(EArea.番汗,new(new Point(8,1),new AffairsParam(10,8),ECountry.燕)),
     new(EArea.朝鮮,new(new Point(8,2),new AffairsParam(20,8),ECountry.燕)),
@@ -95,7 +97,7 @@ internal class Scenario2:ScenarioBase.IScenario {
     new(EArea.目支,new(new Point(8,3),new AffairsParam(10,6),ECountry.馬韓)),
     new(EArea.首里,new(new Point(8,7),new AffairsParam(10,2),ECountry.琉球)),
   ]);
-  private readonly Dictionary<ECountry,CountryWinCondition> winCondMap = new([
+  private static Dictionary<ECountry,CountryWinCondition> GenerateWinCondMap(EArea[] chinaAreas) => new([
     new(ECountry.魏,new(
       new(["呉が滅亡","蜀漢が滅亡","中華領域の65%以上領有"],["※蜀漢を滅亡させたら10%緩和","※呉を滅亡させたら5%緩和"]),
       (game)=>Country.IsPerish(game,ECountry.呉)&&Country.IsPerish(game,ECountry.蜀漢)&&chinaAreas.MyApplyF(v=>v.Length*(0.65-(Country.GetPerishFrom(game,ECountry.蜀漢)==ECountry.魏?0.1:0)-(Country.GetPerishFrom(game,ECountry.呉)==ECountry.魏?0.05:0))<=Country.HasAreaCount(game,ECountry.魏,v)),
@@ -317,7 +319,7 @@ internal class Scenario2:ScenarioBase.IScenario {
       ])
     ))
   ]);
-  private readonly Dictionary<ECountry,CountryData> countryDataMap = new([
+  private static Dictionary<ECountry,CountryData> GenerateCountryDataMap() => new([
     new(ECountry.魏,new(1000,1,new Color(255,187,187,255),2,0)),
     new(ECountry.呉,new(1000,1,new Color(255,255,187,187),0,0)),
     new(ECountry.蜀漢,new(1000,1,new Color(255,187,255,187),0,0)),
@@ -336,7 +338,7 @@ internal class Scenario2:ScenarioBase.IScenario {
     new(ECountry.琉球,new(100,1,new Color(255,204,170,153),0,1)),
     new(ECountry.南越,new(200,1,new Color(255,204,170,221),0,0)),
   ]);
-  private readonly Dictionary<PersonId,PersonData> personDataMap = new([
+  private static Dictionary<PersonId,PersonData> GeneratePersonDataMap() => new([
     new(new("王建"),new(ERole.central,1,170,238,ECountry.燕,200)),
     new(new("柳甫"),new(ERole.central,1,180,238,ECountry.燕)),
     new(new("賈範"),new(ERole.affair,1,190,237,ECountry.燕)),

@@ -18,9 +18,11 @@ internal record CountryListData(Brush Brush,ECountry Country,decimal Fund,string
 internal sealed partial class ParamList:UserControl {
   private enum SortButtonKind { 国役割別, ランク順, 生年順, 没年順 };
   private const double listviewWidth = 750;
-  private const double listviewHeight = 350;
-  private readonly List<ObservableCollection<PersonListData>> personDataList = [[],[]];
-  private readonly List<ObservableCollection<CountryListData>> countryDataList = [[],[]];
+  private const double personListviewHeight = 400;
+  private const double countryListviewHeight = 300;
+  private static readonly List<ObservableCollection<PersonListData>> personDataList = [[],[]];
+  private static readonly List<ObservableCollection<CountryListData>> countryDataList = [[],[]];
+  private static UIElement? parent = null;
   internal ParamList() {
     InitializeComponent();
     MyInit();
@@ -34,8 +36,21 @@ internal sealed partial class ParamList:UserControl {
         new(SortButtonKind.生年順,v =>v.OrderBy(v => v.Value.BirthYear).ToDictionary()),
         new(SortButtonKind.没年順,v =>v.OrderBy(v => v.Value.DeathYear).ToDictionary())
       ]);
-      SizeChanged += (_,_) => ResizeElem();
+      AttachEvent();
       SetUIElements();
+      void AttachEvent() {
+        SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
+        void ResizeElem(UIElement parent) {
+          double scaleFactor = UIUtil.GetScaleFactor(parent.RenderSize);
+          double pageWidth = RenderSize.Width;
+          double contentWidth = RenderSize.Width / scaleFactor - 5;
+          ContentPanel.Width = contentWidth;
+          ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
+          ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+          SortButtonPanel1.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
+          SortButtonPanel2.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
+        }
+      }
       void SetUIElements() {
         scenarioNames.ForEachWithIndex((v,i) => v.Text = ScenarioBase.GetScenarioId(i)?.Value);
         sortButtonPanels.ForEachWithIndex((v,i) => v.MySetChildren([.. CreateSortButtons(i)]));
@@ -62,23 +77,13 @@ internal sealed partial class ParamList:UserControl {
           }
         }
         List<CountryListData> GetCountryListData(ScenarioData scenario) {
-          return [.. scenario.CountryMap.Select(ToCountryListItem)];
+          return [.. scenario.CountryMap.OrderBy(v => v.Key).Select(ToCountryListItem)];
           CountryListData ToCountryListItem(KeyValuePair<ECountry,CountryData> countryInfo) {
             return new CountryListData((countryInfo.Value.ViewColor ?? UIUtil.transparentColor).ToBrush(),countryInfo.Key,countryInfo.Value.Fund,string.Join(",",scenario.AreaMap.Where(v => v.Value.Country == countryInfo.Key).Select(v => v.Key.ToString())));
           }
         }
       }
-      void ResizeElem() {
-        double scaleFactor = UIUtil.GetScaleFactor(RenderSize with { Height = 0 });
-        double pageWidth = RenderSize.Width;
-        double contentWidth = RenderSize.Width / scaleFactor - 5;
-        ContentPanel.Width = contentWidth;
-        ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
-        ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
-        SortButtonPanel1.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
-        SortButtonPanel2.Children.OfType<Button>().ToList().ForEach(v => v.Width = contentWidth / 4 - 5 * 2);
-        Scroll.Width = RenderSize.Width;
-      }
     }
   }
+  internal static void Init(UIElement parentElem) => parent = parentElem;
 }

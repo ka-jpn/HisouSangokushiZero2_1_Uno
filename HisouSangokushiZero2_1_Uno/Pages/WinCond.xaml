@@ -18,7 +18,7 @@
       </Grid>
     </DataTemplate>
   </UserControl.Resources>
-  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+  <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
         <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ１："/>
@@ -28,7 +28,7 @@
         <TextBlock Text="陣営" TextAlignment="Center" Width="50"/>
         <TextBlock Text="勝利条件" MaxWidth="700" Padding="5,0,0,0" />
       </StackPanel>
-      <ListView x:Name="WinCondListView1" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Height="{x:Bind local:WinCond.listviewHeight}" ItemsSource="{x:Bind winCondDataList[0],Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
+      <ListView x:Name="WinCondListView1" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Height="{x:Bind local:WinCond.listviewHeight}" ItemsSource="{x:Bind local:WinCond.winCondDataList[0],Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
       <StackPanel Height="2"></StackPanel>
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
         <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ２："/>
@@ -38,7 +38,7 @@
         <TextBlock Text="陣営名" TextAlignment="Center" Width="50"/>
         <TextBlock Text="勝利条件" MaxWidth="700" Padding="5,0,0,0" />
       </StackPanel>
-      <ListView x:Name="WinCondListView2" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Height="{x:Bind local:WinCond.listviewHeight}" ItemsSource="{x:Bind winCondDataList[1],Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
+      <ListView x:Name="WinCondListView2" MaxWidth="{x:Bind local:WinCond.listviewWidth}" Height="{x:Bind local:WinCond.listviewHeight}" ItemsSource="{x:Bind local:WinCond.winCondDataList[1],Mode=OneWay}" ItemTemplate="{StaticResource WinCondListView}" Background="#CCC"/>
       <StackPanel Height="2"></StackPanel>
     </StackPanel>
   </ScrollViewer>

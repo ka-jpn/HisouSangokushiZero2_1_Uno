@@ -84,13 +84,14 @@ internal static class UIUtil {
     Uno.Foundation.WebAssemblyRuntime.InvokeJS($"window.parent.{viewMode}();");
 #endif
   }
-  internal static double GetScaleFactor(Windows.Foundation.Size size) => Math.Max(size.Width / mapSize.Width,(size.Height - StateInfo.contentHeight) / mapSize.Height);
+  internal static double GetScaleFactor(Windows.Foundation.Size size) => Math.Max(size.Width / mapSize.Width,size.Height / mapSize.Height);
   internal static void ReverseVisibility(UIElement elem) => elem.Visibility = ToVisibility(elem.Visibility.IsHidden());
   internal static void SetVisibility(UIElement elem,bool isShow) => ToVisibility(isShow).MyApplyA(v=>elem.Visibility = v,v=>elem.Visibility != v);
   internal static Visibility ToVisibility(bool isShow) => isShow ? Visibility.Visible : Visibility.Collapsed;
   internal static void SaveGame() => SaveGameActions.ForEach(v => v());
   internal static void LoadGame() => LoadGameActions.ForEach(v => v());
   internal static void InitGame() => InitGameActions.ForEach(v => v());
+  internal static double GetContentMaxWidth() => viewMode == ViewMode.fix ? fixModeMaxWidth : double.PositiveInfinity;
 }
 internal static class 汎用拡張メソッド {
 		internal static T MySetChildren<T>(this T panel,List<UIElement> elements) where T : Panel => panel.MyApplyA(v => v.Children.Clear()).MyApplyA(v => elements.ForEach(v.Children.Add));

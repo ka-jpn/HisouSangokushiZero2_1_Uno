@@ -5,28 +5,8 @@
     See https://aka.platform.uno/using-uno-sdk#implicit-packages for more information regarding the Implicit Packages.
   -->
   <ItemGroup>
-    <UnoIcon Include="Assets\Icons\icon.svg" />
-    <EmbeddedResource Include="Platforms\WebAssembly\WasmCSS\myStyle.css" />
-    <EmbeddedResource Include="Platforms\WebAssembly\WasmScripts\myScript.js" />
-    <LinkerDescriptor Include="LinkerConfig.xml" />
-    <WasmShellMonoEnvironment Include="MONO_GC_PARAMS" Value="nursery-size=32m,major=marksweep,soft-heap-limit=128m" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageVersion Include="MessagePack" Version="3.1.4" />
     <PackageVersion Include="SkiaSharp" Version="3.119.1" />
     <PackageVersion Include="SkiaSharp.NativeAssets.WebAssembly" Version="3.119.1" />
   </ItemGroup>
-  <PropertyGroup>
-    <UnoSplashScreenFile>Assets\Splash\splash_screen.svg</UnoSplashScreenFile>
-    <UnoSplashScreenColor>#DDE</UnoSplashScreenColor>
-    <UnoDragDropExternalSupport>false</UnoDragDropExternalSupport>
-    <UnoXamlResourcesTrimming>true</UnoXamlResourcesTrimming>
-    <WasmShellILLinkerEnabled>true</WasmShellILLinkerEnabled>
-    <!--<RunAOTCompilation>true</RunAOTCompilation>-->
-    <WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>
-    <PublishTrimmed>true</PublishTrimmed>
-    <!--<InvariantGlobalization>true</InvariantGlobalization>-->
-    <WasmShellEnableSkia>true</WasmShellEnableSkia>
-    <UnoDefaultFont>None</UnoDefaultFont>
-  </PropertyGroup>
 </Project>

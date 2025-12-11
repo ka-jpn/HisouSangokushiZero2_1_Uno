@@ -11,7 +11,7 @@ using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using static HisouSangokushiZero2_1_Uno.Code.Storage;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal record SaveSlotData(int SlotIndex,string GameVersion,string? NowScenario,string? PlayCountry,string? PlayTurn,string? PlayTime,string? LastSaveDate,string? HasSaveData);
-internal sealed partial class SaveAndLoad:UserControl {
+public sealed partial class SaveAndLoad:UserControl {
   internal const double minScaleFactor = 0.65;
   internal const double scrollMaxWidth = UIUtil.fixModeMaxWidth * minScaleFactor;
   private static bool isWritemode = false;
@@ -66,7 +66,7 @@ internal sealed partial class SaveAndLoad:UserControl {
     page.ResizeElem(parentSize);
   }
   internal void ResizeElem(Windows.Foundation.Size size) {
-    double scaleFactor = UIUtil.GetScaleFactor(size with {Width=Math.Min(size.Width,scrollMaxWidth), Height = 0 }) / minScaleFactor;
+    double scaleFactor = UIUtil.GetScaleFactor(size with { Width = Math.Min(size.Width, scrollMaxWidth), Height = 0 }) / minScaleFactor;
     double contentWidth = RenderSize.Width / scaleFactor;
     double contentHeight = RenderSize.Height / scaleFactor;
     Content.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };

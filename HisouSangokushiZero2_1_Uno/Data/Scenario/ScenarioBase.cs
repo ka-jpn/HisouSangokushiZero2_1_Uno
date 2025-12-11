@@ -6,14 +6,14 @@ namespace HisouSangokushiZero2_1_Uno.Data.Scenario;
 internal static class ScenarioBase {
   internal interface IScenario {
     internal ScenarioId ScenarioId { get; }
-    internal ScenarioData GetScenario();
+    internal ScenarioData GenerateScenario();
   }
   private static readonly List<IScenario> scenarios = [new Scenario1(),new Scenario2()];
   private static readonly Dictionary<ScenarioId,ScenarioData?> loadedScenarioMap = [];
   internal static ScenarioId? GetScenarioId(int scenarioNo) => scenarios.ElementAtOrDefault(scenarioNo)?.ScenarioId;
   internal static ScenarioId[] GetScenarioIds() => [.. scenarios.Select(v => v.ScenarioId)];
   internal static ScenarioData? GetScenarioData(ScenarioId scenarioId) {
-    return loadedScenarioMap.MyAdd(scenarioId,scenarios.FirstOrDefault(v => v.ScenarioId == scenarioId)?.GetScenario()).GetValueOrDefault(scenarioId);
+    return loadedScenarioMap.MyAdd(scenarioId,scenarios.FirstOrDefault(v => v.ScenarioId == scenarioId)?.GenerateScenario()).GetValueOrDefault(scenarioId);
   }
   internal static EArea[] CalcChinaAreas(Dictionary<EArea,EArea> diffMap,EArea[] removes,EArea[] adds) => [.. baseChinaAreas.Select(v => CalcArea(diffMap,v)).Except(removes).Concat(adds)];
   internal static Road[] CalcRoads(Dictionary<EArea,EArea> diffMap,Road[] adds) => [.. baseRoads.Select(v => v with { From = CalcArea(diffMap,v.From),To = CalcArea(diffMap,v.To) }).Concat(adds)];
