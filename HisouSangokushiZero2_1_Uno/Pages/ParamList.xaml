@@ -46,8 +46,8 @@
   <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <StackPanel x:Name="ContentPanel">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ１："/>
-        <TextBlock x:Name="PersonDataScenarioName1" FontFamily="{StaticResource SourceHanSansJPBold}"/>
+        <TextBlock Text="表示シナリオ：" VerticalAlignment="Center"/>
+        <ComboBox Width="200" x:Name="ScenarioComboBox"/>
       </StackPanel>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="SortButtonPanel1" Orientation="Horizontal" HorizontalAlignment="Center"/>
@@ -61,38 +61,14 @@
         <TextBlock Text="没年" Width="40" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="列伝" Width="400" Margin="0,1" Padding="5,0,0,0" TextAlignment="Start"/>
       </StackPanel>
-      <ListView x:Name="PersonListView1" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.personListviewHeight}" ItemsSource="{x:Bind local:ParamList.personDataList[0],Mode=OneWay}" ItemTemplate="{StaticResource PersonListView}" Background="#CCC"/>
+      <ListView x:Name="PersonListView1" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.personListviewHeight}" ItemsSource="{x:Bind local:ParamList.personListViewDataSource,Mode=OneWay}" ItemTemplate="{StaticResource PersonListView}" Background="#CCC"/>
       <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
       <StackPanel MaxWidth="{x:Bind local:ParamList.listviewWidth}" Orientation="Horizontal" Background="#EEE">
         <TextBlock Text="陣営" Width="75" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="初期資金" Width="75" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="初期領土" Width="600" Margin="0,1" TextAlignment="Start"/>
       </StackPanel>
-      <ListView x:Name="CountryListView1" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.countryListviewHeight}" ItemsSource="{x:Bind local:ParamList.countryDataList[0],Mode=OneWay}" ItemTemplate="{StaticResource CountryListView}" Background="#CCC"/>
-      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ２："/>
-        <TextBlock x:Name="PersonDataScenarioName2" FontFamily="{StaticResource SourceHanSansJPBold}"/>
-      </StackPanel>
-      <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
-      <StackPanel x:Name="SortButtonPanel2" Orientation="Horizontal" HorizontalAlignment="Center"/>
-      <StackPanel MaxWidth="{x:Bind local:ParamList.listviewWidth}" Orientation="Horizontal" Background="#EEE">
-        <TextBlock Text="陣営" Width="50" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="人物名" Width="80" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="ロール" Width="50" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="ランク" Width="50" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="生年" Width="40" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="登場" Width="40" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="没年" Width="40" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="列伝" Width="400" Margin="0,1" Padding="5,0,0,0" TextAlignment="Start"/>
-      </StackPanel>
-      <ListView x:Name="PersonListView2" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.personListviewHeight}" ItemsSource="{x:Bind local:ParamList.personDataList[1],Mode=OneWay}" ItemTemplate="{StaticResource PersonListView}" Background="#CCC"/>
-      <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
-      <StackPanel MaxWidth="{x:Bind local:ParamList.listviewWidth}" Orientation="Horizontal" Background="#EEE">
-        <TextBlock Text="陣営" Width="75" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="初期資金" Width="75" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="初期領土" Width="600" Margin="0,1" TextAlignment="Start"/>
-      </StackPanel>
-      <ListView x:Name="CountryListView2" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.countryListviewHeight}" ItemsSource="{x:Bind local:ParamList.countryDataList[1],Mode=OneWay}" ItemTemplate="{StaticResource CountryListView}" Background="#CCC"/>
+      <ListView x:Name="CountryListView1" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.countryListviewHeight}" ItemsSource="{x:Bind local:ParamList.countryListViewDataSource,Mode=OneWay}" ItemTemplate="{StaticResource CountryListView}" Background="#CCC"/>
     </StackPanel>
   </ScrollViewer>
 </UserControl>
