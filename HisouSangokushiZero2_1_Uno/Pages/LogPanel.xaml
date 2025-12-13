@@ -5,8 +5,8 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages">
   <UserControl.Resources>
-    <DataTemplate x:Key="LogMessageView" x:DataType="local:LogMessage">
-      <TextBlock VerticalAlignment="Center" Text="{x:Bind Text}"/>
+    <DataTemplate x:Key="LogMessageView" x:DataType="x:String">
+      <TextBlock VerticalAlignment="Center" Text="{x:Bind}"/>
     </DataTemplate>
   </UserControl.Resources>
   <Grid x:Name="Content">

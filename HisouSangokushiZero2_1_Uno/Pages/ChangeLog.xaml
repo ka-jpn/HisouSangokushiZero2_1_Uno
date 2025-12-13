@@ -47,7 +47,7 @@
         <TextBlock Text="2025/10/24 ver1.14 スマホでの動作安定化対応"/>
         <TextBlock Text="2025/11/14 ver1.15 レイアウト変更＆NPC思考改善＆列伝導入開始"/>
         <TextBlock Text="2025/11/17 ver1.16 セーブスロットを1個から10個に"/>
-        <TextBlock Text="2025/12/10 ver1.17 動作軽量化"/>
+        <TextBlock Text="2025/12/13 ver1.17 動作軽量化＆ログを引き継ぐように"/>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>

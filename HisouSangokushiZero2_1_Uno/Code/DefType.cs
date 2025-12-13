@@ -18,7 +18,7 @@ public static class DefType {
   [MessagePackObject(true)] public record Post(ERole PostRole,PostKind PostKind);
   [MessagePackObject(true)] public record AffairsParam(decimal AffairsMax,decimal AffairNow);
   [MessagePackObject(true)] public record MetaData(ScenarioId? NowScenario,ECountry? PlayCountry,int? PlayTurn,TimeSpan TotalPlayTime,DateTime LastSaveDate,int SlotNo,string GameVersion);
-  [MessagePackObject(true)] public record GameState(ScenarioId? NowScenario,Dictionary<EArea,AreaData> AreaMap,Dictionary<ECountry,CountryData> CountryMap,Dictionary<PersonId,PersonData> PersonMap,ECountry? PlayCountry,int? PlayTurn,int PlayerMaxCellNum,Phase Phase,Dictionary<ECountry,EArea?> ArmyTargetMap,bool IsTurnProcessing,List<string> NewLog,List<string> TrunNewLog,List<string> GameLog,ECountry[] WinCountrys,string[]? StartPlanningCharacterRemark,string[]? StartExecutionCharacterRemark);
+  [MessagePackObject(true)] public record GameState(ScenarioId? NowScenario,Dictionary<EArea,AreaData> AreaMap,Dictionary<ECountry,CountryData> CountryMap,Dictionary<PersonId,PersonData> PersonMap,ECountry? PlayCountry,int? PlayTurn,int PlayerMaxCellNum,Phase Phase,Dictionary<ECountry,EArea?> ArmyTargetMap,bool IsTurnProcessing,List<string> LogMessage,List<string> TrunNewLog,List<string> GameLog,ECountry[] WinCountrys,string[] StartPlanningCharacterRemark,string[] StartExecutionCharacterRemark);
   [MessagePackObject(true)] public record PostKind(PostHead? MaybeHead,int? MaybePostNo,EArea? MaybeArea) {
     public PostKind(PostHead head) : this(head,null,null) { }
     public PostKind(int postNo) : this(null,postNo,null) { }

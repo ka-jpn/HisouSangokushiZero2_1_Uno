@@ -23,8 +23,9 @@ internal static class Storage {
   internal static ReadGame ReadStorageData(int fileNo) {
     string newReadPath = GetNewStorageFolderPath().MyApplyF(myFolder => Path.Combine(myFolder,CreateSaveFileName(fileNo)));
     string oldReadPath = GetOldStorageFolderPath().MyApplyF(myFolder => Path.Combine(myFolder,CreateSaveFileName(fileNo)));
-    return File.Exists(newReadPath) ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(File.ReadAllBytes(newReadPath))) :
-      File.Exists(oldReadPath) ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(File.ReadAllBytes(oldReadPath))) : new(ReadState.NotFind, null);
+    return File.Exists(newReadPath) ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(File.ReadAllBytes(newReadPath))?.MyApplyF(FillState)) :
+      File.Exists(oldReadPath) ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(File.ReadAllBytes(oldReadPath))?.MyApplyF(FillState)) : new(ReadState.NotFind, null);
+    GameState FillState(GameState game) => game with { LogMessage = game.LogMessage ?? [], StartPlanningCharacterRemark = game.StartPlanningCharacterRemark ?? [], StartExecutionCharacterRemark = game.StartExecutionCharacterRemark ?? [] };
   }
   internal static ReadMeta ReadMetaData(int fileNo) {
     string newMetaPath = GetNewStorageFolderPath().MyApplyF(myFolder => Path.Combine(myFolder,CreateMetaFileName(fileNo)));

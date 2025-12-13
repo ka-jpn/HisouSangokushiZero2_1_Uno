@@ -7,7 +7,7 @@
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code"
   xmlns:data="using:HisouSangokushiZero2_1_Uno.Data"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
-  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#EEFE">
+  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="False" Background="#EEFE">
   <Grid x:Name="Content">
     <skia:SKXamlCanvas x:Name="MapCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     <Viewbox x:Name="TitleContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

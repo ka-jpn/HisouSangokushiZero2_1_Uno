@@ -20,7 +20,7 @@ using Commander = HisouSangokushiZero2_1_Uno.Code.Commander;
 using Post = HisouSangokushiZero2_1_Uno.Code.DefType.Post;
 using Text = HisouSangokushiZero2_1_Uno.Code.Text;
 namespace HisouSangokushiZero2_1_Uno.Pages;
-internal sealed partial class Game:Page {
+public sealed partial class Game:Page {
   private record AreaElems(Border Back,TextBlock AreaNameText,StackPanel DefensePersonPanel,StackPanel AffairPersonPanel,Post DefensePost,Post AffairPost,TextBlock AffairText,TextBlock ExText,Grid WrapPanel);
   private static readonly double countryPostPanelWidth = 255;
   private static readonly Dictionary<Post,StackPanel> playerCountryPostPersonPanel = Enum.GetValues<ERole>().SelectMany(role => new List<(Post, StackPanel)>([
@@ -259,10 +259,10 @@ internal sealed partial class Game:Page {
     GameState ButtonAction(GameState game) {
       taskTokens.Clear();
       return game.Phase switch {
-        Phase.Starting => game,
-        Phase.Planning => EndPlanningPhase(game).MyApplyA(game => UpdateCountryInfoPanel(game)),
-        Phase.Execution => EndExecutionPhase(game).MyApplyA(game => UpdateCountryInfoPanel(game)),
-        Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd => game.MyApplyA(game => ShowGameEndLogButtonClick(game))
+        Phase.Starting => throw new Exception(),
+        Phase.Planning => game.MyApplyF(EndPlanningPhase).MyApplyA(UpdateCountryInfoPanel),
+        Phase.Execution => game.MyApplyF(EndExecutionPhase).MyApplyA(UpdateCountryInfoPanel),
+        Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd => game.MyApplyA(ShowGameEndLogButtonClick)
       };
     }
     List<UIElement> ShowSelectScenario(GameState game) => [
@@ -383,9 +383,8 @@ internal sealed partial class Game:Page {
     }
     GameState EndPlanningPhase(GameState game) {
       ResetTurnUI();
-      GameState newGameState = game.MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[ECountry.漢])).MyApplyF(CalcArmyTarget).MyApplyF(game => game with { Phase = Phase.Execution });
-      newGameState.MyApplyA(UpdateAreaPanels).MyApplyA(ExecutionMoveFlag).MyApplyF(ArmyAttack).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyA(ShowCharacterRemark);
-      return newGameState;
+      return game.MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[ECountry.漢])).MyApplyF(CalcArmyTarget).MyApplyF(game => game with { Phase = Phase.Execution })
+        .MyApplyA(UpdateAreaPanels).MyApplyA(ExecutionMoveFlag).MyApplyF(ArmyAttack).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyA(ShowCharacterRemark);
       void ResetTurnUI() => new List<UIElement>([CharacterRemarkPanel,CountryPostsPanel]).ForEach(v => UIUtil.SetVisibility(v,false));
       static GameState CalcArmyTarget(GameState game) {
         Dictionary<ECountry,EArea?> playerArmyTargetMap = game.PlayCountry.MyMaybeToList().Where(country => !Country.IsSleep(game,country)).ToDictionary(v => v,v => game.ArmyTargetMap.GetValueOrDefault(v));
@@ -474,9 +473,8 @@ internal sealed partial class Game:Page {
       UIUtil.SetVisibility(CountryPostsPanel,true);
       return game.MyApplyF(UpdateGame.GameEndJudge).MyApplyF(game => game.Phase is Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd ? game : game.MyApplyF(NextTurn));
       GameState NextTurn(GameState game) {
-        GameState newGameState = game.MyApplyF(UpdateGame.NextTurn).MyApplyF(v => v with { Phase = Phase.Planning }).MyApplyF(game => UpdateGame.AppendStartPlanningRemark(game,[.. Text.StartPlanningCharacterRemarkTexts(game,Lang.ja)]));
-        newGameState.MyApplyA(UpdateCountryPosts).MyApplyA(UpdateAreaPanels).MyApplyA(UpdateTurnLogUI).MyApplyA(UpdateTurnWinCondUI).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyF(UpdateGame.GameEndJudge).MyApplyA(ShowCharacterRemark).MyApplyF(ResetParam);
-        return newGameState;
+        return game.MyApplyF(UpdateGame.NextTurn).MyApplyF(v => v with { Phase = Phase.Planning }).MyApplyF(game => UpdateGame.AppendStartPlanningRemark(game,[.. Text.StartPlanningCharacterRemarkTexts(game,Lang.ja)]))
+          .MyApplyA(UpdateCountryPosts).MyApplyA(UpdateAreaPanels).MyApplyA(UpdateTurnLogUI).MyApplyA(UpdateTurnWinCondUI).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyF(UpdateGame.GameEndJudge).MyApplyA(ShowCharacterRemark).MyApplyF(ResetParam);
       }
       static GameState ResetParam(GameState game) => game with { ArmyTargetMap = [],StartPlanningCharacterRemark = [],StartExecutionCharacterRemark = [] };
     }
@@ -724,13 +722,13 @@ internal sealed partial class Game:Page {
             .. (pushCountry is null?[]:Enum.GetValues<ERole>().SelectMany(role=>Person.GetInitPersonMap(game,pushCountry.Value,role).Keys.OrderBy(v=>Person.GetPersonBirthYear(game,v)).Select(v=>PersonInfoText(game,v)))).MyApplyF(v=>v.MyIsEmpty()?["(人物はいません)"]:v).Select(Make),
           ];
         string okButtonText = pushCountry is ECountry.漢 or null ? $"({Text.CountryText(pushCountry,Lang.ja)}陣営は選べません)" : "プレイする";
-        Action? okButtonAction = pushCountry is ECountry.漢 or null ? null : () => GameData.game = ClickOkButtonAction(game,pushCountry.Value);
+        Action? okButtonAction = pushCountry is ECountry.漢 or null ? null : () => GameData.game = ClickOkButtonAction(GameData.game,pushCountry.Value);
         Ask.SetElems(page.AskPanel,title,contents,okButtonText,okButtonAction,true);
         return game;
         static TextBlock Make(string text) => new() { Text = text,HorizontalAlignment = HorizontalAlignment.Center };
         static string PersonInfoText(GameState game,PersonId personId) => $"{personId.Value}  {Text.RoleToText(Person.GetPersonRole(game,personId),Lang.ja)} ランク{Person.GetPersonRank(game,personId)} 齢{Turn.GetYear(game) - Person.GetPersonBirthYear(game,personId)}";
         GameState ClickOkButtonAction(GameState game,ECountry playCountry) {
-          GameState newGameState = SelectPlayCountry(game,playCountry).MyApplyF(StartGame).MyApplyF(game => UpdateGame.AppendNewLog(game,[Text.TurnHeadLogText(game,Lang.ja)])).MyApplyF(game => UpdateGame.AppendStartPlanningRemark(game,[.. Text.StartPlanningCharacterRemarkTexts(game,Lang.ja)]));
+          GameState newGameState = SelectPlayCountry(game,playCountry).MyApplyF(StartGame).MyApplyF(game => UpdateGame.AppendLogMessage(game,[Text.TurnHeadLogText(game,Lang.ja)])).MyApplyF(game => UpdateGame.AppendStartPlanningRemark(game,[.. Text.StartPlanningCharacterRemarkTexts(game,Lang.ja)]));
           newGameState.MyApplyA(page.UpdateCountryInfoPanel).MyApplyA(page.ShowCharacterRemark);
           return newGameState;
         }
