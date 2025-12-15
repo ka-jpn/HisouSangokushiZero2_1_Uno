@@ -5,7 +5,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code">
-  <Grid x:Name="Content" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#AEEF">
+  <Grid x:Name="Content" Background="#AEEF">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition/>
@@ -34,6 +34,6 @@
         <TextBlock Text="Ý’è"/>
       </Button>
     </Grid>
-    <Grid x:Name="InfoContentPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="5"/>
+    <Grid x:Name="InfoContentPanel" Grid.Row="1" Grid.ColumnSpan="5"/>
   </Grid>
 </UserControl>

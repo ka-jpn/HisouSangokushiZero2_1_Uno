@@ -29,11 +29,12 @@ public sealed partial class Game:Page {
   ])).ToDictionary();
   private static readonly Dictionary<EArea,AreaElems> areaElemsMap = [];
   private static readonly Dictionary<ERole, Grid> countryPostPanelMap = [];
-  private static readonly List<TaskToken> taskTokens = [];
-  private static ERole activePanelRole = ERole.central;
-  private static (Panel panel, Post post)? pointerover = null;
-  private static (Panel panel, PersonId person)? pick = null;
-  private static double lastScaleFactor = double.NaN;
+  private readonly List<TaskToken> taskTokens = [];
+  private ERole activePanelRole = ERole.central;
+  private (Panel panel, Post post)? pointerover = null;
+  private (Panel panel, PersonId person)? pick = null;
+  private double lastScaleFactor = double.NaN;
+  private double mapScale = 1;
   internal static double zoomLevel = 0;
   internal static readonly double initContentGridMaxWidth = UIUtil.GetContentMaxWidth();
   public Game() {
@@ -93,7 +94,8 @@ public sealed partial class Game:Page {
         });
       }
       void AttachEvent() {
-        ContentGrid.SizeChanged += (_,_) => ResizeMap();
+        MainGrid.SizeChanged += (_, _) => ResizeMap();
+        InfoFramePanel.SizeChanged += (_, _) => ResizeInfo();
         OpenLogButton.Click += (_,_) => { UIUtil.ReverseVisibility(LogPanel); UIUtil.SetVisibility(InfoPanel,false); };
         OpenInfoButton.Click += (_,_) => { UIUtil.ReverseVisibility(InfoPanel); UIUtil.SetVisibility(LogPanel,false); };
         Page.PointerMoved += (_,e) => (pick is { } && MovePersonCanvas.Children.SingleOrDefault() is UIElement personPanel ? () => MovePerson(personPanel,e) : MyUtil.MyUtil.nothing).Invoke();
@@ -103,17 +105,17 @@ public sealed partial class Game:Page {
       }
       void ResizeMap() {
         double scaleFactor = StateInfo.SolveScale(ContentGrid.RenderSize.Height, MainGrid.RenderSize);
-        double mapScale = scaleFactor * GetZoomFactor();
-        ScaleTransform mapScaleTransform = new() { ScaleX = mapScale, ScaleY = mapScale };
+        double mapScaleFactor = scaleFactor * GetZoomFactor();
         StateInfo.ResizeElem(StateInfoPanel, scaleFactor);
-        RelayoutCountryPostUI(mapScale);
-        RescaleInfoLayoutPanelUI(mapScale);
-        if (mapScale != lastScaleFactor) {
-          RescaleMap(mapScale);
-          lastScaleFactor = mapScale;
+        RelayoutCountryPostUI(mapScaleFactor);
+        if (mapScaleFactor != lastScaleFactor) {
+          RescaleMap(mapScaleFactor);
+          lastScaleFactor = mapScaleFactor;
         }
+        mapScale = mapScaleFactor;
         void RescaleMap(double scaleFactor) {
-          CountryPostsPanel.Margin = new(0, 0, ContentGrid.RenderSize.Width * (scaleFactor - 1), CountryPostsPanel.Height * (scaleFactor - 1));
+          ScaleTransform mapScaleTransform = new() { ScaleX = mapScaleFactor, ScaleY = mapScaleFactor };
+          CountryPostsPanel.Margin = new(0, 0, MainGrid.RenderSize.Width * (scaleFactor - 1), CountryPostsPanel.Height * (scaleFactor - 1));
           CountryPostsPanel.RenderTransform = mapScaleTransform;
           MapCanvas.Width = UIUtil.mapSize.Width * scaleFactor;
           MapCanvas.Height = UIUtil.mapSize.Height * scaleFactor;
@@ -128,16 +130,14 @@ public sealed partial class Game:Page {
           RescaleTurnWinCondPanelUI(scaleFactor);
         }
         void RelayoutCountryPostUI(double scaleFactor) {
-          double PostPanelLeftUnit = (ContentGrid.RenderSize.Width / scaleFactor - countryPostPanelWidth) / (countryPostPanelMap.Count - 1);
-          countryPostPanelMap.Values.Reverse().Select((elem, index) => (elem, index)).ToList().ForEach(v => Canvas.SetLeft(v.elem, PostPanelLeftUnit * v.index));
+          double PostPanelLeftUnit = (MainGrid.RenderSize.Width / scaleFactor - countryPostPanelWidth) / (countryPostPanelMap.Count - 1);
+          countryPostPanelMap.Values.Select((elem, index) => (elem, index)).ToList().ForEach(v => Canvas.SetLeft(v.elem, PostPanelLeftUnit * v.index));
         }
-        void RescaleInfoLayoutPanelUI(double scaleFactor) {
-          double postPanelHeight = CountryPostsPanel.Visibility.IsHidden() ? 0 : (CountryPostsPanel.Height + CountryPostsPanel.Margin.Bottom);
-          double stateInfoPanelHeight = StateInfo.GetHeight(StateInfoPanel);
-          double infoLayoutPanelHeight = ContentGrid.RenderSize.Height - postPanelHeight - stateInfoPanelHeight;
-          InfoLayoutPanel.Margin = new(0, 0, MapScroll.RenderSize.Width / scaleFactor * (scaleFactor - 1), infoLayoutPanelHeight / scaleFactor * (scaleFactor - 1));
-          InfoLayoutPanel.RenderTransform = mapScaleTransform;
-        }
+      }
+      void ResizeInfo() {
+        InfoLayoutPanel.Margin = new(0, 0, InfoFramePanel.RenderSize.Width / mapScale * (mapScale - 1), InfoFramePanel.RenderSize.Height / mapScale * (mapScale - 1));
+        InfoLayoutPanel.RenderTransform = new ScaleTransform() { ScaleX = mapScale, ScaleY = mapScale };
+
       }
       void SetCountryPostsPanel() {
         Dictionary<ERole, Color> countryRolePanelColorMap = new([
@@ -479,7 +479,7 @@ public sealed partial class Game:Page {
       static GameState ResetParam(GameState game) => game with { ArmyTargetMap = [],StartPlanningCharacterRemark = [],StartExecutionCharacterRemark = [] };
     }
   }
-  private static Grid CreatePersonPutPanel(GameState game,Post post,string backText,StackPanel personPutInnerPanel) {
+  private Grid CreatePersonPutPanel(GameState game,Post post,string backText,StackPanel personPutInnerPanel) {
     Grid personPutPanel = new() { Width = UIUtil.personPutSize.Width,Height = UIUtil.personPutSize.Height,BorderBrush = GetPostFrameColor(game,post.PostKind.MaybeArea).ToBrush(),BorderThickness = new(UIUtil.postFrameWidth),Background = Colors.Transparent };
     TextBlock personPutBackText = new() {
       Text = backText,Foreground = Windows.UI.Color.FromArgb(100,100,100,100),HorizontalAlignment = HorizontalAlignment.Center,VerticalAlignment = VerticalAlignment.Center,
@@ -488,14 +488,14 @@ public sealed partial class Game:Page {
     personPutPanel.PointerEntered += (_,_) => EnterPersonPutPanel(GameData.game,personPutInnerPanel,post);
     personPutPanel.PointerExited += (_,_) => ExitPersonPutPanel(personPutInnerPanel);
     return personPutPanel.MySetChildren([personPutBackText,personPutInnerPanel]);
-    static void EnterPersonPutPanel(GameState game,StackPanel personPutInnerPanel,Post post) {
+    void EnterPersonPutPanel(GameState game,StackPanel personPutInnerPanel,Post post) {
       if(game.Phase != Phase.Starting && (post.PostKind.MaybeArea?.MyApplyF(area => game.AreaMap.GetValueOrDefault(area)?.Country == game.PlayCountry) ?? true)) {
         pointerover?.MyApplyA(v => v.panel.Background = Colors.Transparent);
         personPutInnerPanel.Background = Windows.UI.Color.FromArgb(150,255,255,255);
         pointerover = (personPutInnerPanel, post);
       }
     }
-    static void ExitPersonPutPanel(StackPanel personPutInnerPanel) {
+    void ExitPersonPutPanel(StackPanel personPutInnerPanel) {
       if(pointerover != null) {
         personPutInnerPanel.Background = Colors.Transparent;
         pointerover = null;
@@ -560,14 +560,14 @@ public sealed partial class Game:Page {
         return autoPutPersonButton;
         GameState AutoPutPersonButtonClick(GameState game) => game.PlayCountry?.MyApplyF(country => Code.Post.GetAutoPutPost(game,country,role)).MyApplyF(postMap => UpdateGame.SetPersonPost(game,postMap)).MyApplyA(v => UpdateAreaPanels(v)).MyApplyA(game => UpdateCountryPosts(game)) ?? game;
       }
-      static StackPanel CreatePersonHeadPostPanel(GameState game,ERole role) {
+      StackPanel CreatePersonHeadPostPanel(GameState game,ERole role) {
         return new StackPanel { Orientation = Orientation.Horizontal,BorderBrush = GetPostFrameColor(game,null).ToBrush(),BorderThickness = new(UIUtil.postFrameWidth) }.MySetChildren([
           .. Enum.GetValues<PostHead>().Select(v=> new Post(role,new(v)).MyApplyF(post=> CreatePersonPutPanel(game,post,GetPlayerCountryPostBackString(post.PostKind),playerCountryPostPersonPanel.GetValueOrDefault(post)??[]))),
           ]);
       }
-      static StackPanel CreatePersonPostPanelElems(GameState game,ERole role) {
+      StackPanel CreatePersonPostPanelElems(GameState game,ERole role) {
         return new StackPanel { BorderBrush = GetPostFrameColor(game,null).ToBrush(),BorderThickness = new(UIUtil.postFrameWidth) }.MySetChildren([.. Enumerable.Range(0,UIUtil.capitalPieceRowNum).Select(row => GetPersonPostLinePanel(game,role,row,game.PersonMap.Where(v => Person.GetPersonCountry(game,v.Key) == game.PlayCountry).ToDictionary()))]);
-        static StackPanel GetPersonPostLinePanel(GameState game,ERole role,int rowNo,Dictionary<PersonId,PersonData> personMap) => new StackPanel { Orientation = Orientation.Horizontal }.MySetChildren([
+        StackPanel GetPersonPostLinePanel(GameState game,ERole role,int rowNo,Dictionary<PersonId,PersonData> personMap) => new StackPanel { Orientation = Orientation.Horizontal }.MySetChildren([
           .. Enumerable.Range(0,UIUtil.capitalPieceColumnNum).Select(i => new Post(role,new(rowNo * UIUtil.capitalPieceColumnNum + i)).MyApplyF(post=> CreatePersonPutPanel(game,post,GetPlayerCountryPostBackString(post.PostKind),playerCountryPostPersonPanel.GetValueOrDefault(post) ?? [])))
         ]);
       }
@@ -690,8 +690,7 @@ public sealed partial class Game:Page {
           CountryPostsPanel.Children.Remove(v);
           CountryPostsPanel.Children.Add(v);
         });
-        activePanelRole = toActiveRole;
-       
+        activePanelRole = toActiveRole;       
       }
     }
     static List<Grid> GetResetZIndexPanels(ERole[] resetZIndexRoles) => resetZIndexRoles.Select(countryPostPanelMap.GetValueOrDefault).MyNonNull();

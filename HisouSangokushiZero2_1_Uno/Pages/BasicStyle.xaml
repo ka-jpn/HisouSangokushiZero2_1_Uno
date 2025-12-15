@@ -21,6 +21,7 @@
   </Style>
   <Style TargetType="ComboBox">
     <Setter Property="FontSize" Value="15"/>
+    <Setter Property="Background" Value="#FFF"/>
   </Style>
   <Style TargetType="ListView">
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>

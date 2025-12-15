@@ -4,7 +4,7 @@
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-    <StackPanel x:Name="ContentPanel">
+    <StackPanel x:Name="ContentPanel" Padding="2">
       <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="勝利・敗北について" HorizontalAlignment="Center"/>
       <StackPanel HorizontalAlignment="Center">
         <TextBlock Text="勝利条件：陣営勝利条件を一番乗りで達成(達成勝利) or ゲーム終了年春まで存続(存続勝利)"/>

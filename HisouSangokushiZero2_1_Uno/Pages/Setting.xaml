@@ -5,7 +5,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:data="using:HisouSangokushiZero2_1_Uno.Data">
   <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-    <StackPanel x:Name="ContentPanel">
+    <StackPanel x:Name="ContentPanel" Padding="2">
       <StackPanel Height="10"/>
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
         <TextBlock x:Name="MapZoomCaption" Text="マップ" VerticalAlignment="Center" Width="50"/>

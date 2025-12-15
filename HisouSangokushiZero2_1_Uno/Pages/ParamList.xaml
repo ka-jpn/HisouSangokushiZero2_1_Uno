@@ -5,7 +5,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages">
   <UserControl.Resources>
-    <DataTemplate x:Key="PersonListView" x:DataType="local:PersonListData">
+    <DataTemplate x:Key="PersonItemsRepeater" x:DataType="local:PersonListData">
       <Grid Background="{x:Bind Brush}" HorizontalAlignment="Stretch" MinHeight="25" Padding="0,0,0,1">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="50"/>
@@ -30,7 +30,7 @@
         <TextBlock Grid.Column="7" Text="{x:Bind Biography}" Margin="1" Padding="5,0,0,0" TextAlignment="Start" VerticalAlignment="Center"/>
       </Grid>
     </DataTemplate>
-    <DataTemplate x:Key="CountryListView" x:DataType="local:CountryListData">
+    <DataTemplate x:Key="CountryItemsRepeater" x:DataType="local:CountryListData">
       <Grid Background="{x:Bind Brush}" HorizontalAlignment="Stretch" MinHeight="25" Padding="0,0,0,1">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="75"/>
@@ -44,14 +44,15 @@
     </DataTemplate>
   </UserControl.Resources>
   <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-    <StackPanel x:Name="ContentPanel">
+    <StackPanel x:Name="ContentPanel" Padding="2">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
         <TextBlock Text="表示シナリオ：" VerticalAlignment="Center"/>
-        <ComboBox Width="200" x:Name="ScenarioComboBox"/>
+        <ComboBox Width="200" Height="40" x:Name="ScenarioComboBox"/>
       </StackPanel>
+      <StackPanel Height="2"/>
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
-      <StackPanel x:Name="SortButtonPanel1" Orientation="Horizontal" HorizontalAlignment="Center"/>
-      <StackPanel MaxWidth="{x:Bind local:ParamList.listviewWidth}" Orientation="Horizontal" Background="#EEE">
+      <StackPanel x:Name="SortButtonPanel" Orientation="Horizontal" HorizontalAlignment="Center"/>
+      <StackPanel MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Orientation="Horizontal" Background="#EEE">
         <TextBlock Text="陣営" Width="50" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="人物名" Width="80" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="ロール" Width="50" Margin="0,1" TextAlignment="Center"/>
@@ -61,14 +62,14 @@
         <TextBlock Text="没年" Width="40" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="列伝" Width="400" Margin="0,1" Padding="5,0,0,0" TextAlignment="Start"/>
       </StackPanel>
-      <ListView x:Name="PersonListView1" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.personListviewHeight}" ItemsSource="{x:Bind local:ParamList.personListViewDataSource,Mode=OneWay}" ItemTemplate="{StaticResource PersonListView}" Background="#CCC"/>
+      <ListView x:Name="PersonItemsRepeater" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.personItemsRepeaterHeight}" ItemTemplate="{StaticResource PersonItemsRepeater}" Background="#CCC"/>
       <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
-      <StackPanel MaxWidth="{x:Bind local:ParamList.listviewWidth}" Orientation="Horizontal" Background="#EEE">
+      <StackPanel MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Orientation="Horizontal" Background="#EEE">
         <TextBlock Text="陣営" Width="75" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="初期資金" Width="75" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="初期領土" Width="600" Margin="0,1" TextAlignment="Start"/>
       </StackPanel>
-      <ListView x:Name="CountryListView1" MaxWidth="{x:Bind local:ParamList.listviewWidth}" Height="{x:Bind local:ParamList.countryListviewHeight}" ItemsSource="{x:Bind local:ParamList.countryListViewDataSource,Mode=OneWay}" ItemTemplate="{StaticResource CountryListView}" Background="#CCC"/>
+      <ListView x:Name="CountryItemsRepeater" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.countryItemsRepeaterHeight}" ItemTemplate="{StaticResource CountryItemsRepeater}" Background="#CCC"/>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

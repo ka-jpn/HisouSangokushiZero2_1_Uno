@@ -62,14 +62,14 @@ internal class Scenario1:ScenarioBase.IScenario {
     new(EArea.番禺,new(new Point(5.1,8),new AffairsParam(40,15),ECountry.漢)),
     new(EArea.合浦,new(new Point(4,8),new AffairsParam(40,10),ECountry.漢)),
     new(EArea.龍編,new(new Point(3,8),new AffairsParam(45,20),ECountry.士燮)),
-    new(EArea.日南,new(new Point(3,9),new AffairsParam(20,8),ECountry.南越)),
+    new(EArea.日南,new(new Point(3,9),new AffairsParam(20,8),ECountry.林邑)),
     new(EArea.且蘭,new(new Point(2,7),new AffairsParam(10,3),null)),
     new(EArea.滇池,new(new Point(1,8),new AffairsParam(15,8),null)),
     new(EArea.西随,new(new Point(2,8),new AffairsParam(10,3),null)),
     new(EArea.不韋,new(new Point(0,8),new AffairsParam(15,7),ECountry.南蛮)),
     new(EArea.緬甸,new(new Point(0,9),new AffairsParam(10,4),null)),
     new(EArea.哀牢,new(new Point(1,9),new AffairsParam(10,4),null)),
-    new(EArea.南越,new(new Point(2,9),new AffairsParam(20,10),ECountry.南越)),
+    new(EArea.林邑,new(new Point(2,9),new AffairsParam(20,10),ECountry.林邑)),
     new(EArea.朱崖,new(new Point(4.2,9),new AffairsParam(10,2),null)),
     new(EArea.台北,new(new Point(7,7.9),new AffairsParam(10,2),null)),
     new(EArea.台南,new(new Point(6.9,8.9),new AffairsParam(10,2),null)),
@@ -550,18 +550,18 @@ internal class Scenario1:ScenarioBase.IScenario {
         new( "資金1000以上",Country.GetFund(game,ECountry.琉球)>=1000)
       ])
     )),
-    new(ECountry.南越,new(
+    new(ECountry.林邑,new(
       new(["西暦210年以降","内政値80以上","南越を領有","日南を領有"],["※西暦210年以降1年毎内政値1緩和"]),
-      (game)=>Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.南越)>=80-Math.Max(0,Turn.GetYear(game)-210)&&Country.HasAreas(game,ECountry.南越,[EArea.南越,EArea.日南]),
+      (game)=>Turn.GetYear(game)>=210&&Country.GetTotalAffair(game,ECountry.林邑)>=80-Math.Max(0,Turn.GetYear(game)-210)&&Country.HasAreas(game,ECountry.林邑,[EArea.林邑, EArea.日南]),
       (game)=>new([
         new( "西暦210年以降",Turn.GetYear(game)>=210 ),
-        new( $"内政値{80-(Turn.GetYear(game)-210)}以上",Country.GetTotalAffair(game,ECountry.南越)>=80-(Turn.GetYear(game)-210) ),
+        new( $"内政値{80-(Turn.GetYear(game)-210)}以上",Country.GetTotalAffair(game,ECountry.林邑)>=80-(Turn.GetYear(game)-210) ),
         new( "― ※緩和前条件80以上",null),
         new( "― ※西暦210年以降1年毎1内政値緩和",null),
         new( $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-210)}内政値緩和適用)",null ),
-        new( $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.南越)}",null ),
-        new( "南越を領有",Country.HasAreas(game,ECountry.南越,[EArea.南越]) ),
-        new( "日南を領有",Country.HasAreas(game,ECountry.南越,[EArea.日南]) )
+        new( $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.林邑)}",null ),
+        new( "南越を領有",Country.HasAreas(game,ECountry.林邑,[EArea.林邑]) ),
+        new( "日南を領有",Country.HasAreas(game,ECountry.林邑,[EArea.日南]) )
       ])
     )),
     new(ECountry.濊,new(
@@ -617,7 +617,7 @@ internal class Scenario1:ScenarioBase.IScenario {
     new(ECountry.沃沮,new(50,1,new Color(255,153,187,221),0,0)),
     new(ECountry.馬韓,new(100,1,new Color(255,170,238,136),0,0)),
     new(ECountry.琉球,new(50,1,new Color(255,204,170,153),4,1)),
-    new(ECountry.南越,new(100,1,new Color(255,204,170,221),0,0)),
+    new(ECountry.林邑,new(100,1,new Color(255,204,170,221),0,0)),
     new(ECountry.濊,new(100,1,new Color(255,187,170,153),0,0)),
   ]);
   private static Dictionary<PersonId,PersonData> GeneratePersonDataMap() => new([
@@ -1004,8 +1004,8 @@ internal class Scenario1:ScenarioBase.IScenario {
     new(new("仇首"),new(ERole.attack,1,190,234, ECountry.馬韓)),
     new(new("琉球王"),new(ERole.central,1,175,245, ECountry.琉球)),
     new(new("琉球無名1"),new(ERole.central,1,185,250, ECountry.琉球)),
-    new(new("南越王"),new(ERole.central,1,165,220, ECountry.南越)),
-    new(new("貉侯"),new(ERole.defense,1,170,240, ECountry.南越)),
+    new(new("区連"),new(ERole.central,1,170,250,ECountry.林邑)),
+    new(new("貉侯"),new(ERole.defense,1,170,240, ECountry.林邑)),
     new(new("濊王"),new(ERole.central,1,165,215,ECountry.濊)),
     new(new("不耐侯"),new(ERole.defense,1,170,225,ECountry.濊)),
   ]);

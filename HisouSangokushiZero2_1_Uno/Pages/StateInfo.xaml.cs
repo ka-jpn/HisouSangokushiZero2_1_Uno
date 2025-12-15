@@ -24,20 +24,17 @@ internal sealed partial class StateInfo:UserControl {
     if(buttonText is {}) {
       page.NextButtonText.Text = buttonText;
       page.nextButtonAction = buttonAction;
-      page.NextButton.Width = CalcNextButtonWidth(page);
       UIUtil.SetVisibility(page.NextButton,true);
     } else {
-      page.NextButton.Width = 0;
       UIUtil.SetVisibility(page.NextButton,false);
     }
+    page.ButtonArea.Width = new(page.NextButton.Visibility.IsHidden() ? 0 : 1, GridUnitType.Star);
   }
-  private static double CalcNextButtonWidth(StateInfo page) => page.Content.RenderSize.Width * 0.2;
   internal static void ResizeElem(StateInfo page,double scaleFactor) {
     double scaleX = CookScaleX(scaleFactor);
     double scaleY = CookScaleY(scaleFactor);
     page.Content.RenderTransform = new ScaleTransform() { ScaleX = scaleX,ScaleY = scaleY };
     page.Content.Margin = new(0, 0, page.RenderSize.Width * (1 - 1 / scaleX), baseContentHeight * (scaleY - 1));
-    page.NextButton.Width = CalcNextButtonWidth(page);
     static double CookScaleX(double rawScale) => rawScale switch { < 0.8 => rawScale / 0.8, > 1 => double.Lerp(rawScale,1,0.5), _ => 1 };
   }
   private static double CookScaleY(double rawScale) => rawScale switch { < 0.8 => double.Lerp(rawScale/0.8,1,0.5), > 1 => double.Lerp(rawScale,1,0.5), _ => 1 };

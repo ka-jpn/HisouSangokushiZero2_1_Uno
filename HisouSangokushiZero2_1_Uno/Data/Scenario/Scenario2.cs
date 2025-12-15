@@ -15,7 +15,7 @@ internal class Scenario2:ScenarioBase.IScenario {
     int startYear = 225,endYear = 275;
     EArea[] removeChinaAreas = [EArea.平陽];
     EArea[] addChinaAreas = [EArea.南城];
-    Road[] addRoads = [new(EArea.成都,EArea.魚復,RoadKind.land,2),new(EArea.臨湘,EArea.南城,RoadKind.land,1),new(EArea.龍編,EArea.南越,RoadKind.land,1)];
+    Road[] addRoads = [new(EArea.成都,EArea.魚復,RoadKind.land,2),new(EArea.臨湘,EArea.南城,RoadKind.land,1),new(EArea.龍編,EArea.林邑, RoadKind.land,1)];
     EArea[] chinaAreas = ScenarioBase.CalcChinaAreas(areaDiffs,removeChinaAreas,addChinaAreas);
     Road[] roads = ScenarioBase.CalcRoads(areaDiffs,addRoads);
     return new(startYear,endYear,chinaAreas,roads,GenerateAreaMap(),GenerateWinCondMap(chinaAreas),GenerateCountryDataMap(),GeneratePersonDataMap());
@@ -74,7 +74,7 @@ internal class Scenario2:ScenarioBase.IScenario {
     new(EArea.不韋,new(new Point(0,8),new AffairsParam(15,7),ECountry.南蛮)),
     new(EArea.緬甸,new(new Point(0,9),new AffairsParam(10,4),null)),
     new(EArea.哀牢,new(new Point(1,9),new AffairsParam(10,4),null)),
-    new(EArea.南越,new(new Point(2,9),new AffairsParam(20,10),ECountry.南越)),
+    new(EArea.林邑,new(new Point(2,9),new AffairsParam(20,10),ECountry.林邑)),
     new(EArea.朱崖,new(new Point(4.2,9),new AffairsParam(10,2),null)),
     new(EArea.台北,new(new Point(7,7.9),new AffairsParam(10,2),null)),
     new(EArea.台南,new(new Point(6.9,8.9),new AffairsParam(10,2),null)),
@@ -304,18 +304,18 @@ internal class Scenario2:ScenarioBase.IScenario {
         new( "資金1000以上",Country.GetFund(game,ECountry.琉球)>=1000)
       ])
     )),
-    new(ECountry.南越,new(
+    new(ECountry.林邑,new(
       new(["西暦255年以降","内政値80以上","南越を領有","日南を領有"],["※西暦255年以降1年毎内政値1緩和"]),
-      (game)=>Turn.GetYear(game)>=255&&Country.GetTotalAffair(game,ECountry.南越)>=80-(Turn.GetYear(game)-255)&&Country.HasAreas(game,ECountry.南越,[EArea.南越,EArea.日南]),
+      (game)=>Turn.GetYear(game)>=255&&Country.GetTotalAffair(game,ECountry.林邑)>=80-(Turn.GetYear(game)-255)&&Country.HasAreas(game,ECountry.林邑,[EArea.林邑, EArea.日南]),
       (game)=>new([
         new( $"西暦255年以降",Turn.GetYear(game)>=255),
-        new( $"内政値{80-Math.Max(0,Turn.GetYear(game)-255)}以上",Country.GetTotalAffair(game,ECountry.南越)>=80-Math.Max(0,Turn.GetYear(game)-255)),
+        new( $"内政値{80-Math.Max(0,Turn.GetYear(game)-255)}以上",Country.GetTotalAffair(game,ECountry.林邑)>=80-Math.Max(0,Turn.GetYear(game)-255)),
         new( "― ※緩和前条件80以上",null),
         new( "― ※西暦255年以降1年毎内政値1緩和",null),
         new( $"― ※現在 {Turn.GetYear(game)}年({Math.Max(0,Turn.GetYear(game)-255)}内政値緩和適用)",null),
-        new( $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.南越)}",null),
-        new( "南越を領有",Country.HasAreas(game,ECountry.南越,[EArea.南越])),
-        new( "日南を領有",Country.HasAreas(game,ECountry.南越,[EArea.日南]))
+        new( $"― ※現在 内政値{Country.GetTotalAffair(game,ECountry.林邑)}",null),
+        new( "南越を領有",Country.HasAreas(game,ECountry.林邑,[EArea.林邑])),
+        new( "日南を領有",Country.HasAreas(game,ECountry.林邑,[EArea.日南]))
       ])
     ))
   ]);
@@ -336,7 +336,7 @@ internal class Scenario2:ScenarioBase.IScenario {
     new(ECountry.沃沮,new(100,1,new Color(255,153,187,221),0,0)),
     new(ECountry.馬韓,new(300,1,new Color(255,170,238,136),0,0)),
     new(ECountry.琉球,new(100,1,new Color(255,204,170,153),0,1)),
-    new(ECountry.南越,new(200,1,new Color(255,204,170,221),0,0)),
+    new(ECountry.林邑,new(200,1,new Color(255,204,170,221),0,0)),
   ]);
   private static Dictionary<PersonId,PersonData> GeneratePersonDataMap() => new([
     new(new("王建"),new(ERole.central,1,170,238,ECountry.燕,200)),
@@ -586,7 +586,9 @@ internal class Scenario2:ScenarioBase.IScenario {
     new(new("古尓"),new(ERole.defense,1,200,286,ECountry.馬韓)),
     new(new("琉球王"),new(ERole.central,1,175,245,ECountry.琉球)),
     new(new("琉球無名1"),new(ERole.central,1,185,250,ECountry.琉球)),
-    new(new("貉侯"),new(ERole.defense,1,170,240,ECountry.南越)),
-    new(new("趙嫗"),new(ERole.attack,1,226,248,ECountry.南越))
+    new(new("区連"),new(ERole.central,1,170,250,ECountry.林邑)),
+    new(new("范熊"),new(ERole.central,1,220,285,ECountry.林邑)),
+    new(new("貉侯"),new(ERole.defense,1,170,240,ECountry.林邑)),
+    new(new("趙嫗"),new(ERole.attack,1,226,248,ECountry.林邑))
   ]);
 }

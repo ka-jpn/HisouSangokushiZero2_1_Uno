@@ -5,16 +5,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using Text = HisouSangokushiZero2_1_Uno.Code.Text;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal record WinCondData(Brush Brush,ECountry Country,string WinCondText);
 internal sealed partial class WinCond:UserControl {
-  private const double listviewWidth = 750;
-  private const double listviewHeight = 350;
-  private static readonly List<ObservableCollection<WinCondData>> winCondDataList = [[],[]];
+  private const double itemsRepeaterWidth = 750;
+  private const double itemsRepeaterHeight = 350;
   private static UIElement? parent = null;
   internal WinCond() {
     InitializeComponent();
@@ -34,8 +32,9 @@ internal sealed partial class WinCond:UserControl {
       }
       void SetUIElements() {
         List<TextBlock> WinCondScenarioNames = [WinCondScenarioName1,WinCondScenarioName2];
+        List<ItemsRepeater> winCondItemsRepeaters = [WinCondItemsRepeater1, WinCondItemsRepeater2];
         WinCondScenarioNames.ForEachWithIndex((v,i) => v.Text = ScenarioBase.GetScenarioId(i)?.Value);
-        winCondDataList.ForEachWithIndex((v,i) => ScenarioBase.GetScenarioId(i)?.MyApplyF(ScenarioBase.GetScenarioData)?.MyApplyF(scenario => GetWinCondListData(scenario)).ForEach(v.Add));
+        winCondItemsRepeaters.ForEachWithIndex((v,i) => v.ItemsSource = ScenarioBase.GetScenarioId(i)?.MyApplyF(ScenarioBase.GetScenarioData)?.MyApplyF(scenario => GetWinCondListData(scenario)));
         List<WinCondData> GetWinCondListData(ScenarioData scenario) {
           return [.. scenario.CountryMap.Select(ToCountryListItem)];
           WinCondData ToCountryListItem(KeyValuePair<ECountry,CountryData> countryInfo) {

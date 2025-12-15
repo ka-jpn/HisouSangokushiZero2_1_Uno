@@ -5,17 +5,17 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   x:Name="Page">
-  <StackPanel x:Name="Content" Padding="{x:Bind local:Ask.paddingThickness,Mode=OneWay}" Background="#FDDD" HorizontalAlignment="Center" VerticalAlignment="Center">
+  <StackPanel x:Name="Content" Background="#FDDD" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="5">
     <TextBlock x:Name="TitleTextBlock" HorizontalAlignment="Center"/>
-    <StackPanel Height="{x:Bind local:Ask.paddingSize,Mode=OneWay}"/>
-    <ScrollViewer x:Name="ContentsView" Background="White">
-      <StackPanel x:Name="ContentsPanel" VerticalAlignment="Top"/>
+    <StackPanel x:Name="TitleDetailMargin"/>
+    <ScrollViewer x:Name="DetailView" Background="White">
+      <StackPanel x:Name="DetailPanel" VerticalAlignment="Top"/>
     </ScrollViewer>
-    <StackPanel Height="{x:Bind local:Ask.paddingSize,Mode=OneWay}"/>
+    <StackPanel x:Name="DetailButtonMargin"/>
     <Grid x:Name="ButtonGrid">
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
-        <ColumnDefinition Width="{x:Bind local:Ask.paddingSize,Mode=OneWay}"/>
+        <ColumnDefinition x:Name="ButtonMargin"/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <Button x:Name="OkButton" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FEEE">

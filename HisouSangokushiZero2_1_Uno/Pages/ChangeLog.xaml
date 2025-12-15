@@ -2,10 +2,9 @@
 <UserControl 
   x:Class="HisouSangokushiZero2_1_Uno.Pages.ChangeLog"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <ScrollViewer x:Name="Scroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-    <StackPanel x:Name="ContentPanel">
+    <StackPanel x:Name="ContentPanel" Padding="2">
       <StackPanel HorizontalAlignment="Center">
         <TextBlock Text="2023/09/28 公開"/>
         <TextBlock Text="2024/07/01 ver1.0 機能拡張＆説明修正＆マップ更新"/>
@@ -47,7 +46,7 @@
         <TextBlock Text="2025/10/24 ver1.14 スマホでの動作安定化対応"/>
         <TextBlock Text="2025/11/14 ver1.15 レイアウト変更＆NPC思考改善＆列伝導入開始"/>
         <TextBlock Text="2025/11/17 ver1.16 セーブスロットを1個から10個に"/>
-        <TextBlock Text="2025/12/13 ver1.17 動作軽量化＆ログを引き継ぐように"/>
+        <TextBlock Text="2025/12/15 ver1.17 細かい改善＆セーブデータにログを含めた"/>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>

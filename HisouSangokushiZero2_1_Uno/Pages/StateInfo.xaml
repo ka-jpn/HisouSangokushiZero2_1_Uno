@@ -6,11 +6,11 @@
   xmlns:code="using:HisouSangokushiZero2_1_Uno.Code">
   <Grid x:Name="Content" Background="#FFF">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition/>
-      <ColumnDefinition Width="Auto"/>
+      <ColumnDefinition Width="4*"/>
+      <ColumnDefinition x:Name="ButtonArea" Width="*"/>
     </Grid.ColumnDefinitions>
     <Grid x:Name="InfoContentsPanel" Grid.Column="0" VerticalAlignment="Stretch"/>
-    <Button x:Name="NextButton" Grid.Column="1" MinWidth="100" VerticalAlignment="Stretch" Margin="0,1" Background="#7777">
+    <Button x:Name="NextButton" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1" Background="#7777">
       <TextBlock x:Name="NextButtonText"/>
     </Button>
   </Grid>

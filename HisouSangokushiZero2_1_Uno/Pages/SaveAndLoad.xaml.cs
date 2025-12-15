@@ -66,12 +66,13 @@ public sealed partial class SaveAndLoad:UserControl {
     page.ResizeElem(parentSize);
   }
   internal void ResizeElem(Windows.Foundation.Size size) {
-    double scaleFactor = UIUtil.GetScaleFactor(size with { Width = Math.Min(size.Width, scrollMaxWidth), Height = 0 }) / minScaleFactor;
+    double scaleFactor = CookScaleFactor(UIUtil.GetScaleFactor(size with { Height = 0 }));
     double contentWidth = RenderSize.Width / scaleFactor;
     double contentHeight = RenderSize.Height / scaleFactor;
     Content.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
     Content.Margin = new(0,0,contentWidth * (scaleFactor - 1),contentHeight * (scaleFactor - 1));
-  }
+    double CookScaleFactor(double scaleFactor) => scaleFactor switch { < minScaleFactor => scaleFactor / minScaleFactor, > 1 => scaleFactor, _ => 1 };
+    }
   private static async Task PressSaveSlot(SaveSlotData slotData) {
     await (isWritemode ? WriteSlot() : ReadSlot());
     async Task WriteSlot(){
