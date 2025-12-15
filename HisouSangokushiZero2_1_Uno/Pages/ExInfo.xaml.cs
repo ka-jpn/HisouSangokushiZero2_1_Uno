@@ -1,26 +1,27 @@
 ﻿using HisouSangokushiZero2_1_Uno.Code;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Core;
 namespace HisouSangokushiZero2_1_Uno.Pages;
-internal sealed partial class InfoPanel:UserControl {
+internal sealed partial class ExInfo:UserControl {
   private enum InfoPanelState { Explain, WinCond, ParamList, ChangeLog, Setting };
   private static readonly Dictionary<InfoPanelState,UserControl> infoPanelMap = [];
-  internal InfoPanel() {
+  internal ExInfo() {
     InitializeComponent();
     MyInit();
     void MyInit() {
-      AttachEvent();
-      LoadPage();
       Explain.Init(InfoContentPanel);
       WinCond.Init(InfoContentPanel);
       ParamList.Init(InfoContentPanel);
       ChangeLog.Init(InfoContentPanel);
       Setting.Init(InfoContentPanel);
+      AttachEvent();
+      LoadPage();
       void AttachEvent() {
         ExplainButton.Click += (_,_) => SwitchInfoButton(InfoPanelState.Explain);
         WinCondButton.Click += (_,_) => SwitchInfoButton(InfoPanelState.WinCond);

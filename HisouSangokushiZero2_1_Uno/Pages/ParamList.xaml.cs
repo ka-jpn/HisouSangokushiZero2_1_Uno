@@ -34,7 +34,9 @@ internal sealed partial class ParamList:UserControl {
       AttachEvent();
       SetUIElements();
       void AttachEvent() {
-        SizeChanged += (_, _) => parent?.MyApplyA(ResizeElem);
+        Scroll.SizeChanged += (_, _) => parent?.MyApplyA(ResizeElem);
+        PersonScroll.SizeChanged += (_, _) => PersonItemsRepeater.Width = PersonScroll.RenderSize.Width;
+        CountryScroll.SizeChanged += (_, _) => CountryItemsRepeater.Width = CountryScroll.RenderSize.Width;
         void ResizeElem(UIElement parent) {
           double scaleFactor = UIUtil.GetScaleFactor(parent.RenderSize);
           double pageWidth = RenderSize.Width;

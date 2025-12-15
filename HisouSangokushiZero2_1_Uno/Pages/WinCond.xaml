@@ -28,9 +28,9 @@
         <TextBlock Text="陣営" TextAlignment="Center" Width="50"/>
         <TextBlock Text="勝利条件" MaxWidth="700" Padding="5,0,0,0" />
       </StackPanel>
-      <ScrollView MaxWidth="{x:Bind local:WinCond.itemsRepeaterWidth}" Height="{x:Bind local:WinCond.itemsRepeaterHeight}">
+      <ScrollViewer x:Name="WinCondScroll1" MaxWidth="{x:Bind local:WinCond.itemsRepeaterWidth}" Height="{x:Bind local:WinCond.itemsRepeaterHeight}">
         <ItemsRepeater x:Name="WinCondItemsRepeater1" ItemTemplate="{StaticResource WinCondItemsRepeater}" Background="#CCC"/>
-      </ScrollView>
+      </ScrollViewer>
       <StackPanel Height="2"></StackPanel>
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
         <TextBlock FontFamily="{StaticResource SourceHanSansJPBold}" Text="シナリオ２："/>
@@ -40,9 +40,9 @@
         <TextBlock Text="陣営名" TextAlignment="Center" Width="50"/>
         <TextBlock Text="勝利条件" MaxWidth="700" Padding="5,0,0,0" />
       </StackPanel>
-      <ScrollView MaxWidth="{x:Bind local:WinCond.itemsRepeaterWidth}" Height="{x:Bind local:WinCond.itemsRepeaterHeight}">
+      <ScrollViewer x:Name="WinCondScroll2" MaxWidth="{x:Bind local:WinCond.itemsRepeaterWidth}" Height="{x:Bind local:WinCond.itemsRepeaterHeight}">
         <ItemsRepeater x:Name="WinCondItemsRepeater2" ItemTemplate="{StaticResource WinCondItemsRepeater}" Background="#CCC"/>
-      </ScrollView>
+      </ScrollViewer>
       <StackPanel Height="2"></StackPanel>
     </StackPanel>
   </ScrollViewer>

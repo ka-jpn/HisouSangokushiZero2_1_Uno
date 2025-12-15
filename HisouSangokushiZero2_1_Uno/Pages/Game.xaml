@@ -49,8 +49,8 @@
         <Button x:Name="OpenInfoButton" Grid.Row="1" Width="{x:Bind code:UIUtil.infoFrameWidth}" VerticalAlignment="Stretch" Background="#AEEF" Padding="0">
           <TextBlock FontSize="20" LineHeight="20" Text="情&#xa;報"/>
         </Button>
-        <local:LogPanel x:Name="LogPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
-        <local:InfoPanel x:Name="InfoPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+        <local:GameLog x:Name="GameLogPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
+        <local:ExInfo x:Name="ExInfoPanel" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed"/>
       </Grid>
     </Grid>
     <local:StateInfo x:Name="StateInfoPanel" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>

@@ -27,14 +27,19 @@ internal sealed partial class WinCond:UserControl {
           double contentWidth = RenderSize.Width / scaleFactor - 5;
           ContentPanel.Width = contentWidth;
           ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
-          ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+          ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.RenderSize.Height) * (scaleFactor - 1));
         }
       }
       void SetUIElements() {
         List<TextBlock> WinCondScenarioNames = [WinCondScenarioName1,WinCondScenarioName2];
         List<ItemsRepeater> winCondItemsRepeaters = [WinCondItemsRepeater1, WinCondItemsRepeater2];
+        List<ScrollViewer> winCondScrolls = [WinCondScroll1, WinCondScroll2];
         WinCondScenarioNames.ForEachWithIndex((v,i) => v.Text = ScenarioBase.GetScenarioId(i)?.Value);
         winCondItemsRepeaters.ForEachWithIndex((v,i) => v.ItemsSource = ScenarioBase.GetScenarioId(i)?.MyApplyF(ScenarioBase.GetScenarioData)?.MyApplyF(scenario => GetWinCondListData(scenario)));
+        winCondScrolls.Zip(winCondItemsRepeaters).ToList().ForEach(v => v.First.SizeChanged += (_, _) => {
+          v.Second.Width = v.First.RenderSize.Width;
+          v.First.UpdateLayout();
+        });
         List<WinCondData> GetWinCondListData(ScenarioData scenario) {
           return [.. scenario.CountryMap.Select(ToCountryListItem)];
           WinCondData ToCountryListItem(KeyValuePair<ECountry,CountryData> countryInfo) {

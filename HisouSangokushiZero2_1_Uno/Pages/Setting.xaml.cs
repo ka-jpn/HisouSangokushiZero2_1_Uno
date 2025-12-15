@@ -1,5 +1,4 @@
-﻿using ExCSS;
-using HisouSangokushiZero2_1_Uno.Code;
+﻿using HisouSangokushiZero2_1_Uno.Code;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -30,8 +29,9 @@ internal sealed partial class Setting:UserControl {
         void ResizeElem(UIElement parent) {
           double scaleFactor = UIUtil.GetScaleFactor(parent.RenderSize);
           double contentWidth = RenderSize.Width / scaleFactor - 5;
+          ContentPanel.Width = contentWidth;
           ContentPanel.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
-          ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.DesiredSize.Height) * (scaleFactor - 1));
+          ContentPanel.Margin = new(0,0,contentWidth * (scaleFactor - 1),ContentPanel.Children.Sum(v => v.RenderSize.Height) * (scaleFactor - 1));
           InnerSwitchViewModeButton.MaxWidth = contentWidth - ViewModeCaption.RenderSize.Width - ViewModeText.Width - 10;
           SaveGameButton.MaxWidth = contentWidth - 10;
           LoadGameButton.MaxWidth = contentWidth - 10;

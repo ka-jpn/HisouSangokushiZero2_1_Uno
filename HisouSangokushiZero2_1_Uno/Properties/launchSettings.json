@@ -25,7 +25,7 @@
     },
     "HisouSangokushiZero2_1_Uno (Desktop WSL2)": {
       "commandName": "WSL2",
-      "commandLineArgs": "{ProjectDir}/bin/Debug/net9.0-desktop/HisouSangokushiZero2_1_Uno.dll",
+      "commandLineArgs": "{ProjectDir}/bin/Debug/net10.0-desktop/HisouSangokushiZero2_1_Uno.dll",
       "distributionName": "",
       "compatibleTargetFramework": "desktop"
     }

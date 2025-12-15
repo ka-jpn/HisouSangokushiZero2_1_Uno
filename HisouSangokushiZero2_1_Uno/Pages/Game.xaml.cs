@@ -96,8 +96,8 @@ public sealed partial class Game:Page {
       void AttachEvent() {
         MainGrid.SizeChanged += (_, _) => ResizeMap();
         InfoFramePanel.SizeChanged += (_, _) => ResizeInfo();
-        OpenLogButton.Click += (_,_) => { UIUtil.ReverseVisibility(LogPanel); UIUtil.SetVisibility(InfoPanel,false); };
-        OpenInfoButton.Click += (_,_) => { UIUtil.ReverseVisibility(InfoPanel); UIUtil.SetVisibility(LogPanel,false); };
+        OpenLogButton.Click += (_,_) => { UIUtil.ReverseVisibility(GameLogPanel); UIUtil.SetVisibility(ExInfoPanel, false); };
+        OpenInfoButton.Click += (_,_) => { UIUtil.ReverseVisibility(ExInfoPanel); UIUtil.SetVisibility(GameLogPanel, false); };
         Page.PointerMoved += (_,e) => (pick is { } && MovePersonCanvas.Children.SingleOrDefault() is UIElement personPanel ? () => MovePerson(personPanel,e) : MyUtil.MyUtil.nothing).Invoke();
         Page.PointerReleased += (_,e) => (pick is { } ? () => GameData.game = PutPersonPanel(GameData.game) : MyUtil.MyUtil.nothing).Invoke();
         TopSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
@@ -137,7 +137,7 @@ public sealed partial class Game:Page {
       void ResizeInfo() {
         InfoLayoutPanel.Margin = new(0, 0, InfoFramePanel.RenderSize.Width / mapScale * (mapScale - 1), InfoFramePanel.RenderSize.Height / mapScale * (mapScale - 1));
         InfoLayoutPanel.RenderTransform = new ScaleTransform() { ScaleX = mapScale, ScaleY = mapScale };
-
+        InfoLayoutPanel.Width = InfoFramePanel.RenderSize.Width / mapScale;
       }
       void SetCountryPostsPanel() {
         Dictionary<ERole, Color> countryRolePanelColorMap = new([
@@ -168,7 +168,7 @@ public sealed partial class Game:Page {
     await Task.Yield();
     await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => CleanUI(newGameState));
     await Task.Yield();
-    await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => LogPanel.UpdateLogMessageUI(newGameState));
+    await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => GameLog.UpdateLogMessageUI(newGameState));
     await Task.Yield();
     await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowCharacterRemark(newGameState));
     GameData.game = newGameState;
@@ -384,7 +384,7 @@ public sealed partial class Game:Page {
     GameState EndPlanningPhase(GameState game) {
       ResetTurnUI();
       return game.MyApplyF(game => UpdateGame.AutoPutPostCPU(game,[ECountry.漢])).MyApplyF(CalcArmyTarget).MyApplyF(game => game with { Phase = Phase.Execution })
-        .MyApplyA(UpdateAreaPanels).MyApplyA(ExecutionMoveFlag).MyApplyF(ArmyAttack).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyA(ShowCharacterRemark);
+        .MyApplyA(UpdateAreaPanels).MyApplyA(ExecutionMoveFlag).MyApplyF(ArmyAttack).MyApplyA(GameLog.UpdateLogMessageUI).MyApplyA(ShowCharacterRemark);
       void ResetTurnUI() => new List<UIElement>([CharacterRemarkPanel,CountryPostsPanel]).ForEach(v => UIUtil.SetVisibility(v,false));
       static GameState CalcArmyTarget(GameState game) {
         Dictionary<ECountry,EArea?> playerArmyTargetMap = game.PlayCountry.MyMaybeToList().Where(country => !Country.IsSleep(game,country)).ToDictionary(v => v,v => game.ArmyTargetMap.GetValueOrDefault(v));
@@ -474,7 +474,7 @@ public sealed partial class Game:Page {
       return game.MyApplyF(UpdateGame.GameEndJudge).MyApplyF(game => game.Phase is Phase.PerishEnd or Phase.TurnLimitOverEnd or Phase.WinEnd or Phase.OtherWinEnd ? game : game.MyApplyF(NextTurn));
       GameState NextTurn(GameState game) {
         return game.MyApplyF(UpdateGame.NextTurn).MyApplyF(v => v with { Phase = Phase.Planning }).MyApplyF(game => UpdateGame.AppendStartPlanningRemark(game,[.. Text.StartPlanningCharacterRemarkTexts(game,Lang.ja)]))
-          .MyApplyA(UpdateCountryPosts).MyApplyA(UpdateAreaPanels).MyApplyA(UpdateTurnLogUI).MyApplyA(UpdateTurnWinCondUI).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyF(UpdateGame.GameEndJudge).MyApplyA(ShowCharacterRemark).MyApplyF(ResetParam);
+          .MyApplyA(UpdateCountryPosts).MyApplyA(UpdateAreaPanels).MyApplyA(UpdateTurnLogUI).MyApplyA(UpdateTurnWinCondUI).MyApplyA(GameLog.UpdateLogMessageUI).MyApplyF(UpdateGame.GameEndJudge).MyApplyA(ShowCharacterRemark).MyApplyF(ResetParam);
       }
       static GameState ResetParam(GameState game) => game with { ArmyTargetMap = [],StartPlanningCharacterRemark = [],StartExecutionCharacterRemark = [] };
     }
@@ -734,7 +734,7 @@ public sealed partial class Game:Page {
         GameState SelectPlayCountry(GameState game,ECountry playCountry) => UpdateGame.AttachGameStartData(game,playCountry).MyApplyA( page.UpdateCountryPosts);
         GameState StartGame(GameState game) {
           GameState newGameState = (game with { Phase = Phase.Planning }).MyApplyF(UpdateGame.AppendGameStartLog);
-          newGameState.MyApplyA(page.UpdateAreaPanels).MyApplyA(LogPanel.UpdateLogMessageUI).MyApplyA(page.UpdateTurnLogUI).MyApplyA(page.UpdateTurnWinCondUI);
+          newGameState.MyApplyA(page.UpdateAreaPanels).MyApplyA(GameLog.UpdateLogMessageUI).MyApplyA(page.UpdateTurnLogUI).MyApplyA(page.UpdateTurnWinCondUI);
           page.MyApplyA(page => UIUtil.SetVisibility(page.CountryPostsPanel,true));
           return newGameState;
         }

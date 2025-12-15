@@ -62,14 +62,18 @@
         <TextBlock Text="没年" Width="40" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="列伝" Width="400" Margin="0,1" Padding="5,0,0,0" TextAlignment="Start"/>
       </StackPanel>
-      <ListView x:Name="PersonItemsRepeater" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.personItemsRepeaterHeight}" ItemTemplate="{StaticResource PersonItemsRepeater}" Background="#CCC"/>
+      <ScrollViewer x:Name="PersonScroll" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.personItemsRepeaterHeight}">
+        <ItemsRepeater x:Name="PersonItemsRepeater" ItemTemplate="{StaticResource PersonItemsRepeater}" Background="#CCC"/>
+      </ScrollViewer>
       <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
       <StackPanel MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Orientation="Horizontal" Background="#EEE">
         <TextBlock Text="陣営" Width="75" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="初期資金" Width="75" Margin="0,1" TextAlignment="Center"/>
         <TextBlock Text="初期領土" Width="600" Margin="0,1" TextAlignment="Start"/>
       </StackPanel>
-      <ListView x:Name="CountryItemsRepeater" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.countryItemsRepeaterHeight}" ItemTemplate="{StaticResource CountryItemsRepeater}" Background="#CCC"/>
+      <ScrollViewer x:Name="CountryScroll" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.countryItemsRepeaterHeight}">
+        <ItemsRepeater x:Name="CountryItemsRepeater" ItemTemplate="{StaticResource CountryItemsRepeater}" Background="#CCC"/>
+      </ScrollViewer>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

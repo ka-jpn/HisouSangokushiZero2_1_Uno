@@ -22,11 +22,8 @@
       SkiaRenderer;
       Svg;
     </UnoFeatures>
-    <WasmShellEnableSkia>true</WasmShellEnableSkia>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MessagePack" />
-    <PackageReference Include="SkiaSharp" />
-    <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" />
   </ItemGroup>
 </Project>

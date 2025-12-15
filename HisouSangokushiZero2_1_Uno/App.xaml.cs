@@ -66,9 +66,9 @@ public partial class App:Application {
 #if __WASM__
 			builder.AddProvider(new global::Uno.Extensions.Logging.WebAssembly.WebAssemblyConsoleLoggerProvider());
 #elif __IOS__||__MACCATALYST__
-            builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
+      builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
 #else
-            builder.AddConsole();
+      builder.AddConsole();
 #endif
 			// Exclude logs below this level
 			builder.SetMinimumLevel(LogLevel.Information);
