@@ -19,8 +19,8 @@ public sealed partial class Title:Page {
         GameData.game = GetInitGameData();
         NavigateToGamePage();
       };
-      LoadButton.Click += (_,_) => {
-        SaveAndLoad.Show(SaveDataPanel,false,maybeRead => maybeRead?.MaybeGame is GameState game ? Task.Run(async () => {
+      LoadButton.Click += async (_,_) => {
+        await SaveAndLoad.Show(SaveDataPanel,false,maybeRead => maybeRead?.MaybeGame is GameState game ? Task.Run(async () => {
           GameData.game = game;
           await Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() => NavigateToGamePage());
         }) : Task.CompletedTask,() => UIUtil.SetVisibility(SaveDataPanel,false),Content.RenderSize);

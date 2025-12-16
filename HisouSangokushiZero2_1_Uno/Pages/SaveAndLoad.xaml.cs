@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 using static HisouSangokushiZero2_1_Uno.Code.Storage;
 namespace HisouSangokushiZero2_1_Uno.Pages;
@@ -27,10 +28,10 @@ public sealed partial class SaveAndLoad:UserControl {
     CloseButton.Click += (_,_) => pressCloseProcess();
     SizeChanged += (_,_) => ResizeElem(RenderSize);
   }
-  private static void RefreshSaveSlotView() {
-    saveSlots = [.. Enumerable.Range(0,10).Select(fileIndex => ReadMetaData(IndexToFileNo(fileIndex)))];
+  private static async Task RefreshSaveSlotView() {
+    saveSlots = [.. await Task.WhenAll(Enumerable.Range(0, 10).Select(async fileIndex => await ReadMetaData(IndexToFileNo(fileIndex))))];
     saveSlotTexts.Clear();
-    saveSlots.Select((slot,index) => {
+    saveSlots.Select(async (slot,index) => {
       if(slot.ReadState == ReadState.Read && slot.MaybeMeta is MetaData meta) {
         return new SaveSlotData(
           SlotIndex: index,
@@ -51,17 +52,17 @@ public sealed partial class SaveAndLoad:UserControl {
           PlayTurn: null,
           PlayTime: null,
           LastSaveDate: null,
-          HasSaveData: HasSaveData(IndexToFileNo(index)) ? "セーブデータがありますがここに表示されるメタデータがありません\n(再保存でメタデータが付加されます)" : "セーブデータなし"
+          HasSaveData: await HasSaveData(IndexToFileNo(index)) ? "セーブデータがありますがここに表示されるメタデータがありません\n(再保存でメタデータが付加されます)" : "セーブデータなし"
         );
       }
-    }).ToList().ForEach(saveSlotTexts.Add);
+    }).ToList().ForEach(async v=>saveSlotTexts.Add(await v));
   }
   private static int IndexToFileNo(int index) => index + 1;
-  internal static void Show(SaveAndLoad page,bool isWrite,Func<ReadGame?,Task> afterProcess,Action closeProcess,Windows.Foundation.Size parentSize) {
+  internal static async Task Show(SaveAndLoad page,bool isWrite,Func<ReadGame?,Task> afterProcess,Action closeProcess,Windows.Foundation.Size parentSize) {
     isWritemode = isWrite;
     pressSlotAfterProcess = afterProcess;
     pressCloseProcess = closeProcess;
-    RefreshSaveSlotView();
+    await RefreshSaveSlotView();
     page.Title.Text = isWrite ? "セーブデータ選択" : "ロードデータ選択";
     page.ResizeElem(parentSize);
   }
@@ -76,13 +77,13 @@ public sealed partial class SaveAndLoad:UserControl {
   private static async Task PressSaveSlot(SaveSlotData slotData) {
     await (isWritemode ? WriteSlot() : ReadSlot());
     async Task WriteSlot(){
-      WriteStorageData(GameData.game,GameData.startingPlayTotalTime,IndexToFileNo(slotData.SlotIndex));
-      RefreshSaveSlotView();
+      await WriteStorageData(GameData.game,GameData.startingPlayTotalTime,IndexToFileNo(slotData.SlotIndex));
+      await RefreshSaveSlotView();
       await pressSlotAfterProcess(null);
     }
     async Task ReadSlot(){
       GameData.startingPlayTotalTime = saveSlots.ElementAtOrDefault(slotData.SlotIndex)?.MaybeMeta?.TotalPlayTime ?? TimeSpan.Zero;
-      await pressSlotAfterProcess(ReadStorageData(IndexToFileNo(slotData.SlotIndex)));
+      await pressSlotAfterProcess(await ReadStorageData(IndexToFileNo(slotData.SlotIndex)));
     }
   }
   private async void SaveSlot_PointerPressed(object sender,PointerRoutedEventArgs e) {

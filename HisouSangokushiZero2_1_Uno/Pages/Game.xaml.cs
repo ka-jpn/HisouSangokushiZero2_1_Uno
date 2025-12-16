@@ -49,7 +49,7 @@ public sealed partial class Game:Page {
       CharacterRemark.Init(MainGrid);
       UIUtil.SaveGameActions.Add(async () => {
         await Task.Run(async () => {
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => SaveAndLoad.Show(SaveDataPanel,true,_ => Task.Run(async () => {
+          await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () => await SaveAndLoad.Show(SaveDataPanel,true,_ => Task.Run(async () => {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["セーブ中.."]));
             await Task.Yield();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,false));
@@ -61,7 +61,7 @@ public sealed partial class Game:Page {
       });
       UIUtil.LoadGameActions.Add(async () => {
         await Task.Run(async () => {
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => SaveAndLoad.Show(SaveDataPanel,false,maybeRead => maybeRead?.MaybeGame is GameState game ? Task.Run(async () => {
+          await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () => await SaveAndLoad.Show(SaveDataPanel,false,maybeRead => maybeRead?.MaybeGame is GameState game ? Task.Run(async () => {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["ロード中.."]));
             await Task.Yield();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,false));
