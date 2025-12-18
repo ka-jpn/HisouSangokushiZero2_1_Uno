@@ -29,12 +29,7 @@ internal sealed partial class ExInfo:UserControl {
         ChangeLogButton.Click += (_,_) => SwitchInfoButton(InfoPanelState.ChangeLog);
         SettingButton.Click += (_,_) => SwitchInfoButton(InfoPanelState.Setting);
       }
-      void LoadPage() {
-        Task.Run(async () => {
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => SwitchInfoButton(InfoPanelState.Explain));
-          await Task.Yield();
-        });
-      }
+      void LoadPage() => SwitchInfoButton(InfoPanelState.Explain);
       void SwitchInfoButton(InfoPanelState clickButtonInfoPanelState) {
         Dictionary<InfoPanelState,Button> buttonMap = new([
           new(InfoPanelState.Explain,ExplainButton),

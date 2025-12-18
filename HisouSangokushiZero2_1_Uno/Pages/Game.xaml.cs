@@ -49,27 +49,27 @@ public sealed partial class Game:Page {
       CharacterRemark.Init(MainGrid);
       UIUtil.SaveGameActions.Add(async () => {
         await Task.Run(async () => {
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () => await SaveAndLoad.Show(SaveDataPanel,true,_ => Task.Run(async () => {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["セーブ中.."]));
+          await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () => await SaveAndLoad.Show(SaveDataPanel, true, async _ => {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => ShowMessage(["セーブ中.."]));
             await Task.Yield();
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,false));
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIUtil.SetVisibility(SaveDataPanel, false));
             await Task.Yield();
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["セーブ完了"]));
-          }),() => UIUtil.SetVisibility(SaveDataPanel,false),MainGrid.RenderSize));
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,true));
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => ShowMessage(["セーブ完了"]));
+          }, () => UIUtil.SetVisibility(SaveDataPanel, false), MainGrid.RenderSize));
+          await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => UIUtil.SetVisibility(SaveDataPanel, true));
         });
       });
       UIUtil.LoadGameActions.Add(async () => {
         await Task.Run(async () => {
-          await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () => await SaveAndLoad.Show(SaveDataPanel,false,maybeRead => maybeRead?.MaybeGame is GameState game ? Task.Run(async () => {
+          await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () => await SaveAndLoad.Show(SaveDataPanel,false,async maybeRead => maybeRead?.MyApplyF(async read => {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage(["ロード中.."]));
             await Task.Yield();
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,false));
             await Task.Yield();
-            await InitGame(game);
+            await (read.MaybeGame?.MyApplyF(InitGame) ?? Task.CompletedTask);
             await Task.Yield();
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage([maybeRead?.MaybeGame != null ? "ロード完了" : maybeRead?.ReadState == Storage.ReadState.Read ? "ロード失敗：ファイルが破損しています" : "ロード失敗：ファイルが見つかりません"]));
-          }) : Task.CompletedTask,() => UIUtil.SetVisibility(SaveDataPanel,false),MainGrid.RenderSize));
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => ShowMessage([read.MaybeGame is { } ? "ロード完了" : read.ReadState == Storage.ReadState.Read ? "ロード失敗：ファイルが破損しています" : "ロード失敗：ファイルが見つかりません"]));
+          }),() => UIUtil.SetVisibility(SaveDataPanel,false),MainGrid.RenderSize));
           await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(SaveDataPanel,true));
         });
       });

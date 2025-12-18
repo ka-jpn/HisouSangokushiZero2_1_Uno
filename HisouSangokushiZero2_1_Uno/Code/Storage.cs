@@ -2,8 +2,10 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using MessagePack;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Windows.Storage;
-using Windows.Storage.Streams;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class Storage {
@@ -12,41 +14,47 @@ internal static class Storage {
   internal record ReadMeta(ReadState ReadState,MetaData? MaybeMeta);
   private static string CreateMetaFileName(int fileNo) => $"save{fileNo}.meta";
   private static string CreateSaveFileName(int fileNo) => $"save{fileNo}.dat";
-  private static async Task<StorageFile> CreateFileAsync(StorageFolder folder, string fileName) => await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-  private static async Task<StorageFile?> GetFileAsync(StorageFolder folder, string fileName) => await folder.TryGetItemAsync(fileName) as StorageFile;
-  private static async Task<StorageFolder?> GetOldStorageFolder() => await ApplicationData.Current.LocalFolder.TryGetItemAsync(BaseData.name.Value) as StorageFolder;
-  private static StorageFolder GetNewStorageFolder() => ApplicationData.Current.LocalFolder;
-  private static async Task<byte[]> ReadAsync(StorageFile file) => await FileIO.ReadBufferAsync(file).AsTask().ContinueWith(t => new byte[t.Result.Length].MyApplyA(DataReader.FromBuffer(t.Result).ReadBytes));
+  private static void Write(string folderName, string fileName, byte[] writeData) => File.WriteAllBytes(Path.Combine(folderName, fileName), writeData);
+  private static StorageFolder GetStorageFolder() => ApplicationData.Current.LocalFolder;
+  private static async Task<List<StorageFile>> GetFilesAsync(StorageFolder folder) => [.. await folder.GetFilesAsync()];
+  private static bool ExistsFile(string folderName, string fileName) => File.Exists(Path.Combine(folderName, fileName));
+  private static byte[] Read(string folderName, string fileName) => File.ReadAllBytes(Path.Combine(folderName, fileName));
   internal static async Task WriteStorageData(GameState game,TimeSpan startingPlayTotalTime,int fileNo) {
-    StorageFile? metaFile = await GetNewStorageFolder().MyApplyF(myFolder => CreateFileAsync(myFolder,CreateMetaFileName(fileNo)));
-    StorageFile? saveFile = await GetNewStorageFolder().MyApplyF(myFolder => CreateFileAsync(myFolder,CreateSaveFileName(fileNo)));
     TimeSpan totalPlayTime = DateTime.Now - GameData.startGameDateTime + startingPlayTotalTime;
     DateTime lastSaveTime = DateTime.Now + new TimeSpan(9, 0, 0);
-    await FileIO.WriteBytesAsync(metaFile, MessagePackSerializer.Serialize(new MetaData(game.NowScenario,game.PlayCountry,game.PlayTurn,totalPlayTime,lastSaveTime,fileNo,BaseData.version.Value)));
-    await FileIO.WriteBytesAsync(saveFile,MessagePackSerializer.Serialize(game));
+    MetaData metaData = new(game.NowScenario, game.PlayCountry, game.PlayTurn, totalPlayTime, lastSaveTime, fileNo, BaseData.version.Value);
+    GetStorageFolder().MyApplyA(myFolder => Write(myFolder.Path,CreateMetaFileName(fileNo), MessagePackSerializer.Serialize(metaData)));
+    await Task.Yield();
+    GetStorageFolder().MyApplyA(myFolder => Write(myFolder.Path,CreateSaveFileName(fileNo), MessagePackSerializer.Serialize(game)));
   }
   internal static async Task<ReadGame> ReadStorageData(int fileNo) {
-    StorageFile? newSaveFile = await GetNewStorageFolder().MyApplyF(myFolder => GetFileAsync(myFolder,CreateSaveFileName(fileNo)));
-    StorageFile? oldSaveFile = await ((await GetOldStorageFolder())?.MyApplyF(myFolder => GetFileAsync(myFolder, CreateSaveFileName(fileNo))) ?? Task.FromResult<StorageFile?>(null));
-    return newSaveFile is { } ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(await ReadAsync(newSaveFile))?.MyApplyF(FillState)) :
-      oldSaveFile is { } ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(await ReadAsync(oldSaveFile))?.MyApplyF(FillState)) : new(ReadState.NotFind, null);
-    GameState FillState(GameState game) => game with { LogMessage = game.LogMessage ?? [], StartPlanningCharacterRemark = game.StartPlanningCharacterRemark ?? [], StartExecutionCharacterRemark = game.StartExecutionCharacterRemark ?? [] };
-  }
-  internal static async Task<ReadMeta> ReadMetaData(int fileNo) {
-    StorageFile? newMetaFile = await GetNewStorageFolder().MyApplyF(myFolder => GetFileAsync(myFolder,CreateMetaFileName(fileNo)));
-    return newMetaFile is { } ? new(ReadState.Read, MessagePackSerializer.Deserialize<MetaData?>(await ReadAsync(newMetaFile))) : new(ReadState.NotFind, null);
+    bool newSaveFileExists = GetStorageFolder().MyApplyF(myFolder => ExistsFile(myFolder.Path,CreateSaveFileName(fileNo)));
+    bool oldSaveFileExists = GetStorageFolder().MyApplyF(myFolder => ExistsFile(Path.Combine(myFolder.Path, BaseData.name.Value), CreateSaveFileName(fileNo)));
+    return newSaveFileExists ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(Read(GetStorageFolder().Path, CreateSaveFileName(fileNo)))?.MyApplyF(FillState)) :
+      oldSaveFileExists ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(Read(Path.Combine(GetStorageFolder().Path, BaseData.name.Value), CreateSaveFileName(fileNo)))?.MyApplyF(FillState)) :
+      new(ReadState.NotFind, null);
+    GameState FillState(GameState game) => game with {
+      LogMessage = game.LogMessage ?? [],
+      StartPlanningCharacterRemark = game.StartPlanningCharacterRemark ?? [],
+      StartExecutionCharacterRemark = game.StartExecutionCharacterRemark ?? []
+    };
   }
   internal static async Task DeleteStorageData(int fileNo) {
-    StorageFile? oldWriteFile = await ((await GetOldStorageFolder())?.MyApplyF(myFolder => GetFileAsync(myFolder,CreateSaveFileName(fileNo))) ?? Task.FromResult<StorageFile?>(null));
-    StorageFile? metaFile = await GetNewStorageFolder().MyApplyF(myFolder => GetFileAsync(myFolder,CreateMetaFileName(fileNo)));
-    StorageFile? newSaveFile = await GetNewStorageFolder().MyApplyF(myFolder => GetFileAsync(myFolder,CreateSaveFileName(fileNo)));
-    oldWriteFile?.DeleteAsync();
-    metaFile?.DeleteAsync();
-    newSaveFile?.DeleteAsync(); 
+    File.Delete(Path.Combine(GetStorageFolder().Path, BaseData.name.Value, CreateSaveFileName(fileNo)));
+    File.Delete(Path.Combine(GetStorageFolder().Path, CreateMetaFileName(fileNo)));
+    File.Delete(Path.Combine(GetStorageFolder().Path, CreateSaveFileName(fileNo)));
   }
-  internal static async Task<bool> HasSaveData(int fileNo) {
-    StorageFile? newSaveFile = await GetNewStorageFolder().MyApplyF(myFolder => GetFileAsync(myFolder,CreateSaveFileName(fileNo)));
-    StorageFile? oldSaveFile = await ((await GetOldStorageFolder())?.MyApplyF(myFolder => GetFileAsync(myFolder,CreateSaveFileName(fileNo))) ?? Task.FromResult<StorageFile?>(null));
-    return newSaveFile is { } || oldSaveFile is { };
+  internal static async Task<List<ReadMeta>> ReadMetaDataList() {
+    List<StorageFile> newMetaFiles = await GetStorageFolder().MyApplyF(GetFilesAsync);
+    List<StorageFile?> slotMetaFiles = [.. Enumerable.Range(1, 10).Select(fileNo => newMetaFiles.FirstOrDefault(v => v.Name == CreateMetaFileName(fileNo)))];
+    List<byte[]?> metaRawDatas = [.. slotMetaFiles.Select(slotMetaFile => slotMetaFile?.MyApplyF(v=> Read(GetStorageFolder().Path,v.Path)))];
+    List<MetaData?> metaDatas = [.. metaRawDatas.Select(metaRawData => metaRawData?.MyApplyF(v => MessagePackSerializer.Deserialize<MetaData?>(v)))];
+    return [.. metaDatas.Select(maybeMetaData => maybeMetaData?.MyApplyF(v => new ReadMeta(ReadState.Read, v)) ?? new ReadMeta(ReadState.NotFind, null))];
+  }
+  internal static async Task<List<bool>> GetHasSaveDataList() {
+    List<StorageFile> newSaveFiles = await GetStorageFolder().MyApplyF(GetFilesAsync);
+    List<StorageFile> oldSaveFiles = await GetStorageFolder().MyApplyF(GetFilesAsync);
+    List<List<StorageFile>> saveFiles = [newSaveFiles, oldSaveFiles];
+    return [.. Enumerable.Range(1, 10).Select(fileNo => saveFiles.Any(v => v.FirstOrDefault(v => v.Name == CreateSaveFileName(fileNo)) is { }))];
   }
 }

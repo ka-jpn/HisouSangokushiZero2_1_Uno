@@ -18,8 +18,8 @@
 		<!--<RunAOTCompilation>true</RunAOTCompilation>-->
 		<WasmShellEnableJiterpreter>true</WasmShellEnableJiterpreter>
 		<PublishTrimmed>true</PublishTrimmed>
-		<InvariantGlobalization>true</InvariantGlobalization>
-		<PredefinedCulturesOnly>false</PredefinedCulturesOnly>
+		<!--<InvariantGlobalization>true</InvariantGlobalization>-->
+		<!--<PredefinedCulturesOnly>false</PredefinedCulturesOnly>-->
 		<WasmShellEnableSkia>true</WasmShellEnableSkia>
 		<SatelliteResourceLanguages>None</SatelliteResourceLanguages>
 		<UnoDefaultFont>None</UnoDefaultFont>

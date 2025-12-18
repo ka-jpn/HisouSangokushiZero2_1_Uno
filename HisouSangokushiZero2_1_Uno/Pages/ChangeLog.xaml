@@ -47,6 +47,11 @@
         <TextBlock Text="2025/11/14 ver1.15 レイアウト変更＆NPC思考改善＆列伝導入開始"/>
         <TextBlock Text="2025/11/17 ver1.16 セーブスロットを1個から10個に"/>
         <TextBlock Text="2025/12/16 ver1.17 細かい改善＆セーブデータにログを含めた"/>
+        <StackPanel Padding="20,0,0,0">
+          <TextBlock Text="・再レイアウト時の内部的な動作の改善、軽量化"/>
+          <TextBlock Text="・南越を林邑に変更し、人物に区連と范熊を追加"/>
+          <TextBlock Text="・セーブデータのロード後にログが引き継がれなかったのを引き継ぐように"/>
+        </StackPanel>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>
