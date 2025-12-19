@@ -75,6 +75,15 @@ internal static class UIUtil {
       e.Surface.Canvas.Restore();
     }
   }
+  internal static double SolveMapScale(double height,Windows.Foundation.Size size) {
+    double initScale = GetScaleFactor(size);
+    return (mapSize.Width * initScale - size.Width < 0.1 ? initScale : (CaclScale() - 0.0002));
+    double CaclScale() {
+      return Average(Enumerable.Range(0, 30).Aggregate((initScale / 4, initScale * 4), (before, _) => Average(before).MyApplyF(v => GetDeviation(v) > 0 ? (before.Item1, v) : (v, before.Item2))));
+      double Average((double left, double right) range) => (range.left + range.right) / 2;
+      double GetDeviation(double scale) => Math.Ceiling(mapSize.Height * scale) + Math.Ceiling(StateInfo.baseContentHeight * StateInfo.CookScaleY(scale)) - height;
+    }
+  }
   internal static double CalcFullWidthTextLength(string str) => str.Length - str.Count("0123456789-.() ".Contains) * 0.4 - str.Count(" ".Contains) * 0.8;
   internal static double CalcDataListElemWidth(double textlength) => BasicStyle.fontsize * textlength + dataMargin.Left + dataMargin.Right;
   internal static void SwitchViewMode() {

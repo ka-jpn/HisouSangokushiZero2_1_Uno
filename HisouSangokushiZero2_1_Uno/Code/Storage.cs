@@ -53,7 +53,7 @@ internal static class Storage {
   }
   internal static async Task<List<bool>> GetHasSaveDataList() {
     List<StorageFile> newSaveFiles = await GetStorageFolder().MyApplyF(GetFilesAsync);
-    List<StorageFile> oldSaveFiles = await GetStorageFolder().MyApplyF(GetFilesAsync);
+    List<StorageFile> oldSaveFiles = Directory.Exists(Path.Combine(GetStorageFolder().Path, BaseData.name.Value)) ? await (await GetStorageFolder().GetFolderAsync(BaseData.name.Value)).MyApplyF(GetFilesAsync) : [];
     List<List<StorageFile>> saveFiles = [newSaveFiles, oldSaveFiles];
     return [.. Enumerable.Range(1, 10).Select(fileNo => saveFiles.Any(v => v.FirstOrDefault(v => v.Name == CreateSaveFileName(fileNo)) is { }))];
   }

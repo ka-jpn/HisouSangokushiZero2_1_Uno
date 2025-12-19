@@ -104,9 +104,8 @@ public sealed partial class Game:Page {
         MapCanvas.PaintSurface += (_,e) => UIUtil.MapCanvas_PaintSurface(e);
       }
       void ResizeMap() {
-        double scaleFactor = StateInfo.SolveScale(ContentGrid.RenderSize.Height, MainGrid.RenderSize);
-        double mapScaleFactor = scaleFactor * GetZoomFactor();
-        StateInfo.ResizeElem(StateInfoPanel, scaleFactor);
+        double mapScaleFactor = UIUtil.SolveMapScale(ContentGrid.RenderSize.Height, MainGrid.RenderSize) * GetZoomFactor();
+        StateInfo.ResizeElem(StateInfoPanel, UIUtil.GetScaleFactor(ContentGrid.RenderSize with { Height = 0 }), mapScaleFactor);
         RelayoutCountryPostUI(mapScaleFactor);
         if (mapScaleFactor != lastScaleFactor) {
           RescaleMap(mapScaleFactor);

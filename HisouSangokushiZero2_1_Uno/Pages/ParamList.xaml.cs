@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Pages;
-internal record PersonListData(Brush Brush,ECountry? Country,string Name,string Role,ImageSource RoleImage,int Rank,int BirthYear,string AppearYear,int DeathYear,string Biography);
+internal record PersonListData(Brush Brush,ECountry? Country,string Name,string Role,/*ImageSource RoleImage,*/int Rank,int BirthYear,string AppearYear,int DeathYear,string Biography);
 internal record CountryListData(Brush Brush,ECountry Country,decimal Fund,string AreasText);
 internal sealed partial class ParamList:UserControl {
   private enum SortButtonKind { 国役割別, ランク順, 生年順, 没年順 };
@@ -86,7 +86,7 @@ internal sealed partial class ParamList:UserControl {
       List<PersonListData> GetPersonListData(ScenarioData scenario, SortButtonKind buttonKind) {
         return [.. buttonActionMap.GetValueOrDefault(buttonKind)?.Invoke(scenario.PersonMap.ToDictionary()).Select(ToPersonListItem) ?? []];
         PersonListData ToPersonListItem(KeyValuePair<PersonId, PersonData> personInfo) {
-          return new PersonListData((scenario.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewColor ?? UIUtil.transparentColor).ToBrush(), personInfo.Value.Country, personInfo.Key.Value, Code.Text.RoleToText(personInfo.Value.Role, Lang.ja), new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")), personInfo.Value.Rank, personInfo.Value.BirthYear, Person.GetAppearYear(personInfo.Value).MyApplyF(appearYear => appearYear >= scenario.StartYear ? appearYear.ToString() : "登場"), personInfo.Value.DeathYear, Biography.biographyMap.GetValueOrDefault(personInfo.Key) ?? string.Empty);
+          return new PersonListData((scenario.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewColor ?? UIUtil.transparentColor).ToBrush(), personInfo.Value.Country, personInfo.Key.Value, Code.Text.RoleToText(personInfo.Value.Role, Lang.ja),/* new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")),*/ personInfo.Value.Rank, personInfo.Value.BirthYear, Person.GetAppearYear(personInfo.Value).MyApplyF(appearYear => appearYear >= scenario.StartYear ? appearYear.ToString() : "登場"), personInfo.Value.DeathYear, Biography.biographyMap.GetValueOrDefault(personInfo.Key) ?? string.Empty);
         }
       }
       List<CountryListData> GetCountryListData(ScenarioData scenario) {

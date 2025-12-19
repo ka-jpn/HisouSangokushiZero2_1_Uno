@@ -17,17 +17,18 @@
           <ColumnDefinition Width="40"/>
           <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Text="{x:Bind Country}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <StackPanel Grid.Column="2" Margin="1" Orientation="Horizontal">
+        <TextBlock Grid.Column="0" Text="{x:Bind Country}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="{x:Bind Name}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="2" Text="{x:Bind Role}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <!--<StackPanel Grid.Column="2" Orientation="Horizontal">
           <TextBlock Text="{x:Bind Role}" VerticalAlignment="Center"/>
           <Image Source="{x:Bind RoleImage}" Width="16" Height="16" VerticalAlignment="Center" x:Phase="1"/>
-        </StackPanel>
-        <TextBlock Grid.Column="3" Text="{x:Bind Rank}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Grid.Column="4" Text="{x:Bind BirthYear}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Grid.Column="5" Text="{x:Bind AppearYear}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Grid.Column="6" Text="{x:Bind DeathYear}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Grid.Column="7" Text="{x:Bind Biography}" Margin="1" Padding="5,0,0,0" TextAlignment="Start" VerticalAlignment="Center"/>
+        </StackPanel>-->
+        <TextBlock Grid.Column="3" Text="{x:Bind Rank}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="4" Text="{x:Bind BirthYear}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="5" Text="{x:Bind AppearYear}"  TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="6" Text="{x:Bind DeathYear}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="7" Text="{x:Bind Biography}" Padding="5,0,0,0" TextAlignment="Start" VerticalAlignment="Center"/>
       </Grid>
     </DataTemplate>
     <DataTemplate x:Key="CountryItemsRepeater" x:DataType="local:CountryListData">
@@ -37,8 +38,8 @@
           <ColumnDefinition Width="75"/>
           <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Text="{x:Bind Country}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock Grid.Column="1" Text="{x:Bind Fund}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="0" Text="{x:Bind Country}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="{x:Bind Fund}" TextAlignment="Center" VerticalAlignment="Center"/>
         <TextBlock Grid.Column="2" Text="{x:Bind AreasText}" Margin="1" TextAlignment="Start" VerticalAlignment="Center"/>
       </Grid>
     </DataTemplate>
