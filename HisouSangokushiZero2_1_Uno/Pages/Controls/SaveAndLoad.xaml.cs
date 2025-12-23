@@ -23,11 +23,11 @@ public sealed partial class SaveAndLoad:UserControl {
   internal static readonly ObservableCollection<SaveSlotData> saveSlotTexts = [];
   internal SaveAndLoad() {
     InitializeComponent();
-    MyInit();
-  }
-  private void MyInit() {
-    CloseButton.Click += (_,_) => pressCloseProcess();
-    SizeChanged += (_,_) => ResizeElem(RenderSize);
+    MyInit(this);
+    void MyInit(SaveAndLoad page) {
+      page.SizeChanged += (_, _) => ResizeElem(RenderSize);
+      CloseButton.Click += (_, _) => pressCloseProcess();
+    }
   }
   private static async Task RefreshSaveSlotView() {
     hasSaveDataList = await Storage.GetHasSaveDataList();

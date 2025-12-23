@@ -16,12 +16,12 @@ internal sealed partial class WinCond:UserControl {
   private static UIElement? parent = null;
   internal WinCond() {
     InitializeComponent();
-    MyInit();
-    void MyInit() {
-      AttachEvent();
+    MyInit(this);
+    void MyInit(WinCond page) {
+      AttachEvent(page);
       SetUIElements();
-      void AttachEvent() {
-        SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
+      void AttachEvent(WinCond page) {
+        page.SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
         void ResizeElem(UIElement parent) {
           double scaleFactor = UIUtil.GetScaleFactor(parent.RenderSize);
           double contentWidth = RenderSize.Width / scaleFactor - 5;

@@ -2,6 +2,7 @@ using HisouSangokushiZero2_1_Uno.Code;
 using HisouSangokushiZero2_1_Uno.Data;
 using HisouSangokushiZero2_1_Uno.Data.Scenario;
 using HisouSangokushiZero2_1_Uno.MyUtil;
+using HisouSangokushiZero2_1_Uno.Pages.Common;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -39,9 +40,9 @@ public sealed partial class Game:Page {
   internal static readonly double initContentGridMaxWidth = UIUtil.GetContentMaxWidth();
   public Game() {
     InitializeComponent();
-    MyInit();
-    void MyInit() {
-      AttachEvent();
+    MyInit(this);
+    void MyInit(Game page) {
+      AttachEvent(page);
       SetCountryPostsPanel();
       UIUtil.SwitchViewModeActions.Add(RefreshViewMode);
       UIUtil.ChangeScaleActions.Add(ResizeMap);
@@ -93,13 +94,13 @@ public sealed partial class Game:Page {
           await Dispatcher.RunAsync(CoreDispatcherPriority.Low,() => UIUtil.SetVisibility(LoadingImagePanel,false));
         });
       }
-      void AttachEvent() {
+      void AttachEvent(Game page) {
         MainGrid.SizeChanged += (_, _) => ResizeMap();
         InfoFramePanel.SizeChanged += (_, _) => ResizeInfo();
         OpenLogButton.Click += (_,_) => { UIUtil.ReverseVisibility(GameLogPanel); UIUtil.SetVisibility(ExInfoPanel, false); };
         OpenInfoButton.Click += (_,_) => { UIUtil.ReverseVisibility(ExInfoPanel); UIUtil.SetVisibility(GameLogPanel, false); };
-        Page.PointerMoved += (_,e) => (pick is { } && MovePersonCanvas.Children.SingleOrDefault() is UIElement personPanel ? () => MovePerson(personPanel,e) : MyUtil.MyUtil.nothing).Invoke();
-        Page.PointerReleased += (_,e) => (pick is { } ? () => GameData.game = PutPersonPanel(GameData.game) : MyUtil.MyUtil.nothing).Invoke();
+        page.PointerMoved += (_,e) => (pick is { } && MovePersonCanvas.Children.SingleOrDefault() is UIElement personPanel ? () => MovePerson(personPanel,e) : MyUtil.MyUtil.nothing).Invoke();
+        page.PointerReleased += (_,e) => (pick is { } ? () => GameData.game = PutPersonPanel(GameData.game) : MyUtil.MyUtil.nothing).Invoke();
         TopSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();
         MapCanvas.PaintSurface += (_,e) => UIUtil.MapCanvas_PaintSurface(e);
       }

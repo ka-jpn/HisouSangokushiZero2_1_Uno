@@ -40,11 +40,6 @@
       <Button x:Name="BackTitleButton" Width="350" Height="50" HorizontalAlignment="Center" Background="#AFFF" BorderBrush="Black">
         <TextBlock Text="タイトルに戻る"/>
       </Button>
-      <StackPanel Height="20"/>
-      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <TextBlock Text="ver."/>
-        <TextBlock Text="{x:Bind data:BaseData.version.Value}"/>
-      </StackPanel>
       <StackPanel Height="10"/>
     </StackPanel>
   </ScrollViewer>

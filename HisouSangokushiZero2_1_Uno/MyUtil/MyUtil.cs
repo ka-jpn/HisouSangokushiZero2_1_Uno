@@ -51,13 +51,13 @@ public static class 汎用拡張メソッド {
   ///<summary>NullableなリストをNonNullなリストにする null要素は除外される</summary>
   public static List<T> MyNonNull<T>(this IEnumerable<T?> list) where T : struct => [.. list.OfType<T>()];
   ///<summary>Dictionaryにキーが存在しない場合のみ追加操作、操作後の値を返す</summary>
-  public static Dictionary<T1,T2> MyAdd<T1, T2>(this Dictionary<T1,T2> map,T1 key,T2 newValue) where T1 : notnull => map.MyApplyF(map => { map.TryAdd(key,newValue); return map; });
+  public static Dictionary<T1,T2> MyAdd<T1, T2>(this Dictionary<T1,T2> map,T1 key,T2 newValue) where T1 : notnull => map.ToDictionary().MyApplyF(map => { map.TryAdd(key,newValue); return map; });
   ///<summary>Dictionaryにキーが存在する場合のみ更新操作、操作後の値を返す</summary>
-  public static Dictionary<T1,T2> MyUpdate<T1, T2>(this Dictionary<T1,T2> map,T1 key,Func<T1,T2,T2> newValueFactory) where T1 : notnull => map.MyApplyA(v => v[key] = newValueFactory(key,v[key]),v => v.ContainsKey(key));
+  public static Dictionary<T1,T2> MyUpdate<T1, T2>(this Dictionary<T1,T2> map,T1 key,Func<T1,T2,T2> newValueFactory) where T1 : notnull => map.ToDictionary().MyApplyA(v => v[key] = newValueFactory(key,v[key]),v => v.ContainsKey(key));
   ///<summary>Dictionaryにキーが存在する場合のみ削除操作、操作後の値を返す</summary>
-  public static Dictionary<T1,T2> MyRemove<T1, T2>(this Dictionary<T1,T2> map,T1 key) where T1 : notnull => map.MyApplyF(map => { map.Remove(key); return map; });
+  public static Dictionary<T1,T2> MyRemove<T1, T2>(this Dictionary<T1,T2> map,T1 key) where T1 : notnull => map.ToDictionary().MyApplyF(map => { map.Remove(key); return map; });
   ///<summary>Listに指定インデックスが有効な場合のみ更新操作、操作後の値を返す</summary>
-  public static List<T> MyUpdate<T>(this List<T> list,int index,Func<T,T> newValueFactory) => list.MyApplyA(v => v[index] = newValueFactory(v[index]),v => 0 <= index && index < v.Count);
+  public static List<T> MyUpdate<T>(this List<T> list,int index,Func<T,T> newValueFactory) => list.ToList().MyApplyA(v => v[index] = newValueFactory(v[index]),v => 0 <= index && index < v.Count);
   ///<summary>ListをListのListに分割して返す、分割する区切り箇所を決める条件関数を渡す</summary>
   public static List<List<T>> MyPartition<T>(this IEnumerable<T> list,Func<T,bool> cond) => list.Aggregate(new List<List<T>>(),(fold,elem) => cond(elem) ? [.. fold.Append([elem])] : [.. fold.SkipLast(1).Append([.. fold.Last().Append(elem)])]);
   ///<summary>Nullableの値を要素数が1か0のリストに変換する</summary>

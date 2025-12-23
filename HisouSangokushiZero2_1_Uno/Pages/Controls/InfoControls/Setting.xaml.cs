@@ -11,14 +11,14 @@ internal sealed partial class Setting:UserControl {
   private static UIElement? parent = null;
   internal Setting() {
     InitializeComponent();
-    MyInit();
-    void MyInit() {
-      AttachEvents();
+    MyInit(this);
+    void MyInit(Setting page) {
+      AttachEvents(page);
       RefreshUIElements();
       RefreshZoomButtonEnable();
       UIUtil.SwitchViewModeActions.Add(RefreshUIElements);
-      void AttachEvents() {
-        SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
+      void AttachEvents(Setting page) {
+        page.SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
         ZoomInButton.Click += (_,e) => ChangeZoomLevel(1);
         ZoomOutButton.Click += (_,e) => ChangeZoomLevel(-1);
         InnerSwitchViewModeButton.Click += (_,_) => UIUtil.SwitchViewMode();

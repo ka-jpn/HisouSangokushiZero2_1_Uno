@@ -19,17 +19,17 @@ internal sealed partial class Explain:UserControl {
   private static UIElement? parent = null;
   internal Explain() {
     InitializeComponent();
-    MyInit();
-    void MyInit() {
+    MyInit(this);
+    void MyInit(Explain page) {
       Color crushThresholdFill = new(255, 240, 190, 190),winThresholdFill = new(255,235,235,160),loseThresholdFill = new(255,175,240,175),routThresholdFill = new(255, 190, 190, 240);
       Color crushThresholdEdge = new(255, 240, 135, 135),winThresholdEdge = new(255, 230, 230, 65),loseThresholdEdge = new(255, 105, 225, 105),routThresholdEdge = new(255, 135, 135, 240);
       Color maxThresholdEdge = new(255, 165, 165, 165);
       Dictionary<AttackJudge,Dictionary<double,Point>> judgePointMap = Enum.GetValues<AttackJudge>().ToDictionary(v => v,v => GetJudgeShapeCrds(v));
       Dictionary<double,Point> judgeMaxPoints = GetJudgeShapeCrds(null);
-      AttachEvent();
+      AttachEvent(page);
       SetAttackJudgeExplain();
-      void AttachEvent() {
-        SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
+      void AttachEvent(Explain page) {
+        page.SizeChanged += (_,_) => parent?.MyApplyA(ResizeElem);
         void ResizeElem(UIElement parent) {
           double scaleFactor = UIUtil.GetScaleFactor(parent.RenderSize);
           double contentWidth = RenderSize.Width / scaleFactor - 5;

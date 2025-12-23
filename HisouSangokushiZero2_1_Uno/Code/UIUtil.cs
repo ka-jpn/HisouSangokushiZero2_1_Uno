@@ -1,5 +1,6 @@
 using HisouSangokushiZero2_1_Uno.MyUtil;
 using HisouSangokushiZero2_1_Uno.Pages;
+using HisouSangokushiZero2_1_Uno.Pages.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;

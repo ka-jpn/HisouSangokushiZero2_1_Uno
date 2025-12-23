@@ -22,7 +22,7 @@ internal sealed partial class CharacterRemark:UserControl {
     MyInit(this);
     void MyInit(CharacterRemark page) {
       CloseButton.Click += (_,_) => page.Visibility = Visibility.Collapsed;
-      Page.SizeChanged += (_,_) => parent?.MyApplyA(parent => ResizeElem(parent));
+      page.SizeChanged += (_,_) => parent?.MyApplyA(parent => ResizeElem(parent));
       RemarkText.Padding = new(remarkFrameCornerRadius,remarkFrameCornerRadius,remarkFrameCornerRadius * 2,remarkFrameCornerRadius);
     }
   }

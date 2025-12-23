@@ -10,7 +10,7 @@
       <ResourceDictionary.MergedDictionaries>
         <controls:XamlControlsResources/>
         <!-- Other merged dictionaries here -->
-        <ResourceDictionary Source="/Pages/BasicStyle.xaml"/>
+        <ResourceDictionary Source="/Pages/Common/BasicStyle.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 			<!-- Other app resources here -->
 		</ResourceDictionary>

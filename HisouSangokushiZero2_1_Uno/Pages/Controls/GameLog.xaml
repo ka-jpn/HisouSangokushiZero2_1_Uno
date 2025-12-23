@@ -9,7 +9,7 @@
       <TextBlock VerticalAlignment="Center" Text="{x:Bind}"/>
     </DataTemplate>
   </UserControl.Resources>
-  <Grid x:Name="Content">
-    <ListView x:Name="LogsPanel" ItemsSource="{x:Bind local:GameLog.logMessages,Mode=OneWay}" ItemTemplate="{StaticResource LogMessageView}"  Background="#AEFE"/>
+  <Grid x:Name="Content" Background="#CEFE">
+    <ListView x:Name="LogsPanel" ItemsSource="{x:Bind local:GameLog.logMessages,Mode=OneWay}" ItemTemplate="{StaticResource LogMessageView}"/>
   </Grid>
 </UserControl>
