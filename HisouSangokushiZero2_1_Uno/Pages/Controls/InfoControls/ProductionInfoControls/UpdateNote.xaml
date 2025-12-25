@@ -64,11 +64,12 @@
               <TextBlock Text="・南越を林邑に変更し、人物に区連と范熊を追加"/>
               <TextBlock Text="・セーブデータのロード後にログが引き継がれなかったのを引き継ぐように"/>
             </StackPanel>
-            <TextBlock Text="2025/12/24 ver1.18 いくつかの人物の追加・削除・変更＆列伝追記"/>
+            <TextBlock Text="2025/12/25 ver1.18 いくつかの人物の追加・削除・変更＆列伝追記"/>
             <StackPanel Padding="20,0,0,0">
               <TextBlock Text="・素利、楼班、蘇僕延、蹋頓を追加"/>
               <TextBlock Text="・麻奴、犀苦を削除"/>
               <TextBlock Text="・護留のロールを中枢から防衛へ、芒中の生年変更"/>
+              <TextBlock Text="・列伝を部分的に追加した"/>
             </StackPanel>
           </StackPanel>
         </StackPanel>

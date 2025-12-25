@@ -40,7 +40,7 @@ public sealed partial class Title:Page {
         Content.MaxWidth = UIUtil.viewMode == UIUtil.ViewMode.fix ? UIUtil.fixModeMaxWidth : double.MaxValue;
       }
       void ScalingElements() {
-        double scaleFactor = UIUtil.GetScaleFactor(Content.RenderSize with { Height = 0 });
+        double scaleFactor = UIUtil.GetScaleFactor(Content.RenderSize);
         double infoFramebuttonMargin = UIUtil.infoFrameWidth * (scaleFactor - 1);
         TopSwitchViewModeButton.Margin = new(0,0,infoFramebuttonMargin,infoFramebuttonMargin);
         TopSwitchViewModeButton.RenderTransform = new ScaleTransform() { ScaleX = scaleFactor,ScaleY = scaleFactor };
