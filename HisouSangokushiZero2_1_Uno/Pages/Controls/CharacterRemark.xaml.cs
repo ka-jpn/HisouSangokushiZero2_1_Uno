@@ -9,12 +9,12 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using Text = HisouSangokushiZero2_1_Uno.Code.Text;
+using Text = HisouSangokushiZero2_1_Uno.Data.Language.Text;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 
 internal sealed partial class CharacterRemark:UserControl {
   private static readonly double remarkFrameCornerRadius = 5;
-  private static string nowPersonImageName = Text.GetRemarkPersonName(null,true,Lang.ja);
+  private static string nowPersonImageName = Text.GetRemarkPersonName(null,true);
   private static UIElement? parent = null;
   internal static readonly double personImageSize = 75;
   internal CharacterRemark() {
@@ -28,7 +28,7 @@ internal sealed partial class CharacterRemark:UserControl {
   }
   internal static void Init(UIElement parentElem) => parent = parentElem;
   internal static void Show(CharacterRemark page,GameState game) {
-    string newPersonImageName = Text.GetRemarkPersonName(game.PlayCountry,game.PlayTurn < 3,Lang.ja);
+    string newPersonImageName = Text.GetRemarkPersonName(game.PlayCountry,game.PlayTurn < 3);
     string[] contents = GetCharacterRemark(game);
     if(!contents.MyIsEmpty()) {
       page.PersonName.Text = newPersonImageName;

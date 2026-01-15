@@ -6,7 +6,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,7 +85,7 @@ internal sealed partial class ParamList:UserControl {
       List<PersonListData> GetPersonListData(ScenarioData scenario, SortButtonKind buttonKind) {
         return [.. buttonActionMap.GetValueOrDefault(buttonKind)?.Invoke(scenario.PersonMap.ToDictionary()).Select(ToPersonListItem) ?? []];
         PersonListData ToPersonListItem(KeyValuePair<PersonId, PersonData> personInfo) {
-          return new PersonListData((scenario.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewColor ?? UIUtil.transparentColor).ToBrush(), personInfo.Value.Country, personInfo.Key.Value, Code.Text.RoleToText(personInfo.Value.Role, Lang.ja),/* new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")),*/ personInfo.Value.Rank, personInfo.Value.BirthYear, Person.GetAppearYear(personInfo.Value).MyApplyF(appearYear => appearYear >= scenario.StartYear ? appearYear.ToString() : "登場"), personInfo.Value.DeathYear, Biography.biographyMap.GetValueOrDefault(personInfo.Key) ?? string.Empty);
+          return new PersonListData((scenario.CountryMap.GetValueOrDefault(personInfo.Value.Country)?.ViewColor ?? UIUtil.transparentColor).ToBrush(), personInfo.Value.Country, personInfo.Key.Value, Data.Language.Text.RoleToText(personInfo.Value.Role),/* new SvgImageSource(new($"ms-appx:///Assets/Svg/{personInfo.Value.Role}.svg")),*/ personInfo.Value.Rank, personInfo.Value.BirthYear, Person.GetAppearYear(personInfo.Value).MyApplyF(appearYear => appearYear >= scenario.StartYear ? appearYear.ToString() : "登場"), personInfo.Value.DeathYear, Biography.biographyMap.GetValueOrDefault(personInfo.Key) ?? string.Empty);
         }
       }
       List<CountryListData> GetCountryListData(ScenarioData scenario) {

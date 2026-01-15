@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using HisouSangokushiZero2_1_Uno.MyUtil;
 namespace HisouSangokushiZero2_1_Uno.Code {
 	internal static class Post {																																																																			
-		private static List<PostType> GetCapitalRolePosts(ECountry country,ERole role) => country==ECountry.漢 ? [] : [new PostType(role,new(PostHead.main)),new PostType(role,new(PostHead.sub))];
+		private static List<PostType> GetCapitalRolePosts(ECountry country,ERole role) => country==ECountry.漢 ? [] : [new PostType(role,new(PostHead.Main)),new PostType(role,new(PostHead.Sub))];
 		private static List<PostType> GetCapitalRoleStockPosts(ECountry country,ERole role) => country==ECountry.漢 ? [] : [.. Enumerable.Range(0,UIUtil.capitalPieceCellNum).Select(i => new PostType(role,new(i)))];
-		private static List<PostType> GetAreaRolePosts(GameState game,ECountry country,ERole role) => [.. (role==ERole.defense ? Area.CalcOrdDefenseAreas(game,country) : role==ERole.affair ? Area.CalcOrdAffairAreas(game,country) : []).Select(area => new PostType(role,new(area)))];
+		private static List<PostType> GetAreaRolePosts(GameState game,ECountry country,ERole role) => [.. (role==ERole.Defense ? Area.CalcOrdDefenseAreas(game,country) : role==ERole.Affair ? Area.CalcOrdAffairAreas(game,country) : []).Select(area => new PostType(role,new(area)))];
 		private static List<PostType> GetEmptyCapitalStockPosts(GameState game,ECountry country,ERole role) => [.. GetCapitalRoleStockPosts(country,role).Except(game.PersonMap.Where(v =>Person.GetPersonCountry(game,v.Key)==country).Select(v => v.Value.Post)).MyNonNull()];
 		internal static Dictionary<PersonId,PostType> GetInitPost(GameState game,ECountry country,ERole role) => Person.GetInitPersonMap(game,country,role).ToDictionary(v => v.Key,v => new PostType(role,new()));
 		internal static Dictionary<PersonId,PostType> GetInitAppearPost(GameState game,ECountry country,ERole role) => Person.GetAppearPersonMap(game,country,role).ToDictionary(v => v.Key,v => new PostType(role,new()));

@@ -8,8 +8,8 @@ using Windows.Storage.Streams;
 namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class BeforeNavigate {
   internal static async Task ReadSvgs() {
-    UIUtil.mapSvg=await ReadSvg("map.svg");
-    UIUtil.armySvg=await ReadSvg("army.svg");
+    UIUtil.mapSvg = await ReadSvg("Map.svg");
+    UIUtil.armySvg = await ReadSvg("Army.svg");
   }
   private static async Task<SKSvg> ReadSvg(string fileName) {
     using IRandomAccessStreamWithContentType stream = await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Svg/{fileName}"))).MyApplyF(f => f.OpenReadAsync());

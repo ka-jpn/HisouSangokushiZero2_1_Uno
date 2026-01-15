@@ -3,7 +3,6 @@ using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 namespace HisouSangokushiZero2_1_Uno.Pages;
@@ -20,8 +19,8 @@ internal sealed partial class ProductionInfo : UserControl {
       AttachEvents(page);
       void SetChildCloseAction() {
         void close() => page.ProductionInfoContentPanel.MySetChildren([]);
-        AdditionalNote.Init(close);
-        UpdateNote.Init(close);
+        AdditionalNote.InitCloseAction(close);
+        UpdateNote.InitCloseAction(close);
       }
       void AttachEvents(ProductionInfo page) {
         page.SizeChanged += (_, _) => parent?.MyApplyA(ResizeElem);
@@ -51,6 +50,8 @@ internal sealed partial class ProductionInfo : UserControl {
     }
   }
   internal static void Init(UIElement parentElem) {
+    UpdateNote.InitParentElem(parentElem);
+    AdditionalNote.InitParentElem(parentElem);
     parent = parentElem;
   }
 }

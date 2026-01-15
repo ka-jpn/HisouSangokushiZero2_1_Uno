@@ -15,6 +15,7 @@ namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class UIUtil {
   internal enum ViewMode { fit, fix };
   internal enum PersonViewSortMode { Country_Role_BirthYear, Rank_BirthYear, BirthYear, DeathYear };
+  internal enum YearItems { Spring, Summer, Autumn, Winter };
   internal const double frameRefreshRate = 60;
   internal const double nextStepDelaySeconds = 1 / frameRefreshRate;
   internal const double infoFrameWidth = 40;
@@ -39,7 +40,6 @@ internal static class UIUtil {
   internal static readonly Color transparentColor = new(0,0,0,0);
   internal static readonly Color dataBackColor = new(255,150,150,150);
   internal static readonly Thickness dataMargin = new(1);
-  internal static readonly string[] yearItems = ["春","夏","秋","冬"];
   internal static SKSvg? mapSvg = null;
   internal static SKSvg? armySvg = null;
   internal static ViewMode viewMode = ViewMode.fix;

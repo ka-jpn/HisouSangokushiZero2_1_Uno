@@ -30,12 +30,12 @@ public static class DefType {
   internal record AttackResult(Army Defense,AttackJudge Judge,string InvadeText);
   internal record Road(EArea From,EArea To,RoadKind Kind,int Easiness,int? EasinessReverse = null);
   internal record ScenarioData(int StartYear,int EndYear,EArea[] ChinaAreas,Road[] RoadConnections,IReadOnlyDictionary<EArea,AreaData> AreaMap,IReadOnlyDictionary<ECountry,CountryWinCondition> WinConditionMap,IReadOnlyDictionary<ECountry,CountryData> CountryMap,IReadOnlyDictionary<PersonId,PersonData> PersonMap);
-  internal enum Lang { ja };
-  public enum PostHead { main, sub };
+  internal enum Lang { Ja, En };
+  public enum PostHead { Main, Sub };
   public enum Phase { Starting, Planning, Execution, PerishEnd, TurnLimitOverEnd, WinEnd, OtherWinEnd };
-  internal enum AttackJudge { crush, win, lose, rout };
-  internal enum RoadKind { land, water };
-  public enum ERole { central, affair, defense, attack };
+  internal enum AttackJudge { Crush, Win, Lose, Rout };
+  internal enum RoadKind { Land, Water };
+  public enum ERole { Central, Affair, Defense, Attack };
   public enum EArea {
     襄平, 番汗, 朝鮮, 土垠, 陽楽, 薊, 代, 南皮, 濮陽, 魯, 鄴, 晋陽, 劇, 淮陰, 彭城, 陰陵, 平陽, 離石, 洛陽, 平輿, 酸棗, 長安, 金城, 武威, 居延, 敦煌, 
     宛, 襄陽, 鄂, 武昌, 臨沅, 臨湘, 泉陵, 郴, 秣陵, 建業, 舒, 鄱陽, 南城, 山陰, 東侯官, 番禺, 合浦, 龍編, 日南, 

@@ -72,6 +72,12 @@
               <TextBlock Text="・列伝を部分的に追加した"/>
             </StackPanel>
           </StackPanel>
+          <TextBlock Text="2026/01/25 ver1.19 いくつかの人物の追加・変更＆列伝追記"/>
+          <StackPanel Padding="20,0,0,0">
+            <TextBlock Text="・朱治を追加"/>
+            <TextBlock Text="・凌操のロールを防衛から攻撃へ"/>
+            <TextBlock Text="・列伝を部分的に追加した"/>
+          </StackPanel>
         </StackPanel>
       </ScrollViewer>
     </Grid>

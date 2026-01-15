@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
 using System.Linq;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
-using Text = HisouSangokushiZero2_1_Uno.Code.Text;
+using Text = HisouSangokushiZero2_1_Uno.Data.Language.Text;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 internal record WinCondData(Brush Brush,ECountry Country,string WinCondText);
 internal sealed partial class WinCond:UserControl {
@@ -44,7 +44,7 @@ internal sealed partial class WinCond:UserControl {
           return [.. scenario.CountryMap.Select(ToCountryListItem)];
           WinCondData ToCountryListItem(KeyValuePair<ECountry,CountryData> countryInfo) {
             WinCondMessage? maybeWinCondMessage = scenario.WinConditionMap.GetValueOrDefault(countryInfo.Key)?.Messages;
-            string?[] maybeWinCondText = [maybeWinCondMessage?.Basic?.MyApplyF(v => string.Join('＆',v)) ?? Text.NoBasicWinCondText(Lang.ja),maybeWinCondMessage?.Extra?.MyApplyF(v => string.Join(' ',v))];
+            string?[] maybeWinCondText = [maybeWinCondMessage?.Basic?.MyApplyF(v => string.Join('＆',v)) ?? Text.NoBasicWinCondText(),maybeWinCondMessage?.Extra?.MyApplyF(v => string.Join(' ',v))];
             string winCondMessage = maybeWinCondMessage.MyApplyF(v => string.Join('\n',maybeWinCondText.MyNonNull()));
             return new WinCondData(countryInfo.Value.ViewColor.ToBrush(),countryInfo.Key,winCondMessage);
           }
