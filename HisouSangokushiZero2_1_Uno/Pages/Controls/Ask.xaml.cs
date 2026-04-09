@@ -39,7 +39,7 @@ internal sealed partial class Ask:UserControl {
     double sideMargin = UIUtil.infoFrameWidth * scaleFactor;
     double contentWidth = Page.RenderSize.Width - sideMargin * 2 - padding * 2;
     Content.Margin = new(sideMargin,sideMargin,sideMargin,0);
-    TitleTextBlock.Margin = new(0,padding * scaleFactor,0,BasicStyle.textHeight * (scaleFactor - 1) + padding * scaleFactor);
+    TitleTextBlock.Margin = new(0,padding * scaleFactor,0,BasicStyle.textHeight * titleTextScaleFactor * (scaleFactor - 1) + padding * scaleFactor);
     TitleTextBlock.RenderTransform = new ScaleTransform { ScaleX = scaleFactor * titleTextScaleFactor,ScaleY = scaleFactor * titleTextScaleFactor,CenterX = UIUtil.CalcFullWidthTextLength(TitleTextBlock.Text) * BasicStyle.fontsize * titleTextScaleFactor / 2 };
     DetailView.Width = Math.Min(contentWidth,(maxWidth + padding * 2 / scaleFactor) * scaleFactor);
     DetailView.Height = Math.Min(Page.RenderSize.Height * 0.6,Page.RenderSize.Height - (UIUtil.infoFrameWidth * 2 + TitleTextBlock.RenderSize.Height + OkButton.RenderSize.Height + padding * 2) * scaleFactor - padding * 4);

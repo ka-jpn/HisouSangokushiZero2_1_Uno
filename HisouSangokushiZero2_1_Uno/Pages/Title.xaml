@@ -17,11 +17,11 @@
         <TextBlock Text="Zero2" HorizontalAlignment="Center" FontSize="24" LineHeight="27"/>
         <TextBlock Text="バージョン1" HorizontalAlignment="Center" FontSize="18" LineHeight="22"/>
         <StackPanel Height="5"/>
-        <Button HorizontalAlignment="Center" x:Name="StartButton" Height="25" Width="150">
+        <Button HorizontalAlignment="Center" x:Name="StartButton" Height="25" Width="150" Background="#4000">
           <TextBlock Text="新規スタート"/>
         </Button>
         <StackPanel Height="5"/>
-        <Button HorizontalAlignment="Center" x:Name="LoadButton" Height="25" Width="150">
+        <Button HorizontalAlignment="Center" x:Name="LoadButton" Height="25" Width="150" Background="#4000">
           <TextBlock Text="ロードして続きから"/>
         </Button>
         <StackPanel Height="5"/>

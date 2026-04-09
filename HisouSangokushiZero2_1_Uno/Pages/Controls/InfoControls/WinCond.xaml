@@ -11,8 +11,8 @@
           <ColumnDefinition Width="50"/>
           <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Text="{x:Bind Country}" Margin="1" TextAlignment="Center" VerticalAlignment="Center"/>
-        <StackPanel Grid.Column="1" Margin="1"  VerticalAlignment="Center">
+        <TextBlock Grid.Column="0" Text="{x:Bind Country}" TextAlignment="Center" VerticalAlignment="Center"/>
+        <StackPanel Grid.Column="1"  VerticalAlignment="Center">
           <TextBlock Text="{x:Bind WinCondText}" TextAlignment="Start" Padding="5,0,0,0"/>
         </StackPanel>
       </Grid>

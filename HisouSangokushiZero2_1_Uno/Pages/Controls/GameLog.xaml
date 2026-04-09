@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+﻿<?xml version="1.0" ?>
 <UserControl
   x:Class="HisouSangokushiZero2_1_Uno.Pages.GameLog"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

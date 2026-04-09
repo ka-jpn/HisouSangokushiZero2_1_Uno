@@ -36,6 +36,10 @@ public static class DefType {
   internal enum AttackJudge { Crush, Win, Lose, Rout };
   internal enum RoadKind { Land, Water };
   public enum ERole { Central, Affair, Defense, Attack };
+  internal enum YearItems { Spring, Summer, Autumn, Winter };
+  internal enum ReadState { NotFind, Read };
+  internal record ReadGame(ReadState ReadState, GameState? MaybeGame);
+  internal record ReadMeta(ReadState ReadState, MetaData? MaybeMeta);
   public enum EArea {
     襄平, 番汗, 朝鮮, 土垠, 陽楽, 薊, 代, 南皮, 濮陽, 魯, 鄴, 晋陽, 劇, 淮陰, 彭城, 陰陵, 平陽, 離石, 洛陽, 平輿, 酸棗, 長安, 金城, 武威, 居延, 敦煌, 
     宛, 襄陽, 鄂, 武昌, 臨沅, 臨湘, 泉陵, 郴, 秣陵, 建業, 舒, 鄱陽, 南城, 山陰, 東侯官, 番禺, 合浦, 龍編, 日南, 

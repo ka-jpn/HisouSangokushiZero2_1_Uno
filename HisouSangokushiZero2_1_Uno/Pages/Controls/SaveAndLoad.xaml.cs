@@ -16,9 +16,9 @@ public sealed partial class SaveAndLoad:UserControl {
   internal const double minScaleFactor = 0.65;
   internal const double scrollMaxWidth = UIUtil.fixModeMaxWidth * minScaleFactor;
   private static bool isWritemode = false;
-  private static Action<Storage.ReadGame?> pressSlotAfterProcess = _ => { };
+  private static Action<ReadGame?> pressSlotAfterProcess = _ => { };
   private static Action pressCloseProcess = MyUtil.MyUtil.nothing;
-  private static List<Storage.ReadMeta> saveSlots = [];
+  private static List<ReadMeta> saveSlots = [];
   private static List<bool> hasSaveDataList = [];
   internal static readonly ObservableCollection<SaveSlotData> saveSlotTexts = [];
   internal SaveAndLoad() {
@@ -34,7 +34,7 @@ public sealed partial class SaveAndLoad:UserControl {
     saveSlots = await Storage.ReadMetaDataList();
     saveSlotTexts.Clear();
     Enumerable.Range(0,10).ToList().ForEach(index => {
-      (saveSlots.ElementAtOrDefault(index)?.ReadState == Storage.ReadState.Read && saveSlots.ElementAtOrDefault(index)?.MaybeMeta is MetaData meta ? new SaveSlotData(
+      (saveSlots.ElementAtOrDefault(index)?.ReadState == ReadState.Read && saveSlots.ElementAtOrDefault(index)?.MaybeMeta is MetaData meta ? new SaveSlotData(
         SlotIndex: index,
         GameVersion: $"ゲームバージョン：{meta.GameVersion}",
         NowScenario: $"シナリオ：{meta.NowScenario?.Value}",
@@ -56,7 +56,7 @@ public sealed partial class SaveAndLoad:UserControl {
     });
   }
   private static int IndexToFileNo(int index) => index + 1;
-  internal static async Task Show(SaveAndLoad page,bool isWrite,Action<Storage.ReadGame?> afterProcess,Action closeProcess,Windows.Foundation.Size parentSize) {
+  internal static async Task Show(SaveAndLoad page,bool isWrite,Action<ReadGame?> afterProcess,Action closeProcess,Windows.Foundation.Size parentSize) {
     isWritemode = isWrite;
     pressSlotAfterProcess = afterProcess;
     pressCloseProcess = closeProcess;
@@ -70,7 +70,7 @@ public sealed partial class SaveAndLoad:UserControl {
     double contentHeight = RenderSize.Height / scaleFactor;
     Content.RenderTransform = new ScaleTransform { ScaleX = scaleFactor,ScaleY = scaleFactor };
     Content.Margin = new(0,0,contentWidth * (scaleFactor - 1),contentHeight * (scaleFactor - 1));
-    double CookScaleFactor(double scaleFactor) => scaleFactor switch { < minScaleFactor => scaleFactor / minScaleFactor, > 1 => scaleFactor, _ => 1 };
+    static double CookScaleFactor(double scaleFactor) => scaleFactor switch { < minScaleFactor => scaleFactor / minScaleFactor, > 1 => scaleFactor, _ => 1 };
   }
   private async void SaveSlot_PointerPressed(object sender,PointerRoutedEventArgs e) {
     await (sender is StackPanel panel && panel.DataContext is SaveSlotData slotData ? PressSaveSlot(slotData) : Task.CompletedTask);

@@ -15,7 +15,6 @@ namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class UIUtil {
   internal enum ViewMode { fit, fix };
   internal enum PersonViewSortMode { Country_Role_BirthYear, Rank_BirthYear, BirthYear, DeathYear };
-  internal enum YearItems { Spring, Summer, Autumn, Winter };
   internal const double frameRefreshRate = 60;
   internal const double nextStepDelaySeconds = 1 / frameRefreshRate;
   internal const double infoFrameWidth = 40;

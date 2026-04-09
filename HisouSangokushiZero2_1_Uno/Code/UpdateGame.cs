@@ -37,7 +37,7 @@ internal static class UpdateGame {
   internal static GameState AttachGameStartData(GameState game,ECountry? countryName) => countryName is ECountry country ? game with { PlayCountry = country,PlayTurn = 0 } : game;
   internal static GameState AppendGameStartLog(GameState game) {
     return game.MyApplyF(game => AppendLogMessage(game,[Text.StartPlayText(game.PlayCountry)])).MyApplyF(game => AppendTurnNewLog(game,[Text.StartPlayText(game.PlayCountry)]))
-      .MyApplyF(game => AppendGameLog(game,[string.Join(" ",[Text.StartPlayText(game.PlayCountry),Text.StartPlayAreaNumText(game),Text.StartPlayCountryPersonsText(game)])]));
+      .MyApplyF(game => AppendGameLog(game,[string.Join(" ",[Text.StartPlayText(game.PlayCountry),Text.CountryAreaNumParamText(game,game.PlayCountry),Text.StartPlayCountryPersonsText(game)])]));
   }
   internal static GameState UpdateCapitalArea(GameState game) {
     return game.MyApplyF(AppendPlayerCaptialDiffText) with { CountryMap = game.CountryMap.ToDictionary(v => v.Key,countryInfo => countryInfo.Value with { CapitalArea = Country.CalcCapitalArea(game,countryInfo.Key) }) };

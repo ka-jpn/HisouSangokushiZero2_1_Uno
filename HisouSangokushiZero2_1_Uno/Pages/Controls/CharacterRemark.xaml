@@ -20,7 +20,7 @@
       <Grid x:Name="ButtonPanel" Width="100" Height="25" HorizontalAlignment="Center"/>
     </StackPanel>
     <Button x:Name="CloseButton" Width="25" Height="20" Background="#2F00" HorizontalAlignment="Right" VerticalAlignment="Top">
-      <TextBlock Text="×" FontWeight="Bold" FontSize="25" LineHeight="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      <TextBlock Text="×" FontWeight="Bold" FontSize="25" LineHeight="32" Margin="-1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Button>
   </Grid>
 </UserControl>

@@ -9,9 +9,9 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <Grid Grid.Row="0" Height="30">
-      <TextBlock Text="更新履歴" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      <TextBlock Text="更新履歴" FontSize="20" LineHeight="22" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
       <Button x:Name="CloseButton" Width="35" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Background="#2F00">
-        <TextBlock Text="×" FontWeight="Bold" FontSize="25" LineHeight="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="×" FontWeight="Bold" FontSize="25" LineHeight="27" HorizontalAlignment="Center" VerticalAlignment="Center"/>
       </Button>
     </Grid>
     <Grid Grid.Row="1" Padding="5,0,5,5">
@@ -71,12 +71,12 @@
               <TextBlock Text="・護留のロールを中枢から防衛へ、芒中の生年変更"/>
               <TextBlock Text="・列伝を部分的に追加した"/>
             </StackPanel>
-          </StackPanel>
-          <TextBlock Text="2026/01/25 ver1.19 いくつかの人物の追加・変更＆列伝追記"/>
-          <StackPanel Padding="20,0,0,0">
-            <TextBlock Text="・朱治を追加"/>
-            <TextBlock Text="・凌操のロールを防衛から攻撃へ"/>
-            <TextBlock Text="・列伝を部分的に追加した"/>
+            <TextBlock Text="2026/04/08 ver1.19 人物の追加・変更＆列伝追記"/>
+            <StackPanel Padding="20,0,0,0">
+              <TextBlock Text="・朱治を追加"/>
+              <TextBlock Text="・凌操のロールを防衛から攻撃へ"/>
+              <TextBlock Text="・反董連合シナリオの人物の列伝追加完了"/>
+            </StackPanel>
           </StackPanel>
         </StackPanel>
       </ScrollViewer>

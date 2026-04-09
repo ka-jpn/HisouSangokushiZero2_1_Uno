@@ -9,9 +9,6 @@ using Windows.Storage;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Code;
 internal static class Storage {
-  internal enum ReadState { NotFind, Read };
-  internal record ReadGame(ReadState ReadState,GameState? MaybeGame);
-  internal record ReadMeta(ReadState ReadState,MetaData? MaybeMeta);
   private static string CreateMetaFileName(int fileNo) => $"save{fileNo}.meta";
   private static string CreateSaveFileName(int fileNo) => $"save{fileNo}.dat";
   private static void Write(string folderName, string fileName, byte[] writeData) => File.WriteAllBytes(Path.Combine(folderName, fileName), writeData);
@@ -33,7 +30,7 @@ internal static class Storage {
     return newSaveFileExists ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(Read(GetStorageFolder().Path, CreateSaveFileName(fileNo)))?.MyApplyF(FillState)) :
       oldSaveFileExists ? new(ReadState.Read, MessagePackSerializer.Deserialize<GameState?>(Read(Path.Combine(GetStorageFolder().Path, BaseData.name.Value), CreateSaveFileName(fileNo)))?.MyApplyF(FillState)) :
       new(ReadState.NotFind, null);
-    GameState FillState(GameState game) => game with {
+    static GameState FillState(GameState game) => game with {
       LogMessage = game.LogMessage ?? [],
       StartPlanningCharacterRemark = game.StartPlanningCharacterRemark ?? [],
       StartExecutionCharacterRemark = game.StartExecutionCharacterRemark ?? []

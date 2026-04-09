@@ -54,23 +54,23 @@
       <TextBlock Text="人物データ" HorizontalAlignment="Center"/>
       <StackPanel x:Name="SortButtonPanel" Orientation="Horizontal" HorizontalAlignment="Center"/>
       <StackPanel MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Orientation="Horizontal" Background="#EEE">
-        <TextBlock Text="陣営" Width="50" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="人物名" Width="80" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="ロール" Width="50" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="ランク" Width="50" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="生年" Width="40" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="登場" Width="40" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="没年" Width="40" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="列伝" Width="400" Margin="0,1" Padding="5,0,0,0" TextAlignment="Start"/>
+        <TextBlock Text="陣営" Width="50" TextAlignment="Center"/>
+        <TextBlock Text="人物名" Width="80" TextAlignment="Center"/>
+        <TextBlock Text="ロール" Width="50" TextAlignment="Center"/>
+        <TextBlock Text="ランク" Width="50" TextAlignment="Center"/>
+        <TextBlock Text="生年" Width="40" TextAlignment="Center"/>
+        <TextBlock Text="登場" Width="40" TextAlignment="Center"/>
+        <TextBlock Text="没年" Width="40" TextAlignment="Center"/>
+        <TextBlock Text="列伝" Width="400" Padding="5,0,0,0" TextAlignment="Start"/>
       </StackPanel>
       <ScrollViewer x:Name="PersonScroll" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.personItemsRepeaterHeight}">
         <ItemsRepeater x:Name="PersonItemsRepeater" ItemTemplate="{StaticResource PersonItemsRepeater}" Background="#CCC"/>
       </ScrollViewer>
       <TextBlock Text="陣営データ" HorizontalAlignment="Center"/>
       <StackPanel MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Orientation="Horizontal" Background="#EEE">
-        <TextBlock Text="陣営" Width="75" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="初期資金" Width="75" Margin="0,1" TextAlignment="Center"/>
-        <TextBlock Text="初期領土" Width="600" Margin="0,1" TextAlignment="Start"/>
+        <TextBlock Text="陣営" Width="75" TextAlignment="Center"/>
+        <TextBlock Text="初期資金" Width="75" TextAlignment="Center"/>
+        <TextBlock Text="初期領土" Width="600" TextAlignment="Start"/>
       </StackPanel>
       <ScrollViewer x:Name="CountryScroll" MaxWidth="{x:Bind local:ParamList.itemsRepeaterWidth}" Height="{x:Bind local:ParamList.countryItemsRepeaterHeight}">
         <ItemsRepeater x:Name="CountryItemsRepeater" ItemTemplate="{StaticResource CountryItemsRepeater}" Background="#CCC"/>

@@ -6,7 +6,7 @@
   xmlns:local="using:HisouSangokushiZero2_1_Uno.Pages"
   x:Name="Page">
   <StackPanel x:Name="Content" Background="#FDDD" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="5">
-    <TextBlock x:Name="TitleTextBlock" HorizontalAlignment="Center"/>
+    <TextBlock x:Name="TitleTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     <StackPanel x:Name="TitleDetailMargin"/>
     <ScrollViewer x:Name="DetailView" Background="White">
       <StackPanel x:Name="DetailPanel" VerticalAlignment="Top"/>
