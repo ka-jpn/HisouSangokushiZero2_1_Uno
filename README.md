@@ -1,6 +1,7 @@
-# HisouSangokushiZero2_1_Uno
+# HisouSangokushiZero2_1
 ## 概要
-悲愴三国志Zero2 バージョン1のUno Platformでの開発プロジェクト  
+悲愴三国志Zero2 バージョン1の開発プロジェクト  
+開発技術：C#,Xaml,Uno Platform(webassembly)  
 ## 実装進捗
 -は以前からの要素、!は新しい要素　○は実装済の要素、△は実装中の要素、×は未実装の要素です  
 -○人物データ  
