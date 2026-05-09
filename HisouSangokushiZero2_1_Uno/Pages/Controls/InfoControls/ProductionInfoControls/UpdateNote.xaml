@@ -77,6 +77,7 @@
               <TextBlock Text="・凌操のロールを防衛から攻撃へ"/>
               <TextBlock Text="・反董連合シナリオの人物の列伝追加完了"/>
             </StackPanel>
+            <TextBlock Text="2026/05/09 ver1.20 蜀之南征シナリオの人物列伝を部分的に追加"/>
           </StackPanel>
         </StackPanel>
       </ScrollViewer>

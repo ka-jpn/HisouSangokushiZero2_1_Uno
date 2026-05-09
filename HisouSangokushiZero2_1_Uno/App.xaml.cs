@@ -12,7 +12,6 @@ public partial class App:Application {
 	/// executed, and as such is the logical equivalent of main() or WinMain().
 	/// </summary>
 	public App() {
-    //SkiaSharp.SKGraphics.SetResourceCacheTotalByteLimit(16 * 1024 * 1024);//16MB
     InitializeComponent();
     FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/SourceHanSansJP-Medium.woff2";//set defaultFont
   }

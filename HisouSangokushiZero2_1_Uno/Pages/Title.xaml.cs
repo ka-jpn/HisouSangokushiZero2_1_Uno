@@ -5,11 +5,6 @@ using HisouSangokushiZero2_1_Uno.MyUtil;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using System;
-using System.Diagnostics;
-using System.Linq;
-using Windows.Storage;
-using Windows.UI.Core;
 using static HisouSangokushiZero2_1_Uno.Code.DefType;
 namespace HisouSangokushiZero2_1_Uno.Pages;
 public sealed partial class Title:Page {

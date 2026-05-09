@@ -1,5 +1,4 @@
 ﻿using HisouSangokushiZero2_1_Uno.MyUtil;
-using SkiaSharp;
 using Svg.Skia;
 using System;
 using System.IO;

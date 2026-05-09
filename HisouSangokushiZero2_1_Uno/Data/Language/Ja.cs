@@ -92,7 +92,7 @@ internal class Ja:ILangText {
   string ILangText.WinCondCaptionText(GameState game) => $"勝利条件({GetCalendarText(game)})";
   string ILangText.ScenarioCaptionText() => "シナリオ";
   string ILangText.StartYearText(ScenarioData scenarioData) => $"{scenarioData.StartYear}年開始";
-  string ILangText.EndYearText(ScenarioData scenarioData) => $"{scenarioData.StartYear}年終了";
+  string ILangText.EndYearText(ScenarioData scenarioData) => $"{scenarioData.EndYear}年終了";
   string ILangText.ClickMapAreaText() => "マップ上のエリアをクリックしてプレイ勢力を選択";
   string ILangText.CountryParamCaptionText(ECountry? country) => $"{country}陣営";
   string ILangText.CountryCapitalAreaParamText(GameState game, ECountry? country) => $"首都:{Country.GetCapitalArea(game, country)?.ToString() ?? "(なし)"}";

@@ -42,6 +42,6 @@ namespace HisouSangokushiZero2_1_Uno.Code {
     internal static int HasAreaCount(GameState game,ECountry country,EArea[] areas) => GetAreas(game,country).Intersect(areas).Count();
     internal static bool HasAreas(GameState game,ECountry country,EArea[] areas) => HasAreaCount(game,country,areas) == areas.Length;
     internal static EArea? GetCapitalArea(GameState game,ECountry? country) => country?.MyApplyF(game.CountryMap.GetValueOrDefault)?.CapitalArea;
-    internal static EArea? CalcCapitalArea(GameState game,ECountry country) => country == ECountry.Š¿ ? EArea.—Œ—z : Area.GetConnectCapitalCountryAreas(game,country).Except(GetCapitalArea(game,country).MyMaybeToList().MyApplyF(v=> HasAreas(game,country,[..v]) ? [] : v)).MyApplyF(v => v.MyIsEmpty() ? Area.GetCountryAreas(game,country) : v).MyNullable().MaxBy(v =>v?.MyApplyF(game.AreaMap.GetValueOrDefault)?.AffairParam.AffairNow);
+    internal static EArea? CalcCapitalArea(GameState game,ECountry country) => country == ECountry.æ¼¢ ? EArea.æ´›é™½ : Area.GetConnectCapitalCountryAreas(game,country).Except(GetCapitalArea(game,country).MyMaybeToList().MyApplyF(v=> HasAreas(game,country,[..v]) ? [] : v)).MyApplyF(v => v.MyIsEmpty() ? Area.GetCountryAreas(game,country) : v).MyNullable().MaxBy(v =>v?.MyApplyF(game.AreaMap.GetValueOrDefault)?.AffairParam.AffairNow);
   }
 }
